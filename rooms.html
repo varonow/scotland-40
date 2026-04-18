@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Draw | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+
+  .header-content { position: relative; z-index: 2; }
+
+  .back-link {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--gold); }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-title em { font-style: italic; color: var(--gold); }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+  }
+
+  /* MAIN */
+  main { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+
+  /* DRAW BUTTON */
+  .draw-section {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .draw-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--stone);
+    font-style: italic;
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .draw-btn {
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 1.2rem 3rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.05em;
+  }
+
+  .draw-btn:hover { background: #1a2e28; transform: translateY(-2px); }
+  .draw-btn:active { transform: translateY(0); }
+  .draw-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .redraw-btn {
+    background: transparent;
+    color: var(--stone);
+    border: 1px solid var(--mist);
+    padding: 0.75rem 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .redraw-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* STATUS */
+  .status-msg {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    margin-top: 1rem;
+    min-height: 20px;
+  }
+
+  /* HOTEL SECTIONS */
+  .hotel-section {
+    margin-bottom: 4rem;
+  }
+
+  .hotel-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.5rem;
+  }
+
+  .hotel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.5rem;
+  }
+
+  .hotel-dates {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--stone);
+    margin-bottom: 2rem;
+  }
+
+  .gold-rule {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 2rem;
+  }
+
+  /* ROOM CARDS */
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .room-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .room-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .room-number {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.75rem;
+  }
+
+  .room-guests {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .room-guest {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .guest-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .guest-full-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--dark);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--stone);
+    font-style: italic;
+    font-size: 1.1rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed var(--mist);
+  }
+
+  /* ADMIN BADGE */
+  .admin-section {
+    background: var(--forest);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .admin-text {
+    color: rgba(255,255,255,0.8);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  .admin-text strong {
+    color: var(--gold);
+    display: block;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1.25rem; }
+    .rooms-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="back-link">← Back to Itinerary</a>
+    <p class="header-eyebrow">Scotland 2026 · Room Assignments</p>
+    <h1 class="header-title">The <em>Room</em> Draw 🎩</h1>
+    <p class="header-subtitle">Who will you be sharing with?</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ADMIN SECTION -->
+  <div class="admin-section">
+    <div class="admin-text">
+      <strong>Admin Controls</strong>
+      Only Victoria can draw and re-draw rooms
+    </div>
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <button class="draw-btn" id="drawBtn" onclick="drawRooms()">🎩 Draw Rooms!</button>
+      <button class="redraw-btn" id="redrawBtn" onclick="drawRooms()">↺ Re-draw</button>
+    </div>
+  </div>
+  <div class="status-msg" id="statusMsg"></div>
+
+  <!-- BALMORAL -->
+  <div class="hotel-section">
+    <p class="hotel-label">Hotel One</p>
+    <h2 class="hotel-title">The Balmoral</h2>
+    <p class="hotel-dates">Edinburgh · June 1–3, 2026</p>
+    <div class="gold-rule"></div>
+    <div class="rooms-grid" id="balmoralRooms">
+      <div class="empty-state">Room assignments will appear here after the draw!</div>
+    </div>
+  </div>
+
+  <!-- CAMERON HOUSE -->
+  <div class="hotel-section">
+    <p class="hotel-label">Hotel Two</p>
+    <h2 class="hotel-title">Cameron House</h2>
+    <p class="hotel-dates">Loch Lomond · June 3–5, 2026</p>
+    <div class="gold-rule"></div>
+    <div class="rooms-grid" id="cameronRooms">
+      <div class="empty-state">Room assignments will appear here after the draw!</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
+</footer>
+
+<script>
+  // Supabase setup
+  const SUPABASE_URL = 'https://uzdefjgipyrhqucjwpmj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_eYKUMrnIV3UeqN60KFH-tQ_yr47YF8M';
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // All 10 guests
+  const GUESTS = [
+    'Joyce Saad',
+    'Victoria Aronow',
+    'Danielle Dabah',
+    'Ginger Aronow',
+    'Kimberly Dabah',
+    'Stephanie Kattan',
+    'Rachel Harari',
+    'Joyce Salame',
+    'Ann Salame',
+    'Susie Sutton'
+  ];
+
+  // Get initials from name
+  function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('');
+  }
+
+  // Shuffle array randomly
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Draw rooms and save to database
+  async function drawRooms() {
+    const drawBtn = document.getElementById('drawBtn');
+    const redrawBtn = document.getElementById('redrawBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    drawBtn.disabled = true;
+    statusMsg.textContent = 'Drawing rooms...';
+
+    // Shuffle guests
+    const shuffled = shuffle(GUESTS);
+
+    // Create 5 pairs
+    const pairs = [];
+    for (let i = 0; i < 10; i += 2) {
+      pairs.push({ guest_1: shuffled[i], guest_2: shuffled[i + 1] });
+    }
+
+    try {
+      // Delete existing assignments
+      await db.from('rooms').delete().neq('id', 0);
+
+      // Insert Balmoral rooms (pairs 0-4)
+      const balmoralRows = pairs.map((pair, i) => ({
+        hotel: 'Balmoral',
+        room_number: `Room ${i + 1}`,
+        guest_1: pair.guest_1,
+        guest_2: pair.guest_2
+      }));
+
+      // Insert Cameron House rooms (same pairs, different hotel)
+      const cameronRows = pairs.map((pair, i) => ({
+        hotel: 'Cameron',
+        room_number: `Room ${i + 1}`,
+        guest_1: pair.guest_1,
+        guest_2: pair.guest_2
+      }));
+
+      await db.from('rooms').insert([...balmoralRows, ...cameronRows]);
+
+      statusMsg.textContent = '✓ Rooms drawn and saved!';
+      redrawBtn.style.display = 'inline-block';
+      drawBtn.disabled = false;
+
+      // Load and display
+      await loadRooms();
+
+    } catch (error) {
+      statusMsg.textContent = 'Something went wrong — please try again.';
+      drawBtn.disabled = false;
+      console.error(error);
+    }
+  }
+
+  // Render a room card
+  function renderRoomCard(room, index) {
+    const card = document.createElement('div');
+    card.className = 'room-card';
+    card.innerHTML = `
+      <p class="room-number">${room.room_number}</p>
+      <div class="room-guests">
+        <div class="room-guest">
+          <div class="guest-avatar">${getInitials(room.guest_1)}</div>
+          <span class="guest-full-name">${room.guest_1}</span>
+        </div>
+        <div class="room-guest">
+          <div class="guest-avatar" style="background: #3d2a5a;">${getInitials(room.guest_2)}</div>
+          <span class="guest-full-name">${room.guest_2}</span>
+        </div>
+      </div>
+    `;
+
+    // Staggered reveal animation
+    setTimeout(() => card.classList.add('revealed'), index * 150);
+    return card;
+  }
+
+  // Load rooms from database
+  async function loadRooms() {
+    const { data, error } = await db.from('rooms').select('*').order('room_number');
+
+    if (error || !data || data.length === 0) {
+      document.getElementById('balmoralRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
+      document.getElementById('cameronRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
+      return;
+    }
+
+    const balmoral = data.filter(r => r.hotel === 'Balmoral');
+    const cameron = data.filter(r => r.hotel === 'Cameron');
+
+    const balmoralGrid = document.getElementById('balmoralRooms');
+    const cameronGrid = document.getElementById('cameronRooms');
+
+    balmoralGrid.innerHTML = '';
+    cameronGrid.innerHTML = '';
+
+    balmoral.forEach((room, i) => balmoralGrid.appendChild(renderRoomCard(room, i)));
+    cameron.forEach((room, i) => cameronGrid.appendChild(renderRoomCard(room, i)));
+
+    document.getElementById('redrawBtn').style.display = 'inline-block';
+  }
+
+  // Load on page start
+  loadRooms();
+</script>
+
+</body>
+</html>
