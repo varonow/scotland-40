@@ -6,6 +6,7 @@
 <title>Room Draw | Joyce Just a Wee Bit 40</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -131,21 +132,37 @@
 
   .redraw-btn {
     background: transparent;
-    color: var(--stone);
-    border: 1px solid var(--mist);
-    padding: 0.75rem 2rem;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.75rem 1.5rem;
     font-family: 'Josefin Sans', sans-serif;
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     border-radius: 8px;
     cursor: pointer;
-    margin-top: 1rem;
     transition: all 0.2s;
     display: none;
   }
 
   .redraw-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .clear-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.75rem 1.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .clear-btn:hover { border-color: #e05c5c; color: #e05c5c; }
 
   /* STATUS */
   .status-msg {
@@ -335,6 +352,7 @@
     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
       <button class="draw-btn" id="drawBtn" onclick="drawRooms()">🎩 Draw Rooms!</button>
       <button class="redraw-btn" id="redrawBtn" onclick="drawRooms()">↺ Re-draw</button>
+      <button class="clear-btn" id="clearBtn" onclick="clearRooms()">✕ Clear Draw</button>
     </div>
   </div>
   <div class="status-msg" id="statusMsg"></div>
@@ -368,13 +386,10 @@
 </footer>
 
 <script>
-  // Supabase setup
-  const SUPABASE_URL = 'https://uzdefjgipyrhqucjwpmj.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_eYKUMrnIV3UeqN60KFH-tQ_yr47YF8M';
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Require login to view this page
+  requireAuth();
 
-  // All 10 guests
+  // Draw rooms and save to database
   const GUESTS = [
     'Joyce Saad',
     'Victoria Aronow',
@@ -445,6 +460,7 @@
 
       statusMsg.textContent = '✓ Rooms drawn and saved!';
       redrawBtn.style.display = 'inline-block';
+      document.getElementById('clearBtn').style.display = 'inline-block';
       drawBtn.disabled = false;
 
       // Load and display
@@ -480,6 +496,31 @@
     return card;
   }
 
+  // Clear all room assignments
+  async function clearRooms() {
+    if (!confirm('Are you sure you want to clear all room assignments?')) return;
+
+    const statusMsg = document.getElementById('statusMsg');
+    statusMsg.textContent = 'Clearing rooms...';
+
+    try {
+      await db.from('rooms').delete().neq('id', 0);
+
+      document.getElementById('redrawBtn').style.display = 'none';
+      document.getElementById('clearBtn').style.display = 'none';
+      statusMsg.textContent = '✓ Rooms cleared!';
+
+      document.getElementById('balmoralRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
+      document.getElementById('cameronRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
+
+      setTimeout(() => statusMsg.textContent = '', 3000);
+
+    } catch (error) {
+      statusMsg.textContent = 'Something went wrong — please try again.';
+      console.error(error);
+    }
+  }
+
   // Load rooms from database
   async function loadRooms() {
     const { data, error } = await db.from('rooms').select('*').order('room_number');
@@ -503,6 +544,7 @@
     cameron.forEach((room, i) => cameronGrid.appendChild(renderRoomCard(room, i)));
 
     document.getElementById('redrawBtn').style.display = 'inline-block';
+    document.getElementById('clearBtn').style.display = 'inline-block';
   }
 
   // Load on page start

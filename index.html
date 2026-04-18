@@ -6,6 +6,8 @@
 <title>Joyce — Just a Wee Bit 40 | Scotland 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
 </head>
 <body>
 
@@ -74,6 +76,7 @@
   <a href="#itinerary">Itinerary</a>
   <a href="#guests">Our Group</a>
   <a href="rooms.html">Room Draw</a>
+  <a href="#" onclick="signOut()" style="color: rgba(255,255,255,0.4);">Sign Out</a>
 </nav>
 
 <!-- FLIGHTS -->
@@ -306,7 +309,7 @@
       <p class="birthday-badge">★ Birthday Girl ★</p>
     </div>
 
-    <!-- Victoria — initials -->
+    <!-- Victoria — photo -->
     <div class="guest-card">
       <img class="guest-photo" src="images/victoria-aronow.jpg" alt="Victoria Aronow">
       <p class="guest-name">Victoria<br>Aronow</p>
@@ -336,7 +339,7 @@
       <p class="guest-name">Stephanie<br>Kattan</p>
     </div>
 
-    <!-- Rachel — initials -->
+    <!-- Rachel — photo -->
     <div class="guest-card">
       <img class="guest-photo" src="images/rachel-harari.jpg" alt="Rachel Harari">
       <p class="guest-name">Rachel<br>Harari</p>
@@ -354,7 +357,7 @@
       <p class="guest-name">Ann<br>Salame</p>
     </div>
 
-    <!-- Susie — initials -->
+    <!-- Susie — photo -->
     <div class="guest-card">
       <img class="guest-photo" src="images/susie-sutton.jpg" alt="Susie Sutton">
       <p class="guest-name">Susie<br>Sutton</p>
@@ -390,5 +393,8 @@
   <p class="footer-text">Joyce Saad · 40th Birthday · June 1–5, 2026</p>
 </footer>
 
+<script>
+  requireAuth();
+</script>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <title>Reset Password | Joyce Just a Wee Bit 40</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -241,11 +242,6 @@
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://uzdefjgipyrhqucjwpmj.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_eYKUMrnIV3UeqN60KFH-tQ_yr47YF8M';
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
-
   // Check if arriving from a reset email link
   db.auth.onAuthStateChange((event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
