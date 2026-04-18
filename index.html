@@ -5,526 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Joyce — Just a Wee Bit 40 | Scotland 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --forest: #2C4A3E;
-    --heather: #7B5EA7;
-    --gold: #C9A84C;
-    --cream: #F9F5EE;
-    --stone: #5C4A2A;
-    --mist: #E8E4DC;
-    --dark: #0D0D0D;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Cormorant Garamond', serif;
-    background: var(--cream);
-    color: var(--dark);
-    font-size: 18px;
-    line-height: 1.7;
-  }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    height: 100vh;
-    min-height: 600px;
-    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(123,94,167,0.3) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.15) 0%, transparent 50%);
-  }
-
-  .hero-tartan {
-    position: absolute;
-    inset: 0;
-    opacity: 0.04;
-    background-image:
-      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
-      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
-      repeating-linear-gradient(0deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 80px),
-      repeating-linear-gradient(90deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 80px);
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 2rem;
-  }
-
-  /* LOGO IN HERO */
-  .hero-logo {
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.1s forwards;
-  }
-
-  .hero-eyebrow {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.2s forwards;
-  }
-
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3.5rem, 10vw, 7rem);
-    font-weight: 400;
-    color: #fff;
-    line-height: 1.05;
-    margin-bottom: 0.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.4s forwards;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .hero-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.1rem, 3vw, 1.5rem);
-    font-weight: 300;
-    font-style: italic;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 2.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.6s forwards;
-  }
-
-  .hero-dates {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.75);
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.8s forwards;
-  }
-
-  .hero-divider {
-    width: 60px;
-    height: 1px;
-    background: var(--gold);
-    margin: 1.5rem auto;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.7s forwards;
-  }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.65);
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    animation: fadeUp 1s ease 1.2s both;
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
-    animation: scrollPulse 2s ease-in-out infinite;
-  }
-
-  /* NAV */
-  nav {
-    background: var(--forest);
-    padding: 0.9rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .nav-logo {
-    position: absolute;
-    left: 2rem;
-  }
-
-  nav a {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.85);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  nav a:hover { color: var(--gold); }
-
-  /* SECTIONS */
-  section { padding: 5rem 2rem; max-width: 860px; margin: 0 auto; }
-
-  .section-label {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--heather);
-    margin-bottom: 0.75rem;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 400;
-    color: var(--forest);
-    line-height: 1.2;
-    margin-bottom: 2rem;
-  }
-
-  .gold-rule {
-    width: 50px;
-    height: 2px;
-    background: var(--gold);
-    margin-bottom: 2.5rem;
-  }
-
-  /* FLIGHTS */
-  .flight-card {
-    background: var(--forest);
-    border-radius: 12px;
-    padding: 2rem;
-    color: white;
-    margin-bottom: 1rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .flight-card::before {
-    content: '';
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: rgba(201,168,76,0.1);
-  }
-
-  .flight-card.return { background: #3d2a5a; }
-
-  .flight-route {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .flight-city {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 400;
-  }
-
-  .flight-arrow {
-    color: var(--gold);
-    font-size: 1.2rem;
-    flex: 1;
-    text-align: center;
-    letter-spacing: 0.2em;
-  }
-
-  .flight-meta { display: flex; gap: 2rem; flex-wrap: wrap; }
-  .flight-meta-item { font-size: 1rem; }
-  .flight-meta-label {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.75);
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  /* ITINERARY */
-  .day-block {
-    margin-bottom: 3rem;
-    border-left: 2px solid var(--mist);
-    padding-left: 2rem;
-    position: relative;
-  }
-
-  .day-block::before {
-    content: '';
-    position: absolute;
-    left: -5px;
-    top: 8px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-  }
-
-  .day-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .day-number {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--heather);
-  }
-
-  .day-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--forest);
-  }
-
-  .day-date {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    color: #5C4A2A;
-    margin-left: auto;
-  }
-
-  .event-list { list-style: none; }
-
-  .event-item {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--mist);
-  }
-
-  .event-item:last-child { border-bottom: none; }
-
-  .event-time {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    color: #5C4A2A;
-    padding-top: 3px;
-    text-align: right;
-    padding-right: 1rem;
-    border-right: 1px solid var(--mist);
-  }
-
-  .event-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--dark);
-    margin-bottom: 2px;
-  }
-
-  .event-address {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-    color: #5C4A2A;
-  }
-
-  .tbd-block {
-    background: var(--mist);
-    border-radius: 8px;
-    padding: 2rem;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: #5C4A2A;
-    font-size: 1.1rem;
-    line-height: 1.8;
-  }
-
-  /* HOTELS */
-  .hotel-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .hotel-card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--mist);
-  }
-
-  .hotel-banner {
-    height: 200px;
-    overflow: hidden;
-  }
-
-  .hotel-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-
-  .hotel-card:hover .hotel-banner img {
-    transform: scale(1.04);
-  }
-
-  .hotel-body { padding: 1.5rem; }
-
-  .hotel-location {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--heather);
-    margin-bottom: 0.25rem;
-  }
-
-  .hotel-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    color: var(--forest);
-    margin-bottom: 0.5rem;
-  }
-
-  .hotel-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    color: #5C4A2A;
-    font-style: italic;
-  }
-
-  /* GUESTS */
-  .guest-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1rem;
-  }
-
-  .guest-card {
-    background: white;
-    border-radius: 10px;
-    padding: 1.25rem 1rem;
-    text-align: center;
-    border: 1px solid var(--mist);
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .guest-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
-  }
-
-  .guest-card.birthday {
-    border-color: var(--gold);
-    background: linear-gradient(135deg, #fff 60%, #fdf8ee);
-  }
-
-  .guest-initials {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--forest);
-    color: var(--gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    margin: 0 auto 0.75rem;
-  }
-
-  .guest-card.birthday .guest-initials {
-    background: var(--heather);
-  }
-
-  .guest-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    color: var(--dark);
-    line-height: 1.3;
-  }
-
-  .birthday-badge {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 4px;
-  }
-
-  /* FOOTER */
-  footer {
-    background: var(--dark);
-    text-align: center;
-    padding: 3rem 2rem;
-  }
-
-  .footer-logo { margin-bottom: 1.5rem; }
-
-  .footer-text {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    section { padding: 3rem 1.25rem; }
-    .flight-route { flex-direction: column; gap: 0.5rem; }
-    .event-item { grid-template-columns: 65px 1fr; }
-    .nav-logo { display: none; }
-  }
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -533,7 +14,6 @@
   <div class="hero-tartan"></div>
   <div class="hero-content">
 
-    <!-- PLACEHOLDER LOGO — replace SVG below with Ann's logo image when ready -->
     <div class="hero-logo">
       <svg width="220" height="88" viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(140, 18)">
@@ -546,16 +26,14 @@
           <line x1="-4" y1="2" x2="-7" y2="-3" stroke="#C9A84C" stroke-width="1"/>
           <line x1="7" y1="6" x2="11" y2="3" stroke="#C9A84C" stroke-width="1"/>
           <line x1="-7" y1="6" x2="-11" y2="3" stroke="#C9A84C" stroke-width="1"/>
-          <line x1="3" y1="-1" x2="5" y2="-6" stroke="#C9A84C" stroke-width="0.8"/>
-          <line x1="-3" y1="-1" x2="-5" y2="-6" stroke="#C9A84C" stroke-width="0.8"/>
           <circle cx="0" cy="7" r="2.5" fill="#C9A84C" opacity="0.6"/>
         </g>
         <text x="140" y="68" text-anchor="middle" font-family="'Playfair Display', serif" font-size="26" font-weight="400" fill="white" letter-spacing="6">JOYCE</text>
         <line x1="30" y1="81" x2="88" y2="81" stroke="#C9A84C" stroke-width="0.8" opacity="0.6"/>
         <line x1="192" y1="81" x2="250" y2="81" stroke="#C9A84C" stroke-width="0.8" opacity="0.6"/>
-        <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="10.5" fill="#C9A84C" letter-spacing="1">just a wee bit 40</text>
+        <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="13" fill="#C9A84C" letter-spacing="1">just a wee bit 40</text>
         <line x1="80" y1="98" x2="200" y2="98" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-        <text x="140" y="108" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-size="7.5" fill="rgba(255,255,255,0.35)" letter-spacing="3">SCOTLAND 2026</text>
+        <text x="140" y="108" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.6)" letter-spacing="3">SCOTLAND 2026</text>
       </svg>
     </div>
 
@@ -588,7 +66,7 @@
         <circle cx="0" cy="5" r="2" fill="#C9A84C" opacity="0.5"/>
       </g>
       <text x="42" y="22" font-family="'Playfair Display', serif" font-size="16" font-weight="400" fill="white" letter-spacing="3">JOYCE</text>
-      <text x="42" y="35" font-family="'Playfair Display', serif" font-style="italic" font-size="8" fill="#C9A84C" letter-spacing="0.5">just a wee bit 40</text>
+      <text x="42" y="35" font-family="'Playfair Display', serif" font-style="italic" font-size="11" fill="#C9A84C" letter-spacing="0.5">just a wee bit 40</text>
     </svg>
   </div>
   <a href="#flights">Flights</a>
@@ -650,7 +128,7 @@
   <div class="hotel-grid">
     <div class="hotel-card">
       <div class="hotel-banner">
-        <img src="balmoral.jpg" alt="The Balmoral Hotel, Edinburgh">
+        <img src="images/balmoral.jpg" alt="The Balmoral Hotel, Edinburgh">
       </div>
       <div class="hotel-body">
         <p class="hotel-location">Edinburgh · June 1–3</p>
@@ -660,7 +138,7 @@
     </div>
     <div class="hotel-card">
       <div class="hotel-banner">
-        <img src="cameron.jpg" alt="Cameron House, Loch Lomond">
+        <img src="images/cameron.jpg" alt="Cameron House, Loch Lomond">
       </div>
       <div class="hotel-body">
         <p class="hotel-location">Loch Lomond · June 3–5</p>
@@ -811,7 +289,6 @@
       </li>
     </ul>
   </div>
-
 </section>
 
 <!-- GUESTS -->
@@ -820,47 +297,68 @@
   <h2 class="section-title">The Birthday Party</h2>
   <div class="gold-rule"></div>
   <div class="guest-grid">
+
+    <!-- Birthday girl — initials until photo arrives -->
     <div class="guest-card birthday">
       <div class="guest-initials">JS</div>
       <p class="guest-name">Joyce<br>Saad</p>
       <p class="birthday-badge">★ Birthday Girl ★</p>
     </div>
+
+    <!-- Victoria — initials -->
     <div class="guest-card">
       <div class="guest-initials">VA</div>
       <p class="guest-name">Victoria<br>Aronow</p>
     </div>
+
+    <!-- Danielle — photo -->
     <div class="guest-card">
-      <div class="guest-initials">DD</div>
+      <img class="guest-photo" src="images/danielle-dabah.jpg" alt="Danielle Dabah">
       <p class="guest-name">Danielle<br>Dabah</p>
     </div>
+
+    <!-- Ginger — photo -->
     <div class="guest-card">
-      <div class="guest-initials">GA</div>
+      <img class="guest-photo" src="images/ginger-aronow.jpg" alt="Ginger Aronow">
       <p class="guest-name">Ginger<br>Aronow</p>
     </div>
+
+    <!-- Kimberly — photo -->
     <div class="guest-card">
-      <div class="guest-initials">KD</div>
+      <img class="guest-photo" src="images/kimberly-dabah.jpg" alt="Kimberly Dabah">
       <p class="guest-name">Kimberly<br>Dabah</p>
     </div>
+
+    <!-- Stephanie — photo -->
     <div class="guest-card">
-      <div class="guest-initials">SK</div>
+      <img class="guest-photo" src="images/stephanie-kattan.jpg" alt="Stephanie Kattan">
       <p class="guest-name">Stephanie<br>Kattan</p>
     </div>
+
+    <!-- Rachel — initials -->
     <div class="guest-card">
       <div class="guest-initials">RH</div>
       <p class="guest-name">Rachel<br>Harari</p>
     </div>
+
+    <!-- Joyce Salame — photo -->
     <div class="guest-card">
-      <div class="guest-initials">JS</div>
+      <img class="guest-photo" src="images/joyce-salame.jpg" alt="Joyce Salame">
       <p class="guest-name">Joyce<br>Salame</p>
     </div>
+
+    <!-- Ann — photo -->
     <div class="guest-card">
-      <div class="guest-initials">AS</div>
+      <img class="guest-photo" src="images/ann-salame.jpg" alt="Ann Salame">
       <p class="guest-name">Ann<br>Salame</p>
     </div>
+
+    <!-- Susie — initials -->
     <div class="guest-card">
       <div class="guest-initials">SS</div>
       <p class="guest-name">Susie<br>Sutton</p>
     </div>
+
   </div>
 </section>
 
@@ -883,9 +381,9 @@
       <text x="140" y="68" text-anchor="middle" font-family="'Playfair Display', serif" font-size="26" font-weight="400" fill="white" letter-spacing="6">JOYCE</text>
       <line x1="30" y1="81" x2="88" y2="81" stroke="#C9A84C" stroke-width="0.8" opacity="0.6"/>
       <line x1="192" y1="81" x2="250" y2="81" stroke="#C9A84C" stroke-width="0.8" opacity="0.6"/>
-      <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="10.5" fill="#C9A84C" letter-spacing="1">just a wee bit 40</text>
+      <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="13" fill="#C9A84C" letter-spacing="1">just a wee bit 40</text>
       <line x1="80" y1="98" x2="200" y2="98" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
-      <text x="140" y="108" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-size="7.5" fill="rgba(255,255,255,0.35)" letter-spacing="3">SCOTLAND 2026</text>
+      <text x="140" y="108" text-anchor="middle" font-family="'Josefin Sans', sans-serif" font-size="10" fill="rgba(255,255,255,0.5)" letter-spacing="3">SCOTLAND 2026</text>
     </svg>
   </div>
   <p class="footer-text">Joyce Saad · 40th Birthday · June 1–5, 2026</p>
