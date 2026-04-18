@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .card {
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+
+  .logo { margin-bottom: 2rem; }
+
+  .card-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.25rem;
+  }
+
+  .card-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .gold-rule {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+    text-align: left;
+  }
+
+  label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  input:focus { border-color: var(--forest); }
+
+  .password-hint {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--stone);
+    margin-top: 0.25rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.05em;
+  }
+
+  .submit-btn:hover { background: #1a2e28; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .switch-link {
+    margin-top: 1.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+  }
+
+  .switch-link a {
+    color: var(--heather);
+    text-decoration: none;
+  }
+
+  .switch-link a:hover { text-decoration: underline; }
+
+  .error-msg {
+    background: #fdf0f0;
+    border: 1px solid #f5c6c6;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #c0392b;
+    margin-bottom: 1rem;
+    display: none;
+    text-align: left;
+  }
+
+  .success-msg {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #166534;
+    margin-bottom: 1rem;
+    display: none;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="logo">
+    <svg width="160" height="64" viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(140, 18)">
+        <line x1="0" y1="32" x2="0" y2="14" stroke="#2C4A3E" stroke-width="1.5"/>
+        <path d="M0,28 Q-12,22 -10,14" stroke="#2C4A3E" stroke-width="1" fill="none"/>
+        <path d="M0,28 Q12,22 10,14" stroke="#2C4A3E" stroke-width="1" fill="none"/>
+        <ellipse cx="0" cy="8" rx="9" ry="7" fill="none" stroke="#7B5EA7" stroke-width="1.2"/>
+        <line x1="0" y1="1" x2="0" y2="-5" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="4" y1="2" x2="7" y2="-3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="-4" y1="2" x2="-7" y2="-3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="7" y1="6" x2="11" y2="3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="-7" y1="6" x2="-11" y2="3" stroke="#7B5EA7" stroke-width="1"/>
+        <circle cx="0" cy="7" r="2.5" fill="#7B5EA7" opacity="0.6"/>
+      </g>
+      <text x="140" y="68" text-anchor="middle" font-family="'Playfair Display', serif" font-size="26" font-weight="400" fill="#2C4A3E" letter-spacing="6">JOYCE</text>
+      <line x1="30" y1="81" x2="88" y2="81" stroke="#C9A84C" stroke-width="0.8"/>
+      <line x1="192" y1="81" x2="250" y2="81" stroke="#C9A84C" stroke-width="0.8"/>
+      <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="13" fill="#7B5EA7" letter-spacing="1">just a wee bit 40</text>
+    </svg>
+  </div>
+
+  <p class="card-eyebrow">First time here?</p>
+  <h1 class="card-title">Create Account</h1>
+  <p class="card-subtitle">join the Scotland adventure</p>
+  <div class="gold-rule"></div>
+
+  <div class="error-msg" id="errorMsg"></div>
+  <div class="success-msg" id="successMsg"></div>
+
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+  </div>
+
+  <div class="form-group">
+    <label for="password">Choose a Password</label>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="new-password">
+    <p class="password-hint">At least 8 characters</p>
+  </div>
+
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="••••••••" autocomplete="new-password">
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="register()">Create Account</button>
+
+  <p class="switch-link">
+    Already have an account? <a href="login.html">Sign in</a>
+  </p>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://uzdefjgipyrhqucjwpmj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_eYKUMrnIV3UeqN60KFH-tQ_yr47YF8M';
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // If already logged in, redirect to home
+  db.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.href = 'index.html';
+  });
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+  }
+
+  function showSuccess(msg) {
+    const el = document.getElementById('successMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  async function register() {
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const btn = document.getElementById('submitBtn');
+
+    // Basic validation
+    if (!email || !password || !confirmPassword) {
+      showError('Please fill in all fields.');
+      return;
+    }
+
+    if (password.length < 8) {
+      showError('Password must be at least 8 characters.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showError('Passwords do not match.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+
+    // Check if email is on the whitelist
+    const { data: allowed, error: checkError } = await db
+      .from('allowed_users')
+      .select('name, email')
+      .eq('email', email)
+      .single();
+
+    if (checkError || !allowed) {
+      showError('Sorry, this email address is not on the guest list. Please contact Victoria if you think this is a mistake.');
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+      return;
+    }
+
+    btn.textContent = 'Creating account...';
+
+    // Register with Supabase
+    const { data, error } = await db.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: allowed.name }
+      }
+    });
+
+    if (error) {
+      showError(error.message);
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+      return;
+    }
+
+    // Success!
+    showSuccess(`Welcome ${allowed.name}! Please check your email to confirm your account, then sign in.`);
+    btn.disabled = true;
+    btn.textContent = 'Account Created!';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset Password | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .card {
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+  }
+
+  .logo { margin-bottom: 2rem; }
+
+  .card-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.25rem;
+  }
+
+  .card-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .gold-rule {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+    text-align: left;
+  }
+
+  label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  input:focus { border-color: var(--forest); }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.05em;
+  }
+
+  .submit-btn:hover { background: #1a2e28; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .switch-link {
+    margin-top: 1.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+  }
+
+  .switch-link a {
+    color: var(--heather);
+    text-decoration: none;
+  }
+
+  .switch-link a:hover { text-decoration: underline; }
+
+  .error-msg {
+    background: #fdf0f0;
+    border: 1px solid #f5c6c6;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #c0392b;
+    margin-bottom: 1rem;
+    display: none;
+    text-align: left;
+  }
+
+  .success-msg {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: #166534;
+    margin-bottom: 1rem;
+    display: none;
+    text-align: left;
+  }
+
+  /* New password form - shown after clicking reset link in email */
+  .new-password-section { display: none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="logo">
+    <svg width="160" height="64" viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(140, 18)">
+        <line x1="0" y1="32" x2="0" y2="14" stroke="#2C4A3E" stroke-width="1.5"/>
+        <path d="M0,28 Q-12,22 -10,14" stroke="#2C4A3E" stroke-width="1" fill="none"/>
+        <path d="M0,28 Q12,22 10,14" stroke="#2C4A3E" stroke-width="1" fill="none"/>
+        <ellipse cx="0" cy="8" rx="9" ry="7" fill="none" stroke="#7B5EA7" stroke-width="1.2"/>
+        <line x1="0" y1="1" x2="0" y2="-5" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="4" y1="2" x2="7" y2="-3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="-4" y1="2" x2="-7" y2="-3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="7" y1="6" x2="11" y2="3" stroke="#7B5EA7" stroke-width="1"/>
+        <line x1="-7" y1="6" x2="-11" y2="3" stroke="#7B5EA7" stroke-width="1"/>
+        <circle cx="0" cy="7" r="2.5" fill="#7B5EA7" opacity="0.6"/>
+      </g>
+      <text x="140" y="68" text-anchor="middle" font-family="'Playfair Display', serif" font-size="26" font-weight="400" fill="#2C4A3E" letter-spacing="6">JOYCE</text>
+      <line x1="30" y1="81" x2="88" y2="81" stroke="#C9A84C" stroke-width="0.8"/>
+      <line x1="192" y1="81" x2="250" y2="81" stroke="#C9A84C" stroke-width="0.8"/>
+      <text x="140" y="85" text-anchor="middle" font-family="'Playfair Display', serif" font-style="italic" font-size="13" fill="#7B5EA7" letter-spacing="1">just a wee bit 40</text>
+    </svg>
+  </div>
+
+  <!-- STEP 1: Request reset email -->
+  <div id="requestSection">
+    <p class="card-eyebrow">No worries!</p>
+    <h1 class="card-title">Reset Password</h1>
+    <p class="card-subtitle">we'll send you a link</p>
+    <div class="gold-rule"></div>
+
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <div class="form-group">
+      <label for="email">Your Email Address</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="requestReset()">Send Reset Link</button>
+
+    <p class="switch-link">
+      Remembered it? <a href="login.html">Back to sign in</a>
+    </p>
+  </div>
+
+  <!-- STEP 2: Set new password (shown when arriving from reset email link) -->
+  <div id="newPasswordSection" class="new-password-section">
+    <p class="card-eyebrow">Almost there!</p>
+    <h1 class="card-title">New Password</h1>
+    <p class="card-subtitle">choose something memorable</p>
+    <div class="gold-rule"></div>
+
+    <div class="error-msg" id="errorMsg2"></div>
+    <div class="success-msg" id="successMsg2"></div>
+
+    <div class="form-group">
+      <label for="newPassword">New Password</label>
+      <input type="password" id="newPassword" placeholder="••••••••" autocomplete="new-password">
+    </div>
+
+    <div class="form-group">
+      <label for="confirmNewPassword">Confirm New Password</label>
+      <input type="password" id="confirmNewPassword" placeholder="••••••••" autocomplete="new-password">
+    </div>
+
+    <button class="submit-btn" id="submitBtn2" onclick="updatePassword()">Update Password</button>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://uzdefjgipyrhqucjwpmj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_eYKUMrnIV3UeqN60KFH-tQ_yr47YF8M';
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Check if arriving from a reset email link
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      document.getElementById('requestSection').style.display = 'none';
+      document.getElementById('newPasswordSection').style.display = 'block';
+    }
+  });
+
+  function showError(msg, num = '') {
+    const el = document.getElementById('errorMsg' + num);
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('successMsg' + num).style.display = 'none';
+  }
+
+  function showSuccess(msg, num = '') {
+    const el = document.getElementById('successMsg' + num);
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('errorMsg' + num).style.display = 'none';
+  }
+
+  async function requestReset() {
+    const email = document.getElementById('email').value.trim();
+    const btn = document.getElementById('submitBtn');
+
+    if (!email) {
+      showError('Please enter your email address.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://joycejustaweebit40.com/reset.html'
+    });
+
+    if (error) {
+      showError('Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Send Reset Link';
+      return;
+    }
+
+    showSuccess('Check your email! Click the link we sent to reset your password.');
+    btn.textContent = 'Email sent!';
+  }
+
+  async function updatePassword() {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    const btn = document.getElementById('submitBtn2');
+
+    if (!newPassword || !confirmNewPassword) {
+      showError('Please fill in both fields.', '2');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      showError('Password must be at least 8 characters.', '2');
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      showError('Passwords do not match.', '2');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+
+    const { error } = await db.auth.updateUser({ password: newPassword });
+
+    if (error) {
+      showError('Something went wrong. Please try again.', '2');
+      btn.disabled = false;
+      btn.textContent = 'Update Password';
+      return;
+    }
+
+    showSuccess('Password updated! Taking you to sign in...', '2');
+    setTimeout(() => window.location.href = 'login.html', 2000);
+  }
+</script>
+
+</body>
+</html>
