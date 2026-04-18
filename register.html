@@ -306,10 +306,19 @@
       return;
     }
 
-    // Success!
-    showSuccess(`Welcome ${allowed.name}! Please check your email to confirm your account, then sign in.`);
-    btn.disabled = true;
-    btn.textContent = 'Account Created!';
+    // Success — auto sign them in
+    const { error: signInError } = await db.auth.signInWithPassword({ email, password });
+
+    if (signInError) {
+      // Signed up but couldn't auto login — send to login page
+      showSuccess(`Welcome ${allowed.name}! Please check your email to confirm your account, then sign in.`);
+      btn.textContent = 'Account Created!';
+      setTimeout(() => window.location.href = 'login.html', 3000);
+      return;
+    }
+
+    // Redirect to home
+    window.location.href = 'index.html';
   }
 </script>
 
