@@ -31,7 +31,6 @@
     min-height: 100vh;
   }
 
-  /* HEADER */
   header {
     background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
     padding: 3rem 2rem;
@@ -93,33 +92,15 @@
     font-size: 1.2rem;
   }
 
-  /* MAIN */
   main { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
-
-  /* DRAW BUTTON */
-  .draw-section {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .draw-intro {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    color: var(--stone);
-    font-style: italic;
-    margin-bottom: 2rem;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-  }
 
   .draw-btn {
     background: var(--forest);
     color: var(--gold);
     border: none;
-    padding: 1.2rem 3rem;
+    padding: 1rem 1.75rem;
     font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
@@ -130,13 +111,13 @@
   .draw-btn:active { transform: translateY(0); }
   .draw-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-  .redraw-btn {
+  .small-btn {
     background: transparent;
-    color: rgba(255,255,255,0.6);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--mist);
+    color: var(--stone);
+    padding: 0.6rem 1.2rem;
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     border-radius: 8px;
@@ -145,38 +126,27 @@
     display: none;
   }
 
-  .redraw-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .small-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .small-btn.danger:hover { border-color: #e05c5c; color: #e05c5c; }
 
-  .clear-btn {
-    background: transparent;
-    color: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 0.75rem 1.5rem;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: none;
-  }
-
-  .clear-btn:hover { border-color: #e05c5c; color: #e05c5c; }
-
-  /* STATUS */
   .status-msg {
     font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     color: var(--heather);
-    margin-top: 1rem;
-    min-height: 20px;
+    margin-top: 0.5rem;
+    min-height: 18px;
   }
 
-  /* HOTEL SECTIONS */
-  .hotel-section {
-    margin-bottom: 4rem;
+  .hotel-section { margin-bottom: 4rem; }
+
+  .hotel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .hotel-label {
@@ -185,7 +155,7 @@
     letter-spacing: 0.35em;
     text-transform: uppercase;
     color: var(--heather);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .hotel-title {
@@ -193,7 +163,7 @@
     font-size: 2rem;
     font-weight: 400;
     color: var(--forest);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .hotel-dates {
@@ -201,17 +171,19 @@
     font-size: 12px;
     letter-spacing: 0.15em;
     color: var(--stone);
-    margin-bottom: 2rem;
   }
 
-  .gold-rule {
-    width: 40px;
-    height: 2px;
-    background: var(--gold);
-    margin-bottom: 2rem;
+  .hotel-admin {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
   }
 
-  /* ROOM CARDS */
+  .hotel-admin-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+
+  .gold-rule { width: 40px; height: 2px; background: var(--gold); margin-bottom: 2rem; }
+
   .rooms-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -223,15 +195,12 @@
     border-radius: 12px;
     border: 1px solid var(--mist);
     padding: 1.5rem;
-    transition: border-color 0.2s, transform 0.3s;
     opacity: 0;
     transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
   }
 
-  .room-card.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .room-card.revealed { opacity: 1; transform: translateY(0); }
 
   .room-number {
     font-family: 'Josefin Sans', sans-serif;
@@ -242,17 +211,8 @@
     margin-bottom: 0.75rem;
   }
 
-  .room-guests {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .room-guest {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
+  .room-guests { display: flex; flex-direction: column; gap: 0.5rem; }
+  .room-guest { display: flex; align-items: center; gap: 0.75rem; }
 
   .guest-avatar {
     width: 40px;
@@ -268,11 +228,7 @@
     flex-shrink: 0;
   }
 
-  .guest-full-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    color: var(--dark);
-  }
+  .guest-full-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--dark); }
 
   .empty-state {
     text-align: center;
@@ -285,34 +241,6 @@
     border: 1px dashed var(--mist);
   }
 
-  /* ADMIN BADGE */
-  .admin-section {
-    background: var(--forest);
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    margin-bottom: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .admin-text {
-    color: rgba(255,255,255,0.8);
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-  }
-
-  .admin-text strong {
-    color: var(--gold);
-    display: block;
-    font-size: 15px;
-    margin-bottom: 2px;
-  }
-
-  /* FOOTER */
   footer {
     background: var(--dark);
     text-align: center;
@@ -327,6 +255,8 @@
   @media (max-width: 600px) {
     main { padding: 2rem 1.25rem; }
     .rooms-grid { grid-template-columns: 1fr; }
+    .hotel-header { flex-direction: column; }
+    .hotel-admin { align-items: flex-start; }
   }
 </style>
 </head>
@@ -343,39 +273,49 @@
 
 <main>
 
-  <!-- ADMIN SECTION -->
-  <div class="admin-section" id="adminControls" style="display: none;">
-    <div class="admin-text">
-      <strong>Admin Controls</strong>
-      Only Victoria can draw and re-draw rooms
-    </div>
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-      <button class="draw-btn" id="drawBtn" onclick="drawRooms()" style="display: none;">🎩 Draw Rooms!</button>
-      <button class="redraw-btn" id="redrawBtn" onclick="drawRooms()">↺ Re-draw</button>
-      <button class="clear-btn" id="clearBtn" onclick="clearRooms()">✕ Clear Draw</button>
-    </div>
-  </div>
-  <div class="status-msg" id="statusMsg"></div>
-
   <!-- BALMORAL -->
   <div class="hotel-section">
-    <p class="hotel-label">Hotel One</p>
-    <h2 class="hotel-title">The Balmoral</h2>
-    <p class="hotel-dates">Edinburgh · June 1–3, 2026</p>
+    <div class="hotel-header">
+      <div>
+        <p class="hotel-label">Hotel One</p>
+        <h2 class="hotel-title">The Balmoral</h2>
+        <p class="hotel-dates">Edinburgh · June 1–3, 2026</p>
+      </div>
+      <div class="hotel-admin" id="balmoralAdmin">
+        <div class="hotel-admin-btns">
+          <button class="draw-btn" id="balmoralDrawBtn" onclick="drawHotel('Balmoral')">🎩 Draw Balmoral!</button>
+          <button class="small-btn" id="balmoralRedrawBtn" onclick="drawHotel('Balmoral')">↺ Re-draw</button>
+          <button class="small-btn danger" id="balmoralClearBtn" onclick="clearHotel('Balmoral')">✕ Clear</button>
+        </div>
+        <div class="status-msg" id="balmoralStatus"></div>
+      </div>
+    </div>
     <div class="gold-rule"></div>
     <div class="rooms-grid" id="balmoralRooms">
-      <div class="empty-state">Room assignments will appear here after the draw!</div>
+      <div class="empty-state">Draw Balmoral rooms above to see assignments!</div>
     </div>
   </div>
 
   <!-- CAMERON HOUSE -->
   <div class="hotel-section">
-    <p class="hotel-label">Hotel Two</p>
-    <h2 class="hotel-title">Cameron House</h2>
-    <p class="hotel-dates">Loch Lomond · June 3–5, 2026</p>
+    <div class="hotel-header">
+      <div>
+        <p class="hotel-label">Hotel Two</p>
+        <h2 class="hotel-title">Cameron House</h2>
+        <p class="hotel-dates">Loch Lomond · June 3–5, 2026</p>
+      </div>
+      <div class="hotel-admin" id="cameronAdmin">
+        <div class="hotel-admin-btns">
+          <button class="draw-btn" id="cameronDrawBtn" onclick="drawHotel('Cameron')">🎩 Draw Cameron!</button>
+          <button class="small-btn" id="cameronRedrawBtn" onclick="drawHotel('Cameron')">↺ Re-draw</button>
+          <button class="small-btn danger" id="cameronClearBtn" onclick="clearHotel('Cameron')">✕ Clear</button>
+        </div>
+        <div class="status-msg" id="cameronStatus"></div>
+      </div>
+    </div>
     <div class="gold-rule"></div>
     <div class="rooms-grid" id="cameronRooms">
-      <div class="empty-state">Room assignments will appear here after the draw!</div>
+      <div class="empty-state">Draw Cameron House rooms above to see assignments!</div>
     </div>
   </div>
 
@@ -386,38 +326,16 @@
 </footer>
 
 <script>
-  // Require login to view this page
   requireAuth();
 
-  // Show admin controls only for admin users
-  async function initAdminControls() {
-    const admin = await isAdmin();
-    if (admin) {
-      document.getElementById('drawBtn').style.display = 'inline-block';
-      document.getElementById('adminControls').style.display = 'flex';
-    }
-  }
-
-  // Draw rooms and save to database
   const GUESTS = [
-    'Joyce Saad',
-    'Victoria Aronow',
-    'Danielle Dabah',
-    'Ginger Aronow',
-    'Kimberly Dabah',
-    'Stephanie Kattan',
-    'Rachel Harari',
-    'Joyce Salame',
-    'Ann Salame',
-    'Susie Sutton'
+    'Joyce Saad', 'Victoria Aronow', 'Danielle Dabah', 'Ginger Aronow',
+    'Kimberly Dabah', 'Stephanie Kattan', 'Rachel Harari',
+    'Joyce Salame', 'Ann Salame', 'Susie Sutton'
   ];
 
-  // Get initials from name
-  function getInitials(name) {
-    return name.split(' ').map(n => n[0]).join('');
-  }
+  function getInitials(name) { return name.split(' ').map(n => n[0]).join(''); }
 
-  // Shuffle array randomly
   function shuffle(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -427,53 +345,43 @@
     return arr;
   }
 
-  // Draw rooms and save to database
-  async function drawRooms() {
-    const drawBtn = document.getElementById('drawBtn');
-    const redrawBtn = document.getElementById('redrawBtn');
-    const statusMsg = document.getElementById('statusMsg');
+  async function initAdminControls() {
+    const admin = await isAdmin();
+    if (admin) {
+      document.getElementById('balmoralAdmin').style.display = 'flex';
+      document.getElementById('cameronAdmin').style.display = 'flex';
+    }
+  }
+
+  async function drawHotel(hotel) {
+    const key = hotel.toLowerCase();
+    const drawBtn = document.getElementById(`${key}DrawBtn`);
+    const statusMsg = document.getElementById(`${key}Status`);
 
     drawBtn.disabled = true;
     statusMsg.textContent = 'Drawing rooms...';
 
-    // Shuffle guests
     const shuffled = shuffle(GUESTS);
-
-    // Create 5 pairs
-    const pairs = [];
+    const rows = [];
     for (let i = 0; i < 10; i += 2) {
-      pairs.push({ guest_1: shuffled[i], guest_2: shuffled[i + 1] });
+      rows.push({
+        hotel,
+        room_number: `Room ${i / 2 + 1}`,
+        guest_1: shuffled[i],
+        guest_2: shuffled[i + 1]
+      });
     }
 
     try {
-      // Delete existing assignments
-      await db.from('rooms').delete().neq('id', 0);
+      await db.from('rooms').delete().eq('hotel', hotel);
+      await db.from('rooms').insert(rows);
 
-      // Insert Balmoral rooms (pairs 0-4)
-      const balmoralRows = pairs.map((pair, i) => ({
-        hotel: 'Balmoral',
-        room_number: `Room ${i + 1}`,
-        guest_1: pair.guest_1,
-        guest_2: pair.guest_2
-      }));
-
-      // Insert Cameron House rooms (same pairs, different hotel)
-      const cameronRows = pairs.map((pair, i) => ({
-        hotel: 'Cameron',
-        room_number: `Room ${i + 1}`,
-        guest_1: pair.guest_1,
-        guest_2: pair.guest_2
-      }));
-
-      await db.from('rooms').insert([...balmoralRows, ...cameronRows]);
-
-      statusMsg.textContent = '✓ Rooms drawn and saved!';
-      redrawBtn.style.display = 'inline-block';
-      document.getElementById('clearBtn').style.display = 'inline-block';
+      const label = hotel === 'Cameron' ? 'Cameron House' : 'Balmoral';
+      statusMsg.textContent = `✓ ${label} rooms drawn!`;
+      document.getElementById(`${key}RedrawBtn`).style.display = 'inline-block';
+      document.getElementById(`${key}ClearBtn`).style.display = 'inline-block';
       drawBtn.disabled = false;
-
-      // Load and display
-      await loadRooms();
+      await loadHotel(hotel);
 
     } catch (error) {
       statusMsg.textContent = 'Something went wrong — please try again.';
@@ -482,7 +390,27 @@
     }
   }
 
-  // Render a room card
+  async function clearHotel(hotel) {
+    const label = hotel === 'Cameron' ? 'Cameron House' : 'Balmoral';
+    if (!confirm(`Clear all ${label} room assignments?`)) return;
+
+    const key = hotel.toLowerCase();
+    const statusMsg = document.getElementById(`${key}Status`);
+    statusMsg.textContent = 'Clearing...';
+
+    try {
+      await db.from('rooms').delete().eq('hotel', hotel);
+      document.getElementById(`${key}RedrawBtn`).style.display = 'none';
+      document.getElementById(`${key}ClearBtn`).style.display = 'none';
+      statusMsg.textContent = '✓ Cleared!';
+      document.getElementById(`${key}Rooms`).innerHTML = `<div class="empty-state">Draw ${label} rooms above to see assignments!</div>`;
+      setTimeout(() => statusMsg.textContent = '', 3000);
+    } catch (error) {
+      statusMsg.textContent = 'Something went wrong — please try again.';
+      console.error(error);
+    }
+  }
+
   function renderRoomCard(room, index) {
     const card = document.createElement('div');
     card.className = 'room-card';
@@ -499,65 +427,33 @@
         </div>
       </div>
     `;
-
-    // Staggered reveal animation
     setTimeout(() => card.classList.add('revealed'), index * 150);
     return card;
   }
 
-  // Clear all room assignments
-  async function clearRooms() {
-    if (!confirm('Are you sure you want to clear all room assignments?')) return;
+  async function loadHotel(hotel) {
+    const key = hotel.toLowerCase();
+    const { data } = await db.from('rooms').select('*').eq('hotel', hotel).order('room_number');
+    const grid = document.getElementById(`${key}Rooms`);
+    const label = hotel === 'Cameron' ? 'Cameron House' : 'Balmoral';
 
-    const statusMsg = document.getElementById('statusMsg');
-    statusMsg.textContent = 'Clearing rooms...';
-
-    try {
-      await db.from('rooms').delete().neq('id', 0);
-
-      document.getElementById('redrawBtn').style.display = 'none';
-      document.getElementById('clearBtn').style.display = 'none';
-      statusMsg.textContent = '✓ Rooms cleared!';
-
-      document.getElementById('balmoralRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
-      document.getElementById('cameronRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
-
-      setTimeout(() => statusMsg.textContent = '', 3000);
-
-    } catch (error) {
-      statusMsg.textContent = 'Something went wrong — please try again.';
-      console.error(error);
-    }
-  }
-
-  // Load rooms from database
-  async function loadRooms() {
-    const { data, error } = await db.from('rooms').select('*').order('room_number');
-
-    if (error || !data || data.length === 0) {
-      document.getElementById('balmoralRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
-      document.getElementById('cameronRooms').innerHTML = '<div class="empty-state">Room assignments will appear here after the draw!</div>';
+    if (!data || data.length === 0) {
+      grid.innerHTML = `<div class="empty-state">Draw ${label} rooms above to see assignments!</div>`;
       return;
     }
 
-    const balmoral = data.filter(r => r.hotel === 'Balmoral');
-    const cameron = data.filter(r => r.hotel === 'Cameron');
+    grid.innerHTML = '';
+    data.forEach((room, i) => grid.appendChild(renderRoomCard(room, i)));
 
-    const balmoralGrid = document.getElementById('balmoralRooms');
-    const cameronGrid = document.getElementById('cameronRooms');
-
-    balmoralGrid.innerHTML = '';
-    cameronGrid.innerHTML = '';
-
-    balmoral.forEach((room, i) => balmoralGrid.appendChild(renderRoomCard(room, i)));
-    cameron.forEach((room, i) => cameronGrid.appendChild(renderRoomCard(room, i)));
-
-    document.getElementById('redrawBtn').style.display = 'inline-block';
-    document.getElementById('clearBtn').style.display = 'inline-block';
+    const admin = await isAdmin();
+    if (admin) {
+      document.getElementById(`${key}RedrawBtn`).style.display = 'inline-block';
+      document.getElementById(`${key}ClearBtn`).style.display = 'inline-block';
+    }
   }
 
-  // Load on page start
-  loadRooms();
+  loadHotel('Balmoral');
+  loadHotel('Cameron');
   initAdminControls();
 </script>
 
