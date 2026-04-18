@@ -344,13 +344,13 @@
 <main>
 
   <!-- ADMIN SECTION -->
-  <div class="admin-section">
+  <div class="admin-section" id="adminControls" style="display: none;">
     <div class="admin-text">
       <strong>Admin Controls</strong>
       Only Victoria can draw and re-draw rooms
     </div>
     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-      <button class="draw-btn" id="drawBtn" onclick="drawRooms()">🎩 Draw Rooms!</button>
+      <button class="draw-btn" id="drawBtn" onclick="drawRooms()" style="display: none;">🎩 Draw Rooms!</button>
       <button class="redraw-btn" id="redrawBtn" onclick="drawRooms()">↺ Re-draw</button>
       <button class="clear-btn" id="clearBtn" onclick="clearRooms()">✕ Clear Draw</button>
     </div>
@@ -388,6 +388,15 @@
 <script>
   // Require login to view this page
   requireAuth();
+
+  // Show admin controls only for admin users
+  async function initAdminControls() {
+    const admin = await isAdmin();
+    if (admin) {
+      document.getElementById('drawBtn').style.display = 'inline-block';
+      document.getElementById('adminControls').style.display = 'flex';
+    }
+  }
 
   // Draw rooms and save to database
   const GUESTS = [
@@ -549,6 +558,7 @@
 
   // Load on page start
   loadRooms();
+  initAdminControls();
 </script>
 
 </body>
