@@ -560,14 +560,14 @@ footer {
   opacity: 0;
   animation: fadeUp 0.8s ease 1s forwards;
 }
- 
+
 .countdown-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
 }
- 
+
 .countdown-number {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 6vw, 3.5rem);
@@ -577,7 +577,7 @@ footer {
   min-width: 2ch;
   text-align: center;
 }
- 
+
 .countdown-label {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 10px;
@@ -585,7 +585,7 @@ footer {
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
 }
- 
+
 .countdown-sep {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -593,11 +593,11 @@ footer {
   opacity: 0.6;
   margin-bottom: 1.2rem;
 }
- 
+
 .countdown-until {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: rgba(255,255,255,0.5);
   margin-top: 0.75rem;
   opacity: 0;
