@@ -44,6 +44,30 @@
     <p class="hero-subtitle">Five days in the Highlands with her favourite women</p>
     <div class="hero-divider"></div>
     <p class="hero-dates">June 1 – 5, 2026 &nbsp;·&nbsp; Edinburgh & Loch Lomond</p>
+
+    <!-- COUNTDOWN TIMER -->
+    <div class="countdown" id="countdown">
+      <div class="countdown-item">
+        <span class="countdown-number" id="days">00</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="hours">00</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="minutes">00</span>
+        <span class="countdown-label">Minutes</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="seconds">00</span>
+        <span class="countdown-label">Seconds</span>
+      </div>
+    </div>
+    <p class="countdown-until">until we land in Edinburgh 🏴󠁧󠁢󠁳󠁣󠁴󠁿</p>
   </div>
   <div class="scroll-hint">
     <div class="scroll-line"></div>
@@ -395,6 +419,36 @@
 
 <script>
   requireAuth();
+
+  // Countdown to June 1, 2026 9:20 AM Edinburgh time (BST = UTC+1)
+  const TARGET = new Date('2026-06-01T08:20:00Z'); // 9:20 AM BST = 8:20 AM UTC
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = TARGET - now;
+
+    if (diff <= 0) {
+      document.getElementById('days').textContent = '00';
+      document.getElementById('hours').textContent = '00';
+      document.getElementById('minutes').textContent = '00';
+      document.getElementById('seconds').textContent = '00';
+      document.querySelector('.countdown-until').textContent = "We're in Scotland! 🎉🏴󠁧󠁢󠁳󠁣󠁴󠁿";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 </script>
 </body>
 </html>
