@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Messages | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+
+  .header-content { position: relative; z-index: 2; }
+
+  .back-link {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--gold); }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-title em { font-style: italic; color: var(--gold); }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+  }
+
+  main { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+
+  /* COUNTDOWN TO REVEAL */
+  .reveal-banner {
+    background: var(--forest);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: white;
+  }
+
+  .reveal-banner.revealed {
+    background: linear-gradient(135deg, var(--forest), #3d2a5a);
+  }
+
+  .reveal-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .reveal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .reveal-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+  }
+
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    height: 6px;
+    margin: 1.25rem auto;
+    max-width: 300px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* WRITE YOUR MESSAGE */
+  .write-section {
+    margin-bottom: 3rem;
+  }
+
+  .section-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.5rem;
+  }
+
+  .gold-rule { width: 40px; height: 2px; background: var(--gold); margin-bottom: 2rem; }
+
+  .message-box {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 2rem;
+  }
+
+  .message-box.has-message { border-color: var(--gold); }
+
+  textarea {
+    width: 100%;
+    min-height: 160px;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.7;
+  }
+
+  textarea:focus { border-color: var(--forest); }
+
+  .char-count {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .save-btn {
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 0.9rem 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .save-btn:hover { background: #1a2e28; transform: translateY(-1px); }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .delete-btn {
+    background: transparent;
+    border: 1px solid var(--mist);
+    color: var(--stone);
+    padding: 0.9rem 1.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .delete-btn:hover { border-color: #e05c5c; color: #e05c5c; }
+
+  .status-msg {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    margin-top: 0.75rem;
+    min-height: 18px;
+  }
+
+  /* MESSAGES REVEAL */
+  .messages-section { margin-bottom: 3rem; }
+
+  .locked-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed var(--mist);
+  }
+
+  .lock-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .locked-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--forest);
+    margin-bottom: 0.5rem;
+  }
+
+  .locked-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 1.1rem;
+  }
+
+  /* Revealed message cards */
+  .messages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .message-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+
+  .message-card.revealed { opacity: 1; transform: translateY(0); }
+
+  .message-author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .message-author {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.75rem;
+  }
+
+  .message-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    color: var(--dark);
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  .message-date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    margin-top: 1rem;
+  }
+
+  footer {
+    background: var(--dark);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1.25rem; }
+    .messages-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="back-link">← Back to Itinerary</a>
+    <p class="header-eyebrow">Scotland 2026 · For Joyce</p>
+    <h1 class="header-title"><em>Secret</em> Birthday Messages</h1>
+    <p class="header-subtitle">Write something from the heart — revealed on June 1st</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- REVEAL BANNER -->
+  <div class="reveal-banner" id="revealBanner">
+    <p class="reveal-label">Messages unlock in</p>
+    <p class="reveal-title" id="revealTitle">Loading...</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    </div>
+    <p class="progress-label" id="progressLabel"></p>
+  </div>
+
+  <!-- WRITE YOUR MESSAGE -->
+  <div class="write-section">
+    <p class="section-label">Your message</p>
+    <h2 class="section-title">Write to Joyce</h2>
+    <div class="gold-rule"></div>
+
+    <div class="message-box" id="messageBox">
+      <textarea id="messageText" placeholder="Write something beautiful for Joyce's 40th..." maxlength="1000"></textarea>
+      <p class="char-count"><span id="charCount">0</span> / 1000</p>
+      <div class="btn-row">
+        <button class="save-btn" id="saveBtn" onclick="saveMessage()">Save Message</button>
+        <button class="delete-btn" id="deleteBtn" onclick="deleteMessage()">Delete</button>
+      </div>
+      <p class="status-msg" id="statusMsg"></p>
+    </div>
+  </div>
+
+  <!-- MESSAGES — locked or revealed -->
+  <div class="messages-section">
+    <p class="section-label">All messages</p>
+    <h2 class="section-title">From the Girls</h2>
+    <div class="gold-rule"></div>
+    <div id="messagesContainer"></div>
+  </div>
+
+</main>
+
+<footer>
+  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
+</footer>
+
+<script>
+  requireAuth();
+
+  // Reveal date: June 1 2026 midnight Edinburgh time (BST = UTC+1)
+  const REVEAL_DATE = new Date('2026-06-01T00:00:00+01:00');
+  const TOTAL_GUESTS = 10;
+
+  let currentUser = null;
+  let currentMessage = null;
+  let isRevealed = false;
+
+  // Map names to photo filenames
+  const PHOTOS = {
+    'Victoria Aronow': 'images/victoria-aronow.jpg',
+    'Joyce Saad': 'images/joyce-saad.jpg',
+    'Danielle Dabah': 'images/danielle-dabah.jpg',
+    'Ginger Aronow': 'images/ginger-aronow.jpg',
+    'Kimberly Dabah': 'images/kimberly-dabah.jpg',
+    'Stephanie Kattan': 'images/stephanie-kattan.jpg',
+    'Rachel Harari': 'images/rachel-harari.jpg',
+    'Joyce Salame': 'images/joyce-salame.jpg',
+    'Ann Salame': 'images/ann-salame.jpg',
+    'Susie Sutton': 'images/susie-sutton.jpg'
+  };
+
+  // Check if messages should be revealed
+  function checkRevealed() {
+    return new Date() >= REVEAL_DATE;
+  }
+
+  // Update the reveal banner
+  function updateRevealBanner(messageCount) {
+    isRevealed = checkRevealed();
+    const banner = document.getElementById('revealBanner');
+    const title = document.getElementById('revealTitle');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    const pct = Math.round((messageCount / TOTAL_GUESTS) * 100);
+
+    progressBar.style.width = pct + '%';
+    progressLabel.textContent = `${messageCount} of ${TOTAL_GUESTS} messages written`;
+
+    if (isRevealed) {
+      banner.classList.add('revealed');
+      title.textContent = 'Messages are revealed!';
+    } else {
+      // Countdown to midnight June 1
+      const diff = REVEAL_DATE - new Date();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      title.textContent = `${days} days and ${hours} hours to go`;
+    }
+  }
+
+  // Load current user's message
+  async function loadMyMessage() {
+    currentUser = await getCurrentUser();
+    if (!currentUser) return;
+
+    const { data } = await db
+      .from('messages')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .single();
+
+    if (data) {
+      currentMessage = data;
+      document.getElementById('messageText').value = data.message;
+      document.getElementById('charCount').textContent = data.message.length;
+      document.getElementById('messageBox').classList.add('has-message');
+      document.getElementById('deleteBtn').style.display = 'inline-block';
+      document.getElementById('saveBtn').textContent = 'Update Message';
+    }
+  }
+
+  // Save or update message
+  async function saveMessage() {
+    const text = document.getElementById('messageText').value.trim();
+    const btn = document.getElementById('saveBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    if (!text) {
+      statusMsg.textContent = 'Please write something first!';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      // Get user's name from allowed_users
+      const profile = await getUserProfile();
+      const userName = profile ? profile.name : 'A Friend';
+
+      if (currentMessage) {
+        // Update existing
+        await db.from('messages')
+          .update({ message: text, updated_at: new Date().toISOString() })
+          .eq('id', currentMessage.id);
+      } else {
+        // Insert new
+        const { data } = await db.from('messages')
+          .insert({ user_id: currentUser.id, message: text, user_name: userName })
+          .select()
+          .single();
+        currentMessage = data;
+        document.getElementById('deleteBtn').style.display = 'inline-block';
+        document.getElementById('messageBox').classList.add('has-message');
+      }
+
+      btn.textContent = 'Update Message';
+      btn.disabled = false;
+      statusMsg.textContent = '✓ Message saved!';
+      loadAllMessages();
+
+    } catch (error) {
+      statusMsg.textContent = 'Something went wrong — please try again.';
+      btn.disabled = false;
+      btn.textContent = currentMessage ? 'Update Message' : 'Save Message';
+      console.error(error);
+    }
+  }
+
+  // Delete message
+  async function deleteMessage() {
+    if (!confirm('Are you sure you want to delete your message?')) return;
+
+    await db.from('messages').delete().eq('id', currentMessage.id);
+
+    currentMessage = null;
+    document.getElementById('messageText').value = '';
+    document.getElementById('charCount').textContent = '0';
+    document.getElementById('messageBox').classList.remove('has-message');
+    document.getElementById('deleteBtn').style.display = 'none';
+    document.getElementById('saveBtn').textContent = 'Save Message';
+    document.getElementById('statusMsg').textContent = '✓ Message deleted.';
+
+    loadAllMessages();
+  }
+
+  // Load all messages
+  async function loadAllMessages() {
+    const { data: messages } = await db.from('messages').select('*').order('created_at');
+    const count = messages ? messages.length : 0;
+
+    updateRevealBanner(count);
+
+    const container = document.getElementById('messagesContainer');
+    isRevealed = checkRevealed();
+
+    if (!isRevealed) {
+      container.innerHTML = `
+        <div class="locked-state">
+          <div class="lock-icon">🔒</div>
+          <p class="locked-title">Messages are sealed until June 1st</p>
+          <p class="locked-subtitle">Come back on Joyce's birthday to read all the beautiful messages from the girls!</p>
+        </div>`;
+      return;
+    }
+
+    // Revealed! Show all messages
+    if (!messages || messages.length === 0) {
+      container.innerHTML = '<div class="locked-state"><p class="locked-title">No messages yet!</p></div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'messages-grid';
+
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      const card = document.createElement('div');
+      card.className = 'message-card';
+
+      const name = msg.user_name || 'A Friend';
+      const initials = name.split(' ').map(n => n[0]).join('');
+      const photo = PHOTOS[name];
+      const avatarHtml = photo
+        ? `<img src="${photo}" alt="${name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:center top;margin-bottom:1rem;border:2px solid var(--mist);">`
+        : `<div class="message-author-avatar">${initials}</div>`;
+
+      card.innerHTML = `
+        ${avatarHtml}
+        <p class="message-author">${name}</p>
+        <p class="message-text">"${msg.message}"</p>
+        <p class="message-date">${new Date(msg.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+      `;
+
+      grid.appendChild(card);
+      setTimeout(() => card.classList.add('revealed'), i * 200);
+    }
+
+    container.appendChild(grid);
+  }
+
+  // Character counter
+  document.getElementById('messageText').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length;
+  });
+
+  // Init
+  loadMyMessage();
+  loadAllMessages();
+</script>
+
+</body>
+</html>
