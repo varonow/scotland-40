@@ -299,7 +299,7 @@
     cursor: pointer;
   }
 
-  .photo-info { padding: 0.75rem 1rem; }
+  .photo-info { padding: 0.85rem 1rem 1rem; }
 
   .photo-header {
     display: flex;
@@ -313,7 +313,7 @@
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
     flex-shrink: 0;
   }
 
@@ -555,7 +555,7 @@
 
   function avatarHtml(name) {
     const photo = PHOTOS_MAP[name];
-    if (photo) return `<img src="${photo}" alt="${name}" class="photo-avatar">`;
+    if (photo) return `<img src="${photo}" alt="${name}" class="photo-avatar" onerror="this.outerHTML='<div class=\'photo-avatar-initials\'>${getInitials(name)}</div>'">`;
     return `<div class="photo-avatar-initials">${getInitials(name)}</div>`;
   }
 
