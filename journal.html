@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trip Journal | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+
+  .header-content { position: relative; z-index: 2; }
+
+  .back-link {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--gold); }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-title em { font-style: italic; color: var(--gold); }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+  }
+
+  main { max-width: 860px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* DAY TABS */
+  .day-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .day-tab {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--mist);
+    background: white;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .day-tab:hover { border-color: var(--gold); color: var(--gold); }
+
+  .day-tab.active {
+    background: var(--forest);
+    color: var(--gold);
+    border-color: var(--forest);
+  }
+
+  .day-tab .entry-count {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 0 6px;
+    font-size: 9px;
+    margin-left: 4px;
+  }
+
+  .day-tab.active .entry-count { background: rgba(255,255,255,0.2); }
+  .day-tab:not(.active) .entry-count { background: var(--mist); color: var(--stone); }
+
+  /* DAY HEADER */
+  .day-header {
+    margin-bottom: 2rem;
+  }
+
+  .day-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.25rem;
+  }
+
+  .day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.25rem;
+  }
+
+  .day-date {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--stone);
+  }
+
+  .gold-rule { width: 40px; height: 2px; background: var(--gold); margin: 1.5rem 0; }
+
+  /* WRITE ENTRY */
+  .write-section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .write-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .write-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    border: 2px solid var(--mist);
+  }
+
+  .write-avatar-initials {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .write-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+  }
+
+  .write-prompt {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 0.95rem;
+  }
+
+  /* MOOD SELECTOR */
+  .mood-selector {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .mood-btn {
+    font-size: 1.3rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--mist);
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+
+  .mood-btn:hover { border-color: var(--gold); transform: scale(1.1); }
+  .mood-btn.selected { border-color: var(--gold); background: #fdf8ee; }
+
+  .mood-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    background: white;
+    outline: none;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus { border-color: var(--forest); }
+
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.7;
+  }
+
+  textarea:focus { border-color: var(--forest); }
+
+  .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+  .post-btn {
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 0.9rem 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .post-btn:hover { background: #1a2e28; transform: translateY(-1px); }
+  .post-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .cancel-btn {
+    background: transparent;
+    border: 1px solid var(--mist);
+    color: var(--stone);
+    padding: 0.9rem 1.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .cancel-btn:hover { border-color: var(--stone); }
+
+  .status-msg {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    margin-top: 0.5rem;
+  }
+
+  /* ENTRIES */
+  .entries-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .entry-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 1.75rem;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .entry-card.revealed { opacity: 1; transform: translateY(0); }
+  .entry-card.own-entry { border-left: 3px solid var(--gold); }
+
+  .entry-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .entry-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    border: 1px solid var(--mist);
+  }
+
+  .entry-avatar-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .entry-meta { flex: 1; }
+
+  .entry-author {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--heather);
+  }
+
+  .entry-time {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+  }
+
+  .entry-mood { font-size: 1.4rem; }
+
+  .entry-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.5rem;
+  }
+
+  .entry-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--dark);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .entry-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .like-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: transparent;
+    border: 1px solid var(--mist);
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .like-btn:hover { border-color: #e05c7a; color: #e05c7a; }
+  .like-btn.liked { background: #fef0f3; border-color: #e05c7a; color: #e05c7a; }
+  .like-btn .heart { font-size: 14px; }
+
+  .entry-actions { display: flex; gap: 0.5rem; }
+
+  .edit-btn, .delete-btn {
+    background: transparent;
+    border: none;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .edit-btn:hover { color: var(--forest); }
+  .delete-btn:hover { color: #e05c5c; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--stone);
+    font-style: italic;
+    font-size: 1.1rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed var(--mist);
+  }
+
+  footer {
+    background: var(--dark);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1.25rem; }
+    .day-tabs { gap: 0.35rem; }
+    .day-tab { padding: 0.5rem 0.9rem; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="back-link">← Back to Itinerary</a>
+    <p class="header-eyebrow">Scotland 2026 · Our Story</p>
+    <h1 class="header-title">The <em>Trip</em> Journal</h1>
+    <p class="header-subtitle">Write, share and remember every moment</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- DAY TABS -->
+  <div class="day-tabs" id="dayTabs">
+    <button class="day-tab active" onclick="switchDay(1)" id="tab1">Day 1 <span class="entry-count" id="count1">0</span></button>
+    <button class="day-tab" onclick="switchDay(2)" id="tab2">Day 2 <span class="entry-count" id="count2">0</span></button>
+    <button class="day-tab" onclick="switchDay(3)" id="tab3">Day 3 <span class="entry-count" id="count3">0</span></button>
+    <button class="day-tab" onclick="switchDay(4)" id="tab4">Day 4 <span class="entry-count" id="count4">0</span></button>
+    <button class="day-tab" onclick="switchDay(5)" id="tab5">Day 5 <span class="entry-count" id="count5">0</span></button>
+  </div>
+
+  <!-- DAY HEADER -->
+  <div class="day-header" id="dayHeader"></div>
+  <div class="gold-rule"></div>
+
+  <!-- WRITE ENTRY -->
+  <div class="write-section" id="writeSection"></div>
+
+  <!-- ENTRIES -->
+  <div class="entries-list" id="entriesList"></div>
+
+</main>
+
+<footer>
+  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
+</footer>
+
+<script>
+  requireAuth();
+
+  const DAYS = [
+    { day: 1, title: 'Arrival in Edinburgh', date: 'June 1, 2026' },
+    { day: 2, title: 'Kilts, Norse & Ceilidh', date: 'June 2, 2026' },
+    { day: 3, title: 'Journey to Loch Lomond', date: 'June 3, 2026' },
+    { day: 4, title: 'Cameron House', date: 'June 4, 2026' },
+    { day: 5, title: 'Farewell Scotland', date: 'June 5, 2026' }
+  ];
+
+  const MOODS = ['😄', '😍', '🥂', '😂', '🥹', '😴', '🤩', '🥃'];
+
+  const PHOTOS = {
+    'Victoria Aronow': 'images/victoria-aronow.jpg',
+    'Joyce Saad': 'images/joyce-saad.jpg',
+    'Danielle Dabah': 'images/danielle-dabah.jpg',
+    'Ginger Aronow': 'images/ginger-aronow.jpg',
+    'Kimberly Dabah': 'images/kimberly-dabah.jpg',
+    'Stephanie Kattan': 'images/stephanie-kattan.jpg',
+    'Rachel Harari': 'images/rachel-harari.jpg',
+    'Joyce Salame': 'images/joyce-salame.jpg',
+    'Ann Salame': 'images/ann-salame.jpg',
+    'Susie Sutton': 'images/susie-sutton.jpg'
+  };
+
+  let currentDay = 1;
+  let currentUser = null;
+  let currentProfile = null;
+  let selectedMood = '';
+  let editingEntryId = null;
+
+  function getInitials(name) { return name.split(' ').map(n => n[0]).join(''); }
+
+  function avatarHtml(name, size = 44, cls = 'write-avatar') {
+    const photo = PHOTOS[name];
+    if (photo) return `<img src="${photo}" alt="${name}" class="${cls}" style="width:${size}px;height:${size}px;">`;
+    return `<div class="${cls}-initials" style="width:${size}px;height:${size}px;">${getInitials(name)}</div>`;
+  }
+
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr);
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+  }
+
+  async function init() {
+    currentUser = await getCurrentUser();
+    currentProfile = await getUserProfile();
+    renderWriteSection();
+    loadDay(currentDay);
+    loadAllCounts();
+  }
+
+  function switchDay(day) {
+    currentDay = day;
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(`tab${day}`).classList.add('active');
+    editingEntryId = null;
+    selectedMood = '';
+    renderWriteSection();
+    loadDay(day);
+  }
+
+  function renderDayHeader(day) {
+    const d = DAYS[day - 1];
+    document.getElementById('dayHeader').innerHTML = `
+      <p class="day-label">Day ${d.day}</p>
+      <h2 class="day-title">${d.title}</h2>
+      <p class="day-date">${d.date}</p>
+    `;
+  }
+
+  function renderWriteSection(entry = null) {
+    const name = currentProfile ? currentProfile.name : 'You';
+    const isEditing = entry !== null;
+
+    document.getElementById('writeSection').innerHTML = `
+      <div class="write-header">
+        ${avatarHtml(name)}
+        <div>
+          <p class="write-name">${name}</p>
+          <p class="write-prompt">${isEditing ? 'Editing your entry...' : 'Share a moment from today'}</p>
+        </div>
+      </div>
+      <p class="mood-label">How are you feeling?</p>
+      <div class="mood-selector" id="moodSelector">
+        ${MOODS.map(m => `<button class="mood-btn ${isEditing && entry.mood === m ? 'selected' : ''}" onclick="selectMood('${m}')">${m}</button>`).join('')}
+      </div>
+      <input type="text" id="entryTitle" placeholder="Give this moment a title..." value="${isEditing ? entry.title : ''}">
+      <textarea id="entryText" placeholder="What happened? How did it feel? What will you never forget...">${isEditing ? entry.entry : ''}</textarea>
+      <div class="btn-row">
+        <button class="post-btn" id="postBtn" onclick="saveEntry()">${isEditing ? 'Update Entry' : 'Post to Journal'}</button>
+        ${isEditing ? `<button class="cancel-btn" style="display:inline-block;" onclick="cancelEdit()">Cancel</button>` : ''}
+      </div>
+      <p class="status-msg" id="statusMsg"></p>
+    `;
+
+    if (isEditing) selectedMood = entry.mood;
+  }
+
+  function selectMood(mood) {
+    selectedMood = mood;
+    document.querySelectorAll('.mood-btn').forEach(b => {
+      b.classList.toggle('selected', b.textContent === mood);
+    });
+  }
+
+  function cancelEdit() {
+    editingEntryId = null;
+    selectedMood = '';
+    renderWriteSection();
+  }
+
+  async function saveEntry() {
+    const title = document.getElementById('entryTitle').value.trim();
+    const entry = document.getElementById('entryText').value.trim();
+    const btn = document.getElementById('postBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    if (!entry) { statusMsg.textContent = 'Please write something first!'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    const name = currentProfile ? currentProfile.name : 'A Friend';
+
+    try {
+      if (editingEntryId) {
+        await db.from('journal').update({
+          title, entry,
+          mood: selectedMood,
+          updated_at: new Date().toISOString()
+        }).eq('id', editingEntryId);
+      } else {
+        await db.from('journal').insert({
+          user_id: currentUser.id,
+          user_name: name,
+          day: currentDay,
+          title,
+          entry,
+          mood: selectedMood
+        });
+      }
+
+      editingEntryId = null;
+      selectedMood = '';
+      renderWriteSection();
+      loadDay(currentDay);
+      loadAllCounts();
+
+    } catch (error) {
+      statusMsg.textContent = 'Something went wrong — please try again.';
+      btn.disabled = false;
+      btn.textContent = editingEntryId ? 'Update Entry' : 'Post to Journal';
+      console.error(error);
+    }
+  }
+
+  async function loadDay(day) {
+    renderDayHeader(day);
+    const { data: entries } = await db.from('journal')
+      .select('*')
+      .eq('day', day)
+      .order('created_at', { ascending: false });
+
+    const { data: likes } = await db.from('journal_likes')
+      .select('*');
+
+    const list = document.getElementById('entriesList');
+
+    if (!entries || entries.length === 0) {
+      list.innerHTML = `<div class="empty-state">No entries yet for Day ${day} — be the first to write something!</div>`;
+      return;
+    }
+
+    list.innerHTML = '';
+
+    entries.forEach((entry, i) => {
+      const isOwn = currentUser && entry.user_id === currentUser.id;
+      const entryLikes = likes ? likes.filter(l => l.entry_id === entry.id) : [];
+      const hasLiked = currentUser && entryLikes.some(l => l.user_id === currentUser.id);
+
+      const card = document.createElement('div');
+      card.className = `entry-card${isOwn ? ' own-entry' : ''}`;
+      card.id = `entry-${entry.id}`;
+
+      card.innerHTML = `
+        <div class="entry-header">
+          ${avatarHtml(entry.user_name, 40, 'entry-avatar')}
+          <div class="entry-meta">
+            <p class="entry-author">${entry.user_name}</p>
+            <p class="entry-time">${timeAgo(entry.created_at)}${entry.updated_at ? ' · edited' : ''}</p>
+          </div>
+          ${entry.mood ? `<span class="entry-mood">${entry.mood}</span>` : ''}
+        </div>
+        ${entry.title ? `<p class="entry-title">${entry.title}</p>` : ''}
+        <p class="entry-text">${entry.entry}</p>
+        <div class="entry-footer">
+          <button class="like-btn ${hasLiked ? 'liked' : ''}" id="like-${entry.id}" onclick="toggleLike(${entry.id}, ${hasLiked})">
+            <span class="heart">${hasLiked ? '♥' : '♡'}</span>
+            <span id="likecount-${entry.id}">${entryLikes.length} ${entryLikes.length === 1 ? 'like' : 'likes'}</span>
+          </button>
+          ${isOwn ? `
+          <div class="entry-actions">
+            <button class="edit-btn" onclick="editEntry(${entry.id})">Edit</button>
+            <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
+          </div>` : ''}
+        </div>
+      `;
+
+      list.appendChild(card);
+      setTimeout(() => card.classList.add('revealed'), i * 100);
+    });
+  }
+
+  async function toggleLike(entryId, hasLiked) {
+    if (!currentUser) return;
+    const name = currentProfile ? currentProfile.name : 'A Friend';
+
+    if (hasLiked) {
+      await db.from('journal_likes').delete()
+        .eq('entry_id', entryId)
+        .eq('user_id', currentUser.id);
+    } else {
+      await db.from('journal_likes').insert({
+        entry_id: entryId,
+        user_id: currentUser.id,
+        user_name: name
+      });
+    }
+
+    loadDay(currentDay);
+  }
+
+  async function editEntry(entryId) {
+    const { data } = await db.from('journal').select('*').eq('id', entryId).single();
+    if (data) {
+      editingEntryId = entryId;
+      renderWriteSection(data);
+      window.scrollTo({ top: document.getElementById('writeSection').offsetTop - 100, behavior: 'smooth' });
+    }
+  }
+
+  async function deleteEntry(entryId) {
+    if (!confirm('Delete this journal entry?')) return;
+    await db.from('journal_likes').delete().eq('entry_id', entryId);
+    await db.from('journal').delete().eq('id', entryId);
+    loadDay(currentDay);
+    loadAllCounts();
+  }
+
+  async function loadAllCounts() {
+    const { data } = await db.from('journal').select('day');
+    if (!data) return;
+    for (let d = 1; d <= 5; d++) {
+      const count = data.filter(e => e.day === d).length;
+      document.getElementById(`count${d}`).textContent = count;
+    }
+  }
+
+  init();
+</script>
+
+</body>
+</html>
