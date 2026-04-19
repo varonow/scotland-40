@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Wall | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+
+  .header-content { position: relative; z-index: 2; }
+
+  .back-link {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--gold); }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-title em { font-style: italic; color: var(--gold); }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+  }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* UPLOAD SECTION */
+  .upload-section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .upload-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--forest);
+    margin-bottom: 1.5rem;
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--mist);
+    border-radius: 12px;
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--gold);
+    background: #fdf8ee;
+  }
+
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+  .upload-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--forest);
+    margin-bottom: 0.25rem;
+  }
+
+  .upload-hint {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+  }
+
+  /* PREVIEWS */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .preview-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .upload-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .upload-options select, .upload-options input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--dark);
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .upload-options select:focus,
+  .upload-options input:focus { border-color: var(--forest); }
+
+  .upload-btn {
+    background: var(--forest);
+    color: var(--gold);
+    border: none;
+    padding: 0.9rem 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background 0.2s, transform 0.1s;
+    width: 100%;
+  }
+
+  .upload-btn:hover { background: #1a2e28; transform: translateY(-1px); }
+  .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .upload-progress {
+    margin-top: 0.75rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    min-height: 18px;
+  }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-tab {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--mist);
+    background: white;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-tab:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-tab.active { background: var(--forest); color: var(--gold); border-color: var(--forest); }
+
+  .photo-count {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--stone);
+    margin-left: auto;
+  }
+
+  /* MASONRY GRID */
+  .masonry {
+    columns: 3;
+    column-gap: 1rem;
+  }
+
+  .photo-card {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid var(--mist);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s;
+  }
+
+  .photo-card.revealed { opacity: 1; transform: translateY(0); }
+  .photo-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+  .photo-card img {
+    width: 100%;
+    display: block;
+    cursor: pointer;
+  }
+
+  .photo-info { padding: 0.75rem 1rem; }
+
+  .photo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .photo-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+  }
+
+  .photo-avatar-initials {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .photo-author {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--heather);
+    flex: 1;
+  }
+
+  .photo-day-badge {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    background: var(--mist);
+    color: var(--stone);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .photo-caption {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--dark);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .photo-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .photo-time {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--stone);
+  }
+
+  .photo-delete {
+    background: transparent;
+    border: none;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stone);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .photo-delete:hover { color: #e05c5c; }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .lightbox-close:hover { opacity: 1; }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--stone);
+    font-style: italic;
+    font-size: 1.1rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed var(--mist);
+  }
+
+  footer {
+    background: var(--dark);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  @media (max-width: 700px) {
+    .masonry { columns: 2; }
+    .upload-options { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 400px) {
+    .masonry { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="back-link">← Back to Itinerary</a>
+    <p class="header-eyebrow">Scotland 2026 · Our Memories</p>
+    <h1 class="header-title">The <em>Photo</em> Wall</h1>
+    <p class="header-subtitle">Every moment, captured together</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- UPLOAD -->
+  <div class="upload-section">
+    <p class="upload-title">Share a Photo</p>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <div class="upload-icon">📷</div>
+      <p class="upload-text">Tap to choose photos</p>
+      <p class="upload-hint">JPG, PNG, HEIC · Multiple files welcome</p>
+    </div>
+    <div class="preview-grid" id="previewGrid"></div>
+    <div class="upload-options" id="uploadOptions" style="display:none;">
+      <select id="daySelect">
+        <option value="">Which day?</option>
+        <option value="1">Day 1 — Arrival in Edinburgh</option>
+        <option value="2">Day 2 — Kilts, Norse & Ceilidh</option>
+        <option value="3">Day 3 — Journey to Loch Lomond</option>
+        <option value="4">Day 4 — Cameron House</option>
+        <option value="5">Day 5 — Farewell Scotland</option>
+      </select>
+      <input type="text" id="captionInput" placeholder="Add a caption... (optional)">
+    </div>
+    <button class="upload-btn" id="uploadBtn" style="display:none;" onclick="uploadPhotos()">Upload Photos</button>
+    <p class="upload-progress" id="uploadProgress"></p>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterDay(0)" id="filterAll">All Photos</button>
+    <button class="filter-tab" onclick="filterDay(1)" id="filter1">Day 1</button>
+    <button class="filter-tab" onclick="filterDay(2)" id="filter2">Day 2</button>
+    <button class="filter-tab" onclick="filterDay(3)" id="filter3">Day 3</button>
+    <button class="filter-tab" onclick="filterDay(4)" id="filter4">Day 4</button>
+    <button class="filter-tab" onclick="filterDay(5)" id="filter5">Day 5</button>
+    <span class="photo-count" id="photoCount"></span>
+  </div>
+
+  <!-- PHOTO GRID -->
+  <div class="masonry" id="photoGrid"></div>
+
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<footer>
+  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
+</footer>
+
+<script>
+  requireAuth();
+
+  const BUCKET = 'photos';
+  const PHOTOS_MAP = {
+    'Victoria Aronow': 'images/victoria-aronow.jpg',
+    'Joyce Saad': 'images/joyce-saad.jpg',
+    'Danielle Dabah': 'images/danielle-dabah.jpg',
+    'Ginger Aronow': 'images/ginger-aronow.jpg',
+    'Kimberly Dabah': 'images/kimberly-dabah.jpg',
+    'Stephanie Kattan': 'images/stephanie-kattan.jpg',
+    'Rachel Harari': 'images/rachel-harari.jpg',
+    'Joyce Salame': 'images/joyce-salame.jpg',
+    'Ann Salame': 'images/ann-salame.jpg',
+    'Susie Sutton': 'images/susie-sutton.jpg'
+  };
+
+  let currentUser = null;
+  let currentProfile = null;
+  let selectedFiles = [];
+  let currentFilter = 0;
+
+  function getInitials(name) { return name.split(' ').map(n => n[0]).join(''); }
+
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr);
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(mins / 60);
+    const days = Math.floor(hours / 24);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+  }
+
+  function avatarHtml(name) {
+    const photo = PHOTOS_MAP[name];
+    if (photo) return `<img src="${photo}" alt="${name}" class="photo-avatar">`;
+    return `<div class="photo-avatar-initials">${getInitials(name)}</div>`;
+  }
+
+  async function init() {
+    currentUser = await getCurrentUser();
+    currentProfile = await getUserProfile();
+    loadPhotos();
+
+    // File input handler
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+    // Drag and drop
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+    });
+  }
+
+  function handleFileSelect(e) {
+    handleFiles(Array.from(e.target.files));
+  }
+
+  function handleFiles(files) {
+    selectedFiles = [...selectedFiles, ...files];
+    renderPreviews();
+  }
+
+  function renderPreviews() {
+    const grid = document.getElementById('previewGrid');
+    const options = document.getElementById('uploadOptions');
+    const btn = document.getElementById('uploadBtn');
+
+    if (selectedFiles.length === 0) {
+      grid.innerHTML = '';
+      options.style.display = 'none';
+      btn.style.display = 'none';
+      return;
+    }
+
+    options.style.display = 'grid';
+    btn.style.display = 'block';
+
+    grid.innerHTML = selectedFiles.map((file, i) => {
+      const url = URL.createObjectURL(file);
+      return `
+        <div class="preview-item">
+          <img src="${url}" alt="Preview">
+          <button class="preview-remove" onclick="removeFile(${i})">×</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
+  }
+
+  async function uploadPhotos() {
+    if (selectedFiles.length === 0) return;
+
+    const btn = document.getElementById('uploadBtn');
+    const progress = document.getElementById('uploadProgress');
+    const day = document.getElementById('daySelect').value || null;
+    const caption = document.getElementById('captionInput').value.trim();
+    const name = currentProfile ? currentProfile.name : 'A Friend';
+
+    btn.disabled = true;
+    progress.textContent = `Uploading 0 of ${selectedFiles.length}...`;
+
+    let uploaded = 0;
+
+    for (const file of selectedFiles) {
+      const ext = file.name.split('.').pop();
+      const fileName = `${currentUser.id}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+      // Upload to storage bucket
+      const { error: storageError } = await db.storage
+        .from(BUCKET)
+        .upload(fileName, file, { contentType: file.type });
+
+      if (storageError) {
+        progress.textContent = `Error uploading ${file.name}`;
+        continue;
+      }
+
+      // Save metadata to database
+      await db.from('photos').insert({
+        user_id: currentUser.id,
+        user_name: name,
+        file_path: fileName,
+        caption: caption || null,
+        day: day ? parseInt(day) : null
+      });
+
+      uploaded++;
+      progress.textContent = `Uploaded ${uploaded} of ${selectedFiles.length}...`;
+    }
+
+    progress.textContent = `✓ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded!`;
+    selectedFiles = [];
+    document.getElementById('fileInput').value = '';
+    document.getElementById('captionInput').value = '';
+    document.getElementById('daySelect').value = '';
+    renderPreviews();
+    btn.disabled = false;
+    loadPhotos();
+  }
+
+  function filterDay(day) {
+    currentFilter = day;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(day === 0 ? 'filterAll' : `filter${day}`).classList.add('active');
+    loadPhotos();
+  }
+
+  async function loadPhotos() {
+    let query = db.from('photos').select('*').order('created_at', { ascending: false });
+    if (currentFilter > 0) query = query.eq('day', currentFilter);
+
+    const { data: photos } = await query;
+    const grid = document.getElementById('photoGrid');
+    const count = document.getElementById('photoCount');
+
+    count.textContent = photos ? `${photos.length} photo${photos.length !== 1 ? 's' : ''}` : '';
+
+    if (!photos || photos.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="column-span:all;">No photos yet — be the first to share a moment!</div>`;
+      return;
+    }
+
+    grid.innerHTML = '';
+
+    photos.forEach((photo, i) => {
+      const isOwn = currentUser && photo.user_id === currentUser.id;
+      const { data: { publicUrl } } = db.storage.from(BUCKET).getPublicUrl(photo.file_path);
+
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+
+      card.innerHTML = `
+        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" onclick="openLightbox('${publicUrl}')">
+        <div class="photo-info">
+          <div class="photo-header">
+            ${avatarHtml(photo.user_name)}
+            <span class="photo-author">${photo.user_name}</span>
+            ${photo.day ? `<span class="photo-day-badge">Day ${photo.day}</span>` : ''}
+          </div>
+          ${photo.caption ? `<p class="photo-caption">${photo.caption}</p>` : ''}
+          <div class="photo-footer">
+            <span class="photo-time">${timeAgo(photo.created_at)}</span>
+            ${isOwn ? `<button class="photo-delete" onclick="deletePhoto(${photo.id}, '${photo.file_path}')">Delete</button>` : ''}
+          </div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+      setTimeout(() => card.classList.add('revealed'), i * 80);
+    });
+  }
+
+  async function deletePhoto(id, filePath) {
+    if (!confirm('Delete this photo?')) return;
+    await db.storage.from(BUCKET).remove([filePath]);
+    await db.from('photos').delete().eq('id', id);
+    loadPhotos();
+  }
+
+  function openLightbox(url) {
+    document.getElementById('lightboxImg').src = url;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  init();
+</script>
+
+</body>
+</html>
