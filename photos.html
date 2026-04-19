@@ -556,10 +556,11 @@
   function avatarHtml(name) {
     const photo = PHOTOS_MAP[name];
     const initials = getInitials(name);
+    const style = 'width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:center center;flex-shrink:0;border:1px solid #E8E4DC;';
     if (photo) {
-      return `<img src="${photo}" alt="${name}" class="photo-avatar" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="photo-avatar-initials" style="display:none">${initials}</div>`;
+      return `<img src="${photo}" alt="${name}" style="${style}">`;
     }
-    return `<div class="photo-avatar-initials">${initials}</div>`;
+    return `<div style="${style};background:#2C4A3E;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-family:serif;font-size:0.7rem;">${initials}</div>`;
   }
 
   async function init() {
