@@ -555,8 +555,11 @@
 
   function avatarHtml(name) {
     const photo = PHOTOS_MAP[name];
-    if (photo) return `<img src="${photo}" alt="${name}" class="photo-avatar" onerror="this.outerHTML='<div class=\'photo-avatar-initials\'>${getInitials(name)}</div>'">`;
-    return `<div class="photo-avatar-initials">${getInitials(name)}</div>`;
+    const initials = getInitials(name);
+    if (photo) {
+      return `<img src="${photo}" alt="${name}" class="photo-avatar" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="photo-avatar-initials" style="display:none">${initials}</div>`;
+    }
+    return `<div class="photo-avatar-initials">${initials}</div>`;
   }
 
   async function init() {
@@ -701,7 +704,7 @@
       card.className = 'photo-card';
 
       card.innerHTML = `
-        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" onclick="openLightbox('${publicUrl}')">
+        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" onclick="openLightbox('${publicUrl}')" style="width:100%;display:block;cursor:pointer;">
         <div class="photo-info">
           <div class="photo-header">
             ${avatarHtml(photo.user_name)}
