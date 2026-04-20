@@ -324,6 +324,15 @@ section { padding: 5rem 2rem; max-width: 860px; margin: 0 auto; }
   margin-bottom: 0.5rem;
 }
 
+.hotel-name a {
+  color: var(--forest);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold);
+  transition: color 0.2s;
+}
+
+.hotel-name a:hover { color: var(--heather); }
+
 .hotel-desc {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.05rem;
