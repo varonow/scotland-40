@@ -278,7 +278,20 @@
   </div>
 </header>
 
-<!-- CATEGORY TABS -->
+<!-- MAP SECTION -->
+<div style="background: white; border-bottom: 1px solid var(--mist);">
+  <div style="max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem;">
+    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--heather); margin-bottom: 0.5rem;">Edinburgh · Our Picks</p>
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: var(--forest); margin-bottom: 0.25rem;">The Map</h2>
+    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--stone); font-size: 1rem; margin-bottom: 1.25rem;">Tap any pin to open in Google Maps</p>
+    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--mist);">
+      <iframe src="https://www.google.com/maps/d/embed?mid=1Ex_U7Ylm4X7amKyEVFuimXdpk8ChdaE&ehbc=2E312F&noprof=1" width="100%" height="420" style="border:0; display:block;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 10px; letter-spacing: 0.1em; color: var(--stone); margin-top: 0.75rem; text-align: center;">
+      <a href="https://maps.app.goo.gl/edinburgh" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Open full map in Google Maps →</a>
+    </p>
+  </div>
+</div>
 <div class="category-tabs">
   <button class="category-tab active" onclick="showCategory('cocktails')">🍸 Cocktails</button>
   <button class="category-tab" onclick="showCategory('whisky')">🥃 Whisky</button>
@@ -334,7 +347,7 @@
             <span class="place-tag">UK Top 50 · #17</span>
           </div>
         </div>
-        <p class="place-address">3 Bread Street, Edinburgh EH3 9AF</p>
+        <p class="place-address">49 Bread Street, Edinburgh EH3 9AH</p>
         <p class="place-desc">A love letter to Italian aperitivo culture — ranked #17 in the UK Top 50 cocktail bars. Famous for its extraordinary amaro collection, frozen Martinis straight from the freezer, and Italian-inspired nibbles. Chic, intimate, and utterly delicious.</p>
         <div class="place-tip"><strong>Tip:</strong> Try an amaro flight if you've never explored Italian bitters — the bar team are passionate guides.</div>
       </div>
@@ -365,10 +378,48 @@
         <div class="place-tip"><strong>Tip:</strong> Small capacity — arrive early or you may not get in. Strict policy on group sizes.</div>
       </div>
 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎸</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://stramashedinburgh.com" target="_blank" rel="noopener">Stramash</a></p>
+            <span class="place-tag gold">Free Live Music Nightly</span>
+          </div>
+        </div>
+        <p class="place-address">207 Cowgate, Edinburgh EH1 1JQ</p>
+        <p class="place-desc">Edinburgh's greatest live music bar — a massive 900-capacity converted church on the Cowgate with live bands playing every single night until 3am, completely free. Two floors, a huge stage, mezzanine bar, and a bouncing dancefloor. Wednesday nights feature a traditional ceilidh. If you want to dance until 3am after the Voodoo Rooms or Department of Magic, this is where you end up.</p>
+        <div class="place-tip"><strong>Tip:</strong> Free entry every night — just show up. Wednesday ceilidh is brilliant for a first-timer, even better after a few drams.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎵</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.sneakypetes.co.uk" target="_blank" rel="noopener">Sneaky Pete's</a></p>
+            <span class="place-tag">Edinburgh Institution</span>
+          </div>
+        </div>
+        <p class="place-address">73 Cowgate, Edinburgh EH1 1JW</p>
+        <p class="place-desc">Edinburgh's most legendary grassroots music club — a tiny 100-capacity basement on the Cowgate where Lewis Capaldi and Mumford & Sons played their early gigs. Named by DJ Magazine as one of the most important clubs in the world. Dark, brick-lined, loud, and absolutely electric. Gigs from 7pm nightly, club nights until 3am.</p>
+        <div class="place-tip"><strong>Tip:</strong> Check their website for the weekly lineup — the gig programme is exceptional. Right next door to Stramash for a double hit of live music.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎭</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.encoreedinburgh.com" target="_blank" rel="noopener">Encore Speakeasy</a></p>
+            <span class="place-tag gold">Most Glamorous</span>
+          </div>
+        </div>
+        <p class="place-address">4 Hope Street, Edinburgh EH2 4DB</p>
+        <p class="place-desc">Edinburgh's most glamorous secret bar — a Moulin Rouge-inspired underground speakeasy hidden below the West End Brasserie. Enter through a picture frame door into red velvet sofas, gold trim booths, a "Press for Cocktails" button, and theatrical Parisian-inspired cocktails. Live DJs playing disco, funk, soul and R&B on weekends. Pure opulence.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book ahead — fills up fast on weekends. Dress up, sportswear not allowed. The art deco photo booth is a must!</div>
+      </div>
+
     </div>
   </div>
 
-  <!-- WHISKY -->
   <div class="category-section" id="cat-whisky">
     <div class="section-header">
       <p class="section-eyebrow">Scotland's Liquid Gold</p>
@@ -469,10 +520,33 @@
         <div class="place-tip"><strong>Tip:</strong> The Grassmarket location is the most atmospheric — perfect after a browse of Victoria Street.</div>
       </div>
 
-    </div>
-  </div>
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧪</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://brewlabcoffee.co.uk" target="_blank" rel="noopener">Brew Lab Coffee</a></p>
+            <span class="place-tag">Specialty Roaster</span>
+          </div>
+        </div>
+        <p class="place-address">6–8 South College Street, Edinburgh EH8 9AA</p>
+        <p class="place-desc">One of Edinburgh's first and finest third-wave coffee shops — a minimalist, lab-like space near the National Museum of Scotland where the baristas treat every cup like a masterclass. Single origin beans, precise brewing methods, and a great food menu of toasties and bagels. Perfect for a serious coffee stop in the Old Town.</p>
+        <div class="place-tip"><strong>Tip:</strong> Ask the baristas about their current beans — they genuinely love talking about it. Steps from the National Museum.</div>
+      </div>
 
-  <!-- SNACKS -->
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏔️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.cairngorm.coffee" target="_blank" rel="noopener">Cairngorm Coffee</a></p>
+            <span class="place-tag">New Town Favourite</span>
+          </div>
+        </div>
+        <p class="place-address">1 Melville Place, Edinburgh EH3 7PR</p>
+        <p class="place-desc">Edinburgh's brightest and most beautiful café — a gorgeous corner space in the New Town with an entire wall of windows flooding the room with light. Named after Scotland's famous mountain range, they roast their own beans in the Cairngorms using the first San Remo Opera machine in Scotland. Exceptional coffee, healthy food options, and a wonderfully airy vibe.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Melville Place location is the most beautiful — a perfect stop on the way to Dean Village. Also has a Frederick Street location in central New Town.</div>
+      </div>
+
+
   <div class="category-section" id="cat-snacks">
     <div class="section-header">
       <p class="section-eyebrow">For the Hungry Wanderer</p>
@@ -523,9 +597,18 @@
 
       <div class="place-card">
         <div class="place-header">
-          <span class="place-emoji">🥐</span>
+          <span class="place-emoji">🍫</span>
           <div class="place-title-group">
-            <p class="place-name"><a href="https://www.twelvetriangles.com" target="_blank" rel="noopener">Twelve Triangles</a></p>
+            <p class="place-name"><a href="https://www.chocolatarium.co.uk" target="_blank" rel="noopener">The Chocolatarium</a></p>
+            <span class="place-tag gold">Viral on TikTok</span>
+          </div>
+        </div>
+        <p class="place-address">3–5 Cranston Street, Edinburgh EH8 8BE</p>
+        <p class="place-desc">Scotland's most talked-about chocolate experience — a 90-minute immersive tour at a micro-factory just off the Royal Mile. Taste over 40 varieties of chocolate including haggis chocolate, chilli chocolate and Japanese chocolate, then make your own bar to take home. A TripAdvisor Best of the Best winner and all over TikTok for good reason.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book in advance — it sells out fast. Try the whisky truffle making experience for the most Scottish version! Adults £28.</div>
+      </div>
+
+
             <span class="place-tag">Artisan Bakery</span>
           </div>
         </div>
@@ -588,9 +671,31 @@
 
       <div class="place-card">
         <div class="place-header">
-          <span class="place-emoji">👗</span>
+          <span class="place-emoji">📚</span>
           <div class="place-title-group">
-            <p class="place-name">George Street</p>
+            <p class="place-name"><a href="https://www.toppingbooks.co.uk" target="_blank" rel="noopener">Topping & Company Booksellers</a></p>
+            <span class="place-tag gold">Edinburgh's Best Bookshop</span>
+          </div>
+        </div>
+        <p class="place-address">2 Blenheim Place, Edinburgh EH7 5JH</p>
+        <p class="place-desc">Edinburgh's most magical bookshop — a breathtaking three-floor independent in a beautiful Grade A listed building with floor-to-ceiling shelves and iconic rolling library ladders. Over 70,000 books including signed first editions, and they serve complimentary tea and coffee to every browser. Open 9am–9pm daily. An absolute must.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a cup of tea, climb a ladder, and lose yourself for an hour. They also do signed author editions and literary events.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🕯️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.thegentlymad.co.uk" target="_blank" rel="noopener">The Gently Mad</a></p>
+            <span class="place-tag">Antiquarian Bookshop</span>
+          </div>
+        </div>
+        <p class="place-address">2 Summer Place, Edinburgh EH3 5NR</p>
+        <p class="place-desc">One of Edinburgh's most enchanting hidden gems — a tiny family-run antiquarian bookshop and working bookbindery near the Royal Botanic Garden. Stacked floor to ceiling with rare books, leather-bound classics, vintage illustrated editions and old maps, all watched over by warm lamplight and the scent of aged paper. Pure dark academia magic.</p>
+        <div class="place-tip"><strong>Tip:</strong> Combine with a walk through the Royal Botanic Garden — it's a 5-minute stroll. Check hours before visiting as they vary.</div>
+      </div>
+
+
             <span class="place-tag">Fashion Hub</span>
           </div>
         </div>
@@ -653,9 +758,18 @@
 
       <div class="place-card">
         <div class="place-header">
-          <span class="place-emoji">🏛️</span>
+          <span class="place-emoji">🍺</span>
           <div class="place-title-group">
-            <p class="place-name"><a href="https://www.nms.ac.uk" target="_blank" rel="noopener">National Museum of Scotland</a></p>
+            <p class="place-name"><a href="https://www.nicholsonspubs.co.uk/restaurants/scotlandandnorthernireland/thelastdropgrassmarketedinburgh" target="_blank" rel="noopener">The Last Drop</a></p>
+            <span class="place-tag gold">Historic Pub</span>
+          </div>
+        </div>
+        <p class="place-address">74–78 Grassmarket, Edinburgh EH1 2JR</p>
+        <p class="place-desc">One of Edinburgh's most atmospheric pubs — and its name is delightfully macabre. Built right next to the Grassmarket gallows, it's named after the last public hanging in Edinburgh in 1864. The condemned would reportedly have their final drink here before their execution across the road. Low ceilings, cosy booths, cask ales, great Scottish pub food, and allegedly a resident ghost. A proper Edinburgh experience.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a window seat with views up to Edinburgh Castle and order a Scotch pie with your pint. The history alone is worth the visit!</div>
+      </div>
+
+
             <span class="place-tag">Free Entry</span>
           </div>
         </div>
