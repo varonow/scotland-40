@@ -249,6 +249,22 @@
 
   .place-tip strong { color: var(--gold); }
 
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--heather);
+    text-decoration: none;
+    margin-top: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .map-link:hover { color: var(--forest); }
+
   footer {
     background: var(--dark);
     text-align: center;
@@ -278,22 +294,10 @@
   </div>
 </header>
 
-<!-- MAP SECTION -->
-<div style="background: white; border-bottom: 1px solid var(--mist);">
-  <div style="max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem;">
-    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--heather); margin-bottom: 0.5rem;">Edinburgh · Our Picks</p>
-    <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: var(--forest); margin-bottom: 0.25rem;">The Map</h2>
-    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--stone); font-size: 1rem; margin-bottom: 1.25rem;">Tap any pin to open in Google Maps</p>
-    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--mist);">
-      <iframe src="https://www.google.com/maps/d/embed?mid=1Ex_U7Ylm4X7amKyEVFuimXdpk8ChdaE&ehbc=2E312F&noprof=1" width="100%" height="420" style="border:0; display:block;" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 10px; letter-spacing: 0.1em; color: var(--stone); margin-top: 0.75rem; text-align: center;">
-      <a href="https://maps.app.goo.gl/edinburgh" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none;">Open full map in Google Maps →</a>
-    </p>
-  </div>
-</div>
+<!-- CATEGORY TABS -->
 <div class="category-tabs">
-  <button class="category-tab active" onclick="showCategory('cocktails')">🍸 Cocktails</button>
+  <button class="category-tab active" onclick="showCategory('map')">🗺️ Map</button>
+  <button class="category-tab" onclick="showCategory('cocktails')">🍸 Cocktails</button>
   <button class="category-tab" onclick="showCategory('whisky')">🥃 Whisky</button>
   <button class="category-tab" onclick="showCategory('coffee')">☕ Coffee</button>
   <button class="category-tab" onclick="showCategory('snacks')">🍦 Snacks</button>
@@ -303,8 +307,22 @@
 
 <main>
 
+  <!-- MAP TAB -->
+  <div class="category-section active" id="cat-map">
+    <div class="section-header">
+      <p class="section-eyebrow">Edinburgh · All Our Picks</p>
+      <h2 class="section-title">The Map</h2>
+      <p class="section-desc">All 34 recommended spots — tap any pin to open in Google Maps</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--mist);">
+      <iframe src="https://www.google.com/maps/d/embed?mid=1Ex_U7Ylm4X7amKyEVFuimXdpk8ChdaE&ehbc=2E312F&noprof=1" width="100%" height="520" style="border:0; display:block;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--stone); margin-top: 1rem; text-align: center;">Browse the tabs above to read about each spot 👆</p>
+  </div>
+
   <!-- COCKTAILS -->
-  <div class="category-section active" id="cat-cocktails">
+  <div class="category-section" id="cat-cocktails">
     <div class="section-header">
       <p class="section-eyebrow">Beyond the Scheduled Stops</p>
       <h2 class="section-title">Cocktail Bars</h2>
@@ -322,6 +340,7 @@
           </div>
         </div>
         <p class="place-address">79 Queen Street, Edinburgh EH2 4NF</p>
+        <a href="https://maps.google.com/?q=Panda+%26+Sons+79+Queen+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most iconic speakeasy — hidden behind a bookshelf in what appears to be an old barbershop. Named World's Best Bar in 2025, this is a rite of passage for any serious Edinburgh visitor. Ring the bell, find the bookcase, and prepare to be blown away.</p>
         <div class="place-tip"><strong>Tip:</strong> Ring the doorbell of the "barbershop" and push the bookshelf to enter. Book ahead — it fills up fast.</div>
       </div>
@@ -335,6 +354,7 @@
           </div>
         </div>
         <p class="place-address">16A Queen Street, Edinburgh EH2 1JE</p>
+        <a href="https://maps.google.com/?q=Bramble+Bar+16A+Queen+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">The original Edinburgh speakeasy that started it all. Hidden in a New Town basement with tea lights, alcoves, and exposed brick, Bramble has been one of the city's most beloved cocktail bars since 2006. Classic, unpretentious, and absolutely brilliant.</p>
         <div class="place-tip"><strong>Tip:</strong> No sign outside — look for the steps down on Queen Street, just doors from Panda & Sons. Do both in one evening!</div>
       </div>
@@ -348,6 +368,7 @@
           </div>
         </div>
         <p class="place-address">49 Bread Street, Edinburgh EH3 9AH</p>
+        <a href="https://maps.google.com/?q=Hey+Palu+49+Bread+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">A love letter to Italian aperitivo culture — ranked #17 in the UK Top 50 cocktail bars. Famous for its extraordinary amaro collection, frozen Martinis straight from the freezer, and Italian-inspired nibbles. Chic, intimate, and utterly delicious.</p>
         <div class="place-tip"><strong>Tip:</strong> Try an amaro flight if you've never explored Italian bitters — the bar team are passionate guides.</div>
       </div>
@@ -361,6 +382,7 @@
           </div>
         </div>
         <p class="place-address">St James Quarter & George Street, Edinburgh</p>
+        <a href="https://maps.google.com/?q=The+Alchemist+St+James+Quarter+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most theatrical cocktail experience — think dry ice, flames, smoking drinks and novelty props. Every drink is a performance. Not the most nuanced cocktail bar in the city, but wildly fun and extremely Instagrammable.</p>
         <div class="place-tip"><strong>Tip:</strong> The St James Quarter location is steps from Duck & Waffle — perfect for a pre or post-lunch drink on Day 1.</div>
       </div>
@@ -374,6 +396,7 @@
           </div>
         </div>
         <p class="place-address">Rose Street North Lane, Edinburgh EH2</p>
+        <a href="https://maps.google.com/?q=Never+Really+Here+Rose+Street+North+Lane+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most secretive bar — no menu, no sign, no fanfare. Just an unmarked door on Rose Street North Lane. Tell the bartender what you're feeling and they'll craft something bespoke just for you. One of the most special bar experiences in Scotland.</p>
         <div class="place-tip"><strong>Tip:</strong> Small capacity — arrive early or you may not get in. Strict policy on group sizes.</div>
       </div>
@@ -387,6 +410,7 @@
           </div>
         </div>
         <p class="place-address">207 Cowgate, Edinburgh EH1 1JQ</p>
+        <a href="https://maps.google.com/?q=Stramash+207+Cowgate+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's greatest live music bar — a massive 900-capacity converted church on the Cowgate with live bands playing every single night until 3am, completely free. Two floors, a huge stage, mezzanine bar, and a bouncing dancefloor. Wednesday nights feature a traditional ceilidh. If you want to dance until 3am after the Voodoo Rooms or Department of Magic, this is where you end up.</p>
         <div class="place-tip"><strong>Tip:</strong> Free entry every night — just show up. Wednesday ceilidh is brilliant for a first-timer, even better after a few drams.</div>
       </div>
@@ -400,6 +424,7 @@
           </div>
         </div>
         <p class="place-address">73 Cowgate, Edinburgh EH1 1JW</p>
+        <a href="https://maps.google.com/?q=Sneaky+Petes+73+Cowgate+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most legendary grassroots music club — a tiny 100-capacity basement on the Cowgate where Lewis Capaldi and Mumford & Sons played their early gigs. Named by DJ Magazine as one of the most important clubs in the world. Dark, brick-lined, loud, and absolutely electric. Gigs from 7pm nightly, club nights until 3am.</p>
         <div class="place-tip"><strong>Tip:</strong> Check their website for the weekly lineup — the gig programme is exceptional. Right next door to Stramash for a double hit of live music.</div>
       </div>
@@ -413,6 +438,7 @@
           </div>
         </div>
         <p class="place-address">4 Hope Street, Edinburgh EH2 4DB</p>
+        <a href="https://maps.google.com/?q=Encore+Speakeasy+4+Hope+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most glamorous secret bar — a Moulin Rouge-inspired underground speakeasy hidden below the West End Brasserie. Enter through a picture frame door into red velvet sofas, gold trim booths, a "Press for Cocktails" button, and theatrical Parisian-inspired cocktails. Live DJs playing disco, funk, soul and R&B on weekends. Pure opulence.</p>
         <div class="place-tip"><strong>Tip:</strong> Book ahead — fills up fast on weekends. Dress up, sportswear not allowed. The art deco photo booth is a must!</div>
       </div>
@@ -438,6 +464,7 @@
           </div>
         </div>
         <p class="place-address">145 Princes Street, Edinburgh EH2 4BL</p>
+        <a href="https://maps.google.com/?q=Johnnie+Walker+145+Princes+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">A stunning five-floor whisky experience in the heart of Edinburgh with the best castle views in the city from the rooftop 1820 bar. Take an immersive whisky tour and sample three whisky cocktails, then head to the rooftop terrace for sunset views of Edinburgh Castle. One of the best experiences in the city.</p>
         <div class="place-tip"><strong>Tip:</strong> Book the tour in advance — and anyone can visit the 1820 rooftop bar without a tour. Go at sunset!</div>
       </div>
@@ -464,6 +491,7 @@
           </div>
         </div>
         <p class="place-address">379 High Street, Royal Mile, Edinburgh EH1 1PW</p>
+        <a href="https://maps.google.com/?q=Royal+Mile+Whiskies+379+High+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's finest whisky shop — stocking hundreds of expressions from rare single malts to blended Scotch. Perfect for picking up a bottle to bring home or finding something truly special. The knowledgeable staff will help you find exactly the right dram.</p>
         <div class="place-tip"><strong>Tip:</strong> Look for limited edition releases and exclusive bottlings you won't find at home.</div>
       </div>
@@ -490,6 +518,7 @@
           </div>
         </div>
         <p class="place-address">52 Cockburn Street, Edinburgh EH1 1PB</p>
+        <a href="https://maps.google.com/?q=The+Milkman+52+Cockburn+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most charming café — tucked in a beautifully restored old sweet shop on Cockburn Street with curved windows made famous on Instagram. The coffee is excellent and the morning buns are legendary. A perfect rest stop right near the Royal Mile.</p>
         <div class="place-tip"><strong>Tip:</strong> Grab a window seat to watch the world go by on one of Edinburgh's most photogenic streets. Go early to beat the queues.</div>
       </div>
@@ -516,6 +545,7 @@
           </div>
         </div>
         <p class="place-address">Multiple locations, Edinburgh</p>
+        <a href="https://maps.google.com/?q=Twelve+Triangles+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's beloved Swedish café — utterly beautiful Scandi-inspired interiors with fluffy cardamom buns filled with almond paste and whipped cream alongside silky flat whites. Warm, unhurried, and the perfect spot to rest tired feet between sightseeing.</p>
         <div class="place-tip"><strong>Tip:</strong> The Grassmarket location is the most atmospheric — perfect after a browse of Victoria Street.</div>
       </div>
@@ -529,6 +559,7 @@
           </div>
         </div>
         <p class="place-address">6–8 South College Street, Edinburgh EH8 9AA</p>
+        <a href="https://maps.google.com/?q=Brew+Lab+Coffee+6+South+College+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">One of Edinburgh's first and finest third-wave coffee shops — a minimalist, lab-like space near the National Museum of Scotland where the baristas treat every cup like a masterclass. Single origin beans, precise brewing methods, and a great food menu of toasties and bagels. Perfect for a serious coffee stop in the Old Town.</p>
         <div class="place-tip"><strong>Tip:</strong> Ask the baristas about their current beans — they genuinely love talking about it. Steps from the National Museum.</div>
       </div>
@@ -542,6 +573,7 @@
           </div>
         </div>
         <p class="place-address">1 Melville Place, Edinburgh EH3 7PR</p>
+        <a href="https://maps.google.com/?q=Cairngorm+Coffee+1+Melville+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's brightest and most beautiful café — a gorgeous corner space in the New Town with an entire wall of windows flooding the room with light. Named after Scotland's famous mountain range, they roast their own beans in the Cairngorms using the first San Remo Opera machine in Scotland. Exceptional coffee, healthy food options, and a wonderfully airy vibe.</p>
         <div class="place-tip"><strong>Tip:</strong> The Melville Place location is the most beautiful — a perfect stop on the way to Dean Village. Also has a Frederick Street location in central New Town.</div>
       </div>
@@ -565,6 +597,7 @@
           </div>
         </div>
         <p class="place-address">19 Grassmarket, Edinburgh EH1 2HS</p>
+        <a href="https://maps.google.com/?q=Marys+Milk+Bar+19+Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Voted the best ice cream in the UK — a tiny retro gelato parlour in the Grassmarket with views straight up to Edinburgh Castle. Mary trained at the Carpigiani Gelato University in Bologna and makes new flavours every morning. Expect queues, but they move fast and every scoop is worth it. Try the spaghetti gelato — a scoop presented as spaghetti with cherry "meatballs" and white chocolate "parmesan."</p>
         <div class="place-tip"><strong>Tip:</strong> Check their Instagram the morning of your visit to see that day's flavours. Open Wed–Sun 11am–7:30pm.</div>
       </div>
@@ -578,6 +611,7 @@
           </div>
         </div>
         <p class="place-address">Victoria Street, Edinburgh</p>
+        <a href="https://maps.google.com/?q=Victoria+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Proper Scottish fish and chips — crispy battered haddock, golden chips, and mushy peas on Victoria Street. Sometimes you just need the most perfectly executed version of a classic. This is it. Grab a paper cone and eat them on the Grassmarket steps watching Edinburgh Castle.</p>
         <div class="place-tip"><strong>Tip:</strong> Get the haggis and chips if you want the full Scottish experience.</div>
       </div>
@@ -591,6 +625,7 @@
           </div>
         </div>
         <p class="place-address">30A Victoria Street, Edinburgh EH1 2JW</p>
+        <a href="https://maps.google.com/?q=IJ+Mellis+30A+Victoria+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's legendary artisan cheesemonger on Victoria Street — a cave-like shop bursting with extraordinary farmhouse and artisan cheeses from Scotland and beyond. Pick up a wedge of mature Scottish cheddar or a creamy soft cheese with oatcakes for the perfect impromptu picnic.</p>
         <div class="place-tip"><strong>Tip:</strong> The staff will let you taste before you buy — ask for a recommendation and they'll find your perfect cheese.</div>
       </div>
@@ -604,6 +639,7 @@
           </div>
         </div>
         <p class="place-address">3–5 Cranston Street, Edinburgh EH8 8BE</p>
+        <a href="https://maps.google.com/?q=Chocolatarium+3+Cranston+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Scotland's most talked-about chocolate experience — a 90-minute immersive tour at a micro-factory just off the Royal Mile. Taste over 40 varieties of chocolate including haggis chocolate, chilli chocolate and Japanese chocolate, then make your own bar to take home. A TripAdvisor Best of the Best winner and all over TikTok for good reason.</p>
         <div class="place-tip"><strong>Tip:</strong> Book in advance — it sells out fast. Try the whisky truffle making experience for the most Scottish version! Adults £28.</div>
       </div>
@@ -639,6 +675,7 @@
           </div>
         </div>
         <p class="place-address">Victoria Street, Edinburgh EH1</p>
+        <a href="https://maps.google.com/?q=Berties+Fish+Chips+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most beautiful shopping street — a winding rainbow of colourful buildings said to have inspired J.K. Rowling's Diagon Alley. Lined with independent boutiques, artisan cheese shops, whisky stores, and galleries. You're already visiting for the bag making workshop — but leave time to browse.</p>
         <div class="place-tip"><strong>Tip:</strong> Don't miss the Red Door Gallery for Scottish art prints, and Museum Context for Harry Potter collectibles.</div>
       </div>
@@ -665,6 +702,7 @@
           </div>
         </div>
         <p class="place-address">Grassmarket, Edinburgh EH1 2JU</p>
+        <a href="https://maps.google.com/?q=Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most characterful shopping area — cobbled streets beneath the castle packed with independent boutiques, vintage shops, and artisan makers. Highlights include Fabhatrix for handmade hats, Armstrong's Vintage for incredible second-hand finds, and Walker & Slater for beautiful Scottish tweed.</p>
         <div class="place-tip"><strong>Tip:</strong> Saturday morning brings a weekly market with local crafts, artisan food, and live music.</div>
       </div>
@@ -678,6 +716,7 @@
           </div>
         </div>
         <p class="place-address">2 Blenheim Place, Edinburgh EH7 5JH</p>
+        <a href="https://maps.google.com/?q=Topping+Company+2+Blenheim+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most magical bookshop — a breathtaking three-floor independent in a beautiful Grade A listed building with floor-to-ceiling shelves and iconic rolling library ladders. Over 70,000 books including signed first editions, and they serve complimentary tea and coffee to every browser. Open 9am–9pm daily. An absolute must.</p>
         <div class="place-tip"><strong>Tip:</strong> Grab a cup of tea, climb a ladder, and lose yourself for an hour. They also do signed author editions and literary events.</div>
       </div>
@@ -691,6 +730,7 @@
           </div>
         </div>
         <p class="place-address">2 Summer Place, Edinburgh EH3 5NR</p>
+        <a href="https://maps.google.com/?q=The+Gently+Mad+2+Summer+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">One of Edinburgh's most enchanting hidden gems — a tiny family-run antiquarian bookshop and working bookbindery near the Royal Botanic Garden. Stacked floor to ceiling with rare books, leather-bound classics, vintage illustrated editions and old maps, all watched over by warm lamplight and the scent of aged paper. Pure dark academia magic.</p>
         <div class="place-tip"><strong>Tip:</strong> Combine with a walk through the Royal Botanic Garden — it's a 5-minute stroll. Check hours before visiting as they vary.</div>
       </div>
@@ -700,6 +740,7 @@
           </div>
         </div>
         <p class="place-address">George Street, Edinburgh EH2</p>
+        <a href="https://maps.google.com/?q=George+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's chic fashion thoroughfare — a broad Georgian boulevard lined with stylish brands including Anthropologie, Reiss, Karen Millen, AllSaints, and Oliver Bonas alongside beautiful bars and restaurants. Perfect for a leisurely browse followed by a cocktail at one of the street's gorgeous bars.</p>
         <div class="place-tip"><strong>Tip:</strong> Rox Jewellers on George Street has some stunning Scottish-inspired fine jewellery — a beautiful souvenir.</div>
       </div>
@@ -726,6 +767,7 @@
           </div>
         </div>
         <p class="place-address">Calton Hill, Edinburgh EH7 5AA</p>
+        <a href="https://maps.google.com/?q=Calton+Hill+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most spectacular viewpoint — a short climb from the city centre rewarded with panoramic 360-degree views of the castle, Arthur's Seat, the Firth of Forth, and the entire city skyline. Home to the unfinished National Monument (Edinburgh's "Disgrace") and the Nelson Monument. A must for golden hour.</p>
         <div class="place-tip"><strong>Tip:</strong> Takes about 15 minutes to walk from The Balmoral. Go just before sunset for the most magical views.</div>
       </div>
@@ -739,6 +781,7 @@
           </div>
         </div>
         <p class="place-address">Greyfriars Place, Edinburgh EH1 2QQ</p>
+        <a href="https://maps.google.com/?q=Greyfriars+Kirkyard+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's most atmospheric graveyard — and the real-life inspiration for Harry Potter. Find Tom Riddle's grave, the graves that inspired other characters, and see the view of George Heriot's School (the real Hogwarts) over the wall. Also home to the statue of Greyfriars Bobby, Edinburgh's most loyal dog.</p>
         <div class="place-tip"><strong>Tip:</strong> Free to enter and takes 20 minutes. The adjacent Greyfriars Bobby pub is a lovely spot for a pint afterwards.</div>
       </div>
@@ -765,6 +808,7 @@
           </div>
         </div>
         <p class="place-address">74–78 Grassmarket, Edinburgh EH1 2JR</p>
+        <a href="https://maps.google.com/?q=The+Last+Drop+74+Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">One of Edinburgh's most atmospheric pubs — and its name is delightfully macabre. Built right next to the Grassmarket gallows, it's named after the last public hanging in Edinburgh in 1864. The condemned would reportedly have their final drink here before their execution across the road. Low ceilings, cosy booths, cask ales, great Scottish pub food, and allegedly a resident ghost. A proper Edinburgh experience.</p>
         <div class="place-tip"><strong>Tip:</strong> Grab a window seat with views up to Edinburgh Castle and order a Scotch pie with your pint. The history alone is worth the visit!</div>
       </div>
@@ -774,6 +818,7 @@
           </div>
         </div>
         <p class="place-address">Chambers Street, Edinburgh EH1 1JF</p>
+        <a href="https://maps.google.com/?q=National+Museum+of+Scotland+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">One of the best free museums in Europe — a spectacular Victorian building housing thousands of years of Scottish and world history. From Dolly the Sheep to ancient Scottish treasures, Viking artefacts, and the story of Scotland's clans and tartans. Perfect for an hour on a rainy afternoon.</p>
         <div class="place-tip"><strong>Tip:</strong> Head to the top floor rooftop terrace for free views of the Old Town skyline — Edinburgh Castle looks incredible from here.</div>
       </div>
