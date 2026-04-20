@@ -127,7 +127,7 @@
   main { max-width: 860px; margin: 0 auto; padding: 3rem 2rem; }
 
   /* CATEGORY SECTION */
-  .category-section { display: none; }
+  .category-section { display: none; overflow: hidden; }
   .category-section.active { display: block; }
 
   .section-header { margin-bottom: 2.5rem; }
@@ -645,10 +645,16 @@
       </div>
 
 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥐</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.twelvetriangles.com" target="_blank" rel="noopener">Twelve Triangles</a></p>
             <span class="place-tag">Artisan Bakery</span>
           </div>
         </div>
-        <p class="place-address">Multiple locations, Edinburgh</p>
+        <p class="place-address">90 Brunswick Street, Edinburgh EH7 5HU</p>
+        <a href="https://maps.google.com/?q=Twelve+Triangles+90+Brunswick+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">Edinburgh's finest artisan bakery — every loaf and pastry is made by hand using slow-fermented cold-prove doughs that take three to four days. The grilled cheese toasties, sourdough, and flaky croissants are extraordinary. Perfect for a quick and delicious mid-morning snack.</p>
         <div class="place-tip"><strong>Tip:</strong> Don't miss the seasonal jam doughnuts — they sell out by midday.</div>
       </div>
@@ -842,6 +848,10 @@
     event.target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Ensure only map tab is visible on load
+  document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('cat-map').classList.add('active');
 </script>
 
 </body>
