@@ -327,10 +327,20 @@
   }
 
   @media (max-width: 600px) {
-    .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1rem 1rem 3rem; }
-    .flip-card { height: 340px; }
-    .flip-photo-wrap { width: 90px; height: 90px; }
-    .flip-name { font-size: 1.1rem; }
+    .cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1rem 1rem 3rem;
+      max-width: 420px;
+    }
+    .flip-card { height: 380px; }
+    .flip-photo-wrap { width: 110px; height: 110px; }
+    .flip-name { font-size: 1.2rem; }
+    .flip-back { padding: 1.25rem; }
+    .flip-badge-title { font-size: 1.05rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; }
+    .flip-fact { font-size: 0.9rem; line-height: 1.45; }
+    .flip-prediction { font-size: 0.88rem; }
+
     .bingo-cell { font-size: 0.68rem; min-height: 65px; padding: 0.4rem 0.3rem; }
     .bingo-letter { font-size: 1.2rem; }
     .section-tab { padding: 1rem 1.2rem; font-size: 10px; letter-spacing: 0.1em; }
