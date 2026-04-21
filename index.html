@@ -57,22 +57,33 @@
   </div>
 </div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 45px; width: auto;">
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
   </div>
-  <a href="#flights">Flights</a>
-  <a href="#hotels">Hotels</a>
-  <a href="#itinerary">Itinerary</a>
-  <a href="guide.html">Local Guide</a>
-  <a href="#guests">Our Group</a>
-  <a href="rooms.html">Room Draw</a>
-  <a href="messages.html">Birthday Messages</a>
-  <a href="journal.html">Journal</a>
-  <a href="photos.html">Photos</a>
-  <a href="#" onclick="signOut()" style="color: rgba(255,255,255,0.4);">Sign Out</a>
-</nav>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+    <a href="index.html#flights" onclick="closeMenu()">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="closeMenu()">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="closeMenu()">📅 Itinerary</a>
+    <a href="guide.html" onclick="closeMenu()">🗺️ Local Guide</a>
+    <a href="index.html#guests" onclick="closeMenu()">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="closeMenu()">🎩 Room Draw</a>
+    <a href="messages.html" onclick="closeMenu()">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="closeMenu()">📖 Journal</a>
+    <a href="photos.html" onclick="closeMenu()">📸 Photos</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <!-- FLIGHTS -->
 <section id="flights">

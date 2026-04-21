@@ -458,5 +458,21 @@
   initAdminControls();
 </script>
 
+
+<script>
+  function toggleMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const dropdown = document.getElementById('navDropdown');
+    const overlay = document.getElementById('navOverlay');
+    hamburger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+</script>
 </body>
 </html>

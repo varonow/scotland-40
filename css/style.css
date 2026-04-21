@@ -32,7 +32,7 @@ body {
   position: relative;
   height: 100vh;
   min-height: 600px;
-  background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+  background: #1a1a3a;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,19 +46,14 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(123,94,167,0.3) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.15) 0%, transparent 50%);
+    repeating-linear-gradient(90deg, transparent 0px, transparent 14px, rgba(42,42,90,0.9) 14px, rgba(42,42,90,0.9) 30px, transparent 30px, transparent 44px, rgba(139,0,0,0.85) 44px, rgba(139,0,0,0.85) 50px, transparent 50px, transparent 60px, rgba(42,42,90,0.9) 60px, rgba(42,42,90,0.9) 76px, transparent 76px, transparent 96px, rgba(201,168,76,0.7) 96px, rgba(201,168,76,0.7) 102px, transparent 102px, transparent 116px, rgba(42,42,90,0.9) 116px, rgba(42,42,90,0.9) 132px, transparent 132px, transparent 160px),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 14px, rgba(42,42,90,0.5) 14px, rgba(42,42,90,0.5) 30px, transparent 30px, transparent 44px, rgba(139,0,0,0.45) 44px, rgba(139,0,0,0.45) 50px, transparent 50px, transparent 60px, rgba(42,42,90,0.5) 60px, rgba(42,42,90,0.5) 76px, transparent 76px, transparent 96px, rgba(201,168,76,0.35) 96px, rgba(201,168,76,0.35) 102px, transparent 102px, transparent 116px, rgba(42,42,90,0.5) 116px, rgba(42,42,90,0.5) 132px, transparent 132px, transparent 160px);
 }
 
 .hero-tartan {
   position: absolute;
   inset: 0;
-  opacity: 0.04;
-  background-image:
-    repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
-    repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
-    repeating-linear-gradient(0deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 80px),
-    repeating-linear-gradient(90deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 80px);
+  background: rgba(0,0,0,0.35);
 }
 
 .hero-content {
@@ -658,3 +653,133 @@ footer {
   display: block;
   text-transform: uppercase;
 }
+
+/* ============================================
+   HAMBURGER NAV
+   ============================================ */
+
+/* Remove old nav styles */
+nav { display: none !important; }
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  height: 56px;
+  background: var(--forest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.hamburger {
+  position: absolute;
+  left: 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 600;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-logo-center img {
+  height: 38px;
+  width: auto;
+}
+
+/* DROPDOWN MENU */
+.nav-dropdown {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  z-index: 490;
+  background: var(--forest);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.nav-dropdown.open {
+  max-height: 600px;
+}
+
+.nav-dropdown-inner {
+  padding: 0.5rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-dropdown-inner a {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 0.85rem 1.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-dropdown-inner a:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--gold);
+}
+
+.nav-dropdown-inner a:last-child {
+  border-bottom: none;
+}
+
+.nav-signout {
+  color: rgba(255,255,255,0.4) !important;
+  margin-top: 0.5rem;
+}
+
+/* OVERLAY */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 480;
+}
+
+.nav-overlay.open { display: block; }
+
+/* Push page content down so nav doesn't cover it */
+body { padding-top: 56px; }
+
+.hero { padding-top: 0; }
