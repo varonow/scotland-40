@@ -671,7 +671,7 @@ nav { display: none !important; }
   background: var(--forest);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding: 0 1.25rem;
   box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
