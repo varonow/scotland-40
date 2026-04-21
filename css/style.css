@@ -15,6 +15,8 @@
   --dark: #0D0D0D;
 }
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -23,6 +25,7 @@ body {
   color: var(--dark);
   font-size: 18px;
   line-height: 1.7;
+  padding-top: 56px; /* Ensures space for the fixed nav bar on all pages */
 }
 
 /* ============================================
@@ -780,7 +783,3 @@ nav { display: none !important; }
 
 .nav-overlay.open { display: block; }
 
-/* Push page content down so nav doesn't cover it */
-body { padding-top: 56px; }
-
-.hero { padding-top: 0; }
