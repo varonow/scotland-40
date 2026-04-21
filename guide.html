@@ -282,12 +282,114 @@
     .category-tab { padding: 1rem 1rem; font-size: 10px; }
   }
 </style>
+
+<style>
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    height: 56px;
+    background: #2C4A3E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.25rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .hamburger {
+    position: absolute;
+    left: 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 600;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-logo-center img { height: 38px; width: auto; }
+  .nav-dropdown {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 280px;
+    z-index: 490;
+    background: #2C4A3E;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    box-shadow: 4px 8px 24px rgba(0,0,0,0.3);
+    border-radius: 0 0 12px 0;
+  }
+  .nav-dropdown.open { max-height: 600px; }
+  .nav-dropdown-inner { padding: 0.5rem 0 1rem; display: flex; flex-direction: column; }
+  .nav-dropdown-inner a {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nav-dropdown-inner a:hover { background: rgba(255,255,255,0.07); color: #C9A84C; }
+  .nav-signout { color: rgba(255,255,255,0.4) !important; margin-top: 0.5rem; }
+  .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 480; }
+  .nav-overlay.open { display: block; }
+  body { padding-top: 56px; }
+</style>
 </head>
 <body>
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
+  </div>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+    <a href="index.html#flights" onclick="closeMenu()">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="closeMenu()">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="closeMenu()">📅 Itinerary</a>
+    <a href="guide.html" onclick="closeMenu()">🗺️ Local Guide</a>
+    <a href="index.html#guests" onclick="closeMenu()">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="closeMenu()">🎩 Room Draw</a>
+    <a href="messages.html" onclick="closeMenu()">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="closeMenu()">📖 Journal</a>
+    <a href="photos.html" onclick="closeMenu()">📸 Photos</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <header>
   <div class="header-content">
-    <a href="index.html" class="back-link">← Back to Itinerary</a>
+    
     <p class="header-eyebrow">Scotland 2026 · Edinburgh</p>
     <h1 class="header-title">The <em>Local</em> Guide</h1>
     <p class="header-subtitle">Our curated picks for Edinburgh's best</p>
