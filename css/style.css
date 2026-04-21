@@ -720,13 +720,14 @@ nav { display: none !important; }
   position: fixed;
   top: 56px;
   left: 0;
-  right: 0;
+  width: 280px;
   z-index: 490;
   background: var(--forest);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 4px 8px 24px rgba(0,0,0,0.3);
+  border-radius: 0 0 12px 0;
 }
 
 .nav-dropdown.open {
