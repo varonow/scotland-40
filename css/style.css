@@ -32,7 +32,7 @@ body {
   position: relative;
   height: 100vh;
   min-height: 600px;
-  background: #1a2a1a;
+  background: #151f15;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,8 +46,8 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(44,74,62,0.95) 18px, rgba(44,74,62,0.95) 38px, transparent 38px, transparent 42px, rgba(107,15,26,0.9) 42px, rgba(107,15,26,0.9) 48px, transparent 48px, transparent 52px, rgba(44,74,62,0.95) 52px, rgba(44,74,62,0.95) 72px, transparent 72px, transparent 76px, rgba(201,168,76,0.85) 76px, rgba(201,168,76,0.85) 86px, transparent 86px, transparent 90px, rgba(44,74,62,0.95) 90px, rgba(44,74,62,0.95) 110px, transparent 110px, transparent 128px),
-    repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(44,74,62,0.5) 18px, rgba(44,74,62,0.5) 38px, transparent 38px, transparent 42px, rgba(107,15,26,0.45) 42px, rgba(107,15,26,0.45) 48px, transparent 48px, transparent 52px, rgba(44,74,62,0.5) 52px, rgba(44,74,62,0.5) 72px, transparent 72px, transparent 76px, rgba(201,168,76,0.4) 76px, rgba(201,168,76,0.4) 86px, transparent 86px, transparent 90px, rgba(44,74,62,0.5) 90px, rgba(44,74,62,0.5) 110px, transparent 110px, transparent 128px);
+    repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(44,74,62,0.95) 18px, rgba(44,74,62,0.95) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.85) 44px, rgba(123,94,167,0.85) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.95) 56px, rgba(44,74,62,0.95) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.85) 82px, rgba(201,168,76,0.85) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.95) 92px, rgba(44,74,62,0.95) 110px, transparent 110px, transparent 128px),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(44,74,62,0.5) 18px, rgba(44,74,62,0.5) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.4) 44px, rgba(123,94,167,0.4) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.5) 56px, rgba(44,74,62,0.5) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.4) 82px, rgba(201,168,76,0.4) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.5) 92px, rgba(44,74,62,0.5) 110px, transparent 110px, transparent 128px);
 }
 
 .hero-tartan {
@@ -515,7 +515,7 @@ section { padding: 5rem 2rem; max-width: 860px; margin: 0 auto; }
    FOOTER
    ============================================ */
 footer {
-  background: var(--dark);
+  background: var(--forest);
   text-align: center;
   padding: 3rem 2rem;
 }
