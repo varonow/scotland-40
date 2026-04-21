@@ -32,7 +32,7 @@ body {
   position: relative;
   height: 100vh;
   min-height: 600px;
-  background: #1a1a3a;
+  background: #1a2a1a;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,14 +46,14 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    repeating-linear-gradient(90deg, transparent 0px, transparent 14px, rgba(42,42,90,0.9) 14px, rgba(42,42,90,0.9) 30px, transparent 30px, transparent 44px, rgba(139,0,0,0.85) 44px, rgba(139,0,0,0.85) 50px, transparent 50px, transparent 60px, rgba(42,42,90,0.9) 60px, rgba(42,42,90,0.9) 76px, transparent 76px, transparent 96px, rgba(201,168,76,0.7) 96px, rgba(201,168,76,0.7) 102px, transparent 102px, transparent 116px, rgba(42,42,90,0.9) 116px, rgba(42,42,90,0.9) 132px, transparent 132px, transparent 160px),
-    repeating-linear-gradient(0deg, transparent 0px, transparent 14px, rgba(42,42,90,0.5) 14px, rgba(42,42,90,0.5) 30px, transparent 30px, transparent 44px, rgba(139,0,0,0.45) 44px, rgba(139,0,0,0.45) 50px, transparent 50px, transparent 60px, rgba(42,42,90,0.5) 60px, rgba(42,42,90,0.5) 76px, transparent 76px, transparent 96px, rgba(201,168,76,0.35) 96px, rgba(201,168,76,0.35) 102px, transparent 102px, transparent 116px, rgba(42,42,90,0.5) 116px, rgba(42,42,90,0.5) 132px, transparent 132px, transparent 160px);
+    repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(44,74,62,0.95) 18px, rgba(44,74,62,0.95) 38px, transparent 38px, transparent 42px, rgba(107,15,26,0.9) 42px, rgba(107,15,26,0.9) 48px, transparent 48px, transparent 52px, rgba(44,74,62,0.95) 52px, rgba(44,74,62,0.95) 72px, transparent 72px, transparent 76px, rgba(201,168,76,0.85) 76px, rgba(201,168,76,0.85) 86px, transparent 86px, transparent 90px, rgba(44,74,62,0.95) 90px, rgba(44,74,62,0.95) 110px, transparent 110px, transparent 128px),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(44,74,62,0.5) 18px, rgba(44,74,62,0.5) 38px, transparent 38px, transparent 42px, rgba(107,15,26,0.45) 42px, rgba(107,15,26,0.45) 48px, transparent 48px, transparent 52px, rgba(44,74,62,0.5) 52px, rgba(44,74,62,0.5) 72px, transparent 72px, transparent 76px, rgba(201,168,76,0.4) 76px, rgba(201,168,76,0.4) 86px, transparent 86px, transparent 90px, rgba(44,74,62,0.5) 90px, rgba(44,74,62,0.5) 110px, transparent 110px, transparent 128px);
 }
 
 .hero-tartan {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.38);
 }
 
 .hero-content {
