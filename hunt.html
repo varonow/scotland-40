@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scavenger Hunt | Joyce Just a Wee Bit 40 🏴󠁧󠁢󠁳󠁣󠁴󠁿</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --green: #2C4A3E;
+      --gold: #C9A84C;
+      --purple: #7B5EA7;
+      --cream: #F9F5EE;
+      --easy: #4A7C59;
+      --medium: #B8860B;
+      --hard: #8B2535;
+      --easy-bg: #e8f5ec;
+      --medium-bg: #fdf5e0;
+      --hard-bg: #fce8ea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: var(--cream);
+      color: #333;
+    }
+
+    /* ── PAGE HERO ── */
+    .hunt-hero {
+      background: var(--forest);
+      color: var(--gold);
+      text-align: center;
+      padding: 36px 20px 28px;
+      border-bottom: 3px solid var(--gold);
+    }
+    .hunt-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .hunt-hero p {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.95rem;
+      max-width: 560px;
+      margin: 0 auto 18px;
+      line-height: 1.5;
+    }
+    .point-legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .legend-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .legend-dot.easy { background: #6bc47a; }
+    .legend-dot.medium { background: #f0c040; }
+    .legend-dot.hard { background: #e05060; }
+
+    /* ── TABS ── */
+    .tab-bar {
+      display: flex;
+      background: #fff;
+      border-bottom: 2px solid #e0d9cc;
+      position: sticky;
+      top: 65px;
+      z-index: 90;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 8px;
+      background: none;
+      border: none;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--forest);
+      border-bottom-color: var(--gold);
+    }
+    .tab-btn:hover { color: var(--forest); }
+
+    /* ── MAIN CONTENT ── */
+    .tab-content { display: none; padding: 24px 16px 60px; max-width: 1100px; margin: 0 auto; }
+    .tab-content.active { display: block; }
+
+    /* ── SCORE SUMMARY BAR ── */
+    .my-score-bar {
+      background: var(--forest);
+      color: white;
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .my-score-bar .score-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    .my-score-bar .score-label { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+    .my-score-bar .score-meta { text-align: right; }
+
+    /* ── CHALLENGE GRID ── */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .challenge-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 1.5px solid #e5ddd0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+    .challenge-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .challenge-card.submitted { border-color: var(--gold); }
+    .challenge-card.won { border-color: #6bc47a; background: #f6fff8; }
+    .challenge-card.dismissed { opacity: 0.6; }
+
+    .card-difficulty-bar {
+      height: 5px;
+    }
+    .card-difficulty-bar.easy { background: #4A7C59; }
+    .card-difficulty-bar.medium { background: #B8860B; }
+    .card-difficulty-bar.hard { background: #8B2535; }
+
+    .card-body {
+      padding: 14px 15px 12px;
+    }
+    .card-num {
+      font-size: 0.7rem;
+      color: #aaa;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    .card-text {
+      font-size: 0.92rem;
+      line-height: 1.4;
+      color: #333;
+      margin-bottom: 12px;
+      min-height: 40px;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pts-badge {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.78rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .pts-badge.easy { background: var(--easy-bg); color: #4A7C59; }
+    .pts-badge.medium { background: var(--medium-bg); color: #B8860B; }
+    .pts-badge.hard { background: var(--hard-bg); color: #8B2535; }
+
+    .card-status {
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .card-status.not-done { color: #ccc; }
+    .card-status.submitted-status { color: var(--gold); }
+    .card-status.won-status { color: #4A9C5D; }
+    .card-status.dismissed-status { color: #e05060; }
+
+    .card-thumb {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+      border-top: 1px solid #eee;
+    }
+
+    /* ── UPLOAD MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      background: var(--forest);
+      color: var(--gold);
+      padding: 18px 22px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-body { padding: 22px; }
+    .modal-challenge-text {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .modal-pts {
+      font-size: 0.83rem;
+      color: #888;
+      margin-bottom: 18px;
+    }
+    .modal-pts strong { color: var(--forest); }
+
+    .upload-zone {
+      border: 2px dashed #d0c8b8;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--gold); background: #fffdf7; }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .upload-text { font-size: 0.88rem; color: #888; line-height: 1.4; }
+    .upload-preview {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--forest);
+      color: var(--gold);
+      border: none;
+      border-radius: 8px;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .submit-btn:hover { opacity: 0.88; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .modal-already-submitted {
+      text-align: center;
+      padding: 10px 0;
+    }
+    .modal-already-submitted img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .submitted-msg {
+      font-size: 0.9rem;
+      color: var(--forest);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .dismissed-msg {
+      font-size: 0.9rem;
+      color: #e05060;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .resubmit-note { font-size: 0.8rem; color: #888; }
+
+    /* ── LEADERBOARD ── */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .leaderboard-table th {
+      background: var(--forest);
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      padding: 14px 16px;
+      text-align: left;
+    }
+    .leaderboard-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid #f0ebe0;
+      font-size: 0.92rem;
+    }
+    .leaderboard-table tr:last-child td { border-bottom: none; }
+    .leaderboard-table tr:hover td { background: #fffdf7; }
+    .rank-cell { font-family: 'Playfair Display', serif; color: #aaa; width: 40px; }
+    .rank-cell.gold { color: #C9A84C; font-size: 1.1rem; }
+    .rank-cell.silver { color: #999; font-size: 1rem; }
+    .rank-cell.bronze { color: #b07d4a; font-size: 1rem; }
+    .score-cell { font-family: 'Playfair Display', serif; color: var(--forest); font-size: 1rem; text-align: right; }
+    .completed-cell { color: #888; font-size: 0.82rem; text-align: center; }
+
+    /* ── ADMIN ── */
+    .admin-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--forest);
+      letter-spacing: 1px;
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .admin-card {
+      background: #fff;
+      border-radius: 10px;
+      border: 1.5px solid #e5ddd0;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .admin-card-header {
+      background: #f7f3ec;
+      padding: 11px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .admin-challenge-label {
+      font-size: 0.82rem;
+      color: #555;
+      font-weight: 700;
+    }
+    .admin-card-body {
+      padding: 14px 15px;
+    }
+    .submission-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0ebe0;
+    }
+    .submission-row:last-child { border-bottom: none; }
+    .sub-thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .sub-info { flex: 1; }
+    .sub-name { font-weight: 700; font-size: 0.88rem; color: #333; }
+    .sub-time { font-size: 0.77rem; color: #aaa; margin: 2px 0 6px; }
+    .sub-rank { font-size: 0.77rem; }
+    .sub-rank.first { color: #4A9C5D; font-weight: 700; }
+    .sub-rank.other { color: #888; }
+    .sub-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .btn-dismiss {
+      padding: 5px 14px;
+      background: #fce8ea;
+      color: #c0392b;
+      border: 1.5px solid #e8a0a0;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-dismiss:hover { opacity: 0.8; }
+    .btn-restore {
+      padding: 5px 14px;
+      background: #e8f5ec;
+      color: #2d7a4a;
+      border: 1.5px solid #90d0a5;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-restore:hover { opacity: 0.8; }
+    .sub-status-badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .sub-status-badge.active { background: #e8f5ec; color: #2d7a4a; }
+    .sub-status-badge.dismissed { background: #fce8ea; color: #c0392b; }
+
+    /* ── PHOTO LIGHTBOX ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px; right: 24px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* ── LOADING / EMPTY STATES ── */
+    .loading-state, .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #aaa;
+      font-size: 0.92rem;
+    }
+    .loading-spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #e0d9cc;
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .not-logged-in {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .not-logged-in h3 { font-family: 'Playfair Display', serif; color: var(--forest); margin-bottom: 10px; }
+    .not-logged-in p { color: #888; margin-bottom: 20px; font-size: 0.9rem; }
+    .login-link {
+      display: inline-block;
+      padding: 11px 28px;
+      background: var(--forest);
+      color: var(--gold);
+      text-decoration: none;
+      border-radius: 8px;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--forest);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      z-index: 9999;
+      transition: transform 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+
+
+    @media (max-width: 500px) {
+      .challenge-grid { grid-template-columns: 1fr 1fr; }
+      .card-text { font-size: 0.82rem; }
+      .tab-btn { font-size: 0.72rem; padding: 12px 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height:38px;width:auto;">
+  </div>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="closeMenu()">🏠 Home</a>
+    <a href="index.html#flights" onclick="closeMenu()">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="closeMenu()">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="closeMenu()">📅 Itinerary</a>
+    <a href="guide.html" onclick="closeMenu()">🗺️ Local Guide</a>
+    <a href="index.html#guests" onclick="closeMenu()">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="closeMenu()">🎩 Room Draw</a>
+    <a href="messages.html" onclick="closeMenu()">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="closeMenu()">📖 Journal</a>
+    <a href="photos.html" onclick="closeMenu()">📸 Photos</a>
+    <a href="hunt.html" onclick="closeMenu()">🏆 Scavenger Hunt</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+
+  <!-- ── HERO ── -->
+  <div class="hunt-hero">
+    <h1>📸 Scotland Scavenger Hunt</h1>
+    <p>Complete challenges, upload your proof, and climb the leaderboard. First to submit each challenge earns double points!</p>
+    <div class="point-legend">
+      <div class="legend-item"><div class="legend-dot easy"></div> Easy — 2 pts (4 first)</div>
+      <div class="legend-item"><div class="legend-dot medium"></div> Medium — 4 pts (8 first)</div>
+      <div class="legend-item"><div class="legend-dot hard"></div> Hard — 6 pts (12 first)</div>
+    </div>
+  </div>
+
+  <!-- ── TABS ── -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('challenges', this)">📸 Challenges</button>
+    <button class="tab-btn" onclick="switchTab('leaderboard', this)">🏆 Leaderboard</button>
+    <button class="tab-btn" id="adminTabBtn" style="display:none" onclick="switchTab('admin', this)">🔧 Admin</button>
+  </div>
+
+  <!-- ── CHALLENGES TAB ── -->
+  <div class="tab-content active" id="tab-challenges">
+    <div id="notLoggedInMsg" class="not-logged-in" style="display:none">
+      <h3>Sign in to play!</h3>
+      <p>You need to be logged in to submit photos and track your score.</p>
+      <a href="login.html" class="login-link">Sign In</a>
+    </div>
+    <div id="challengesInner" style="display:none">
+      <div class="my-score-bar">
+        <div>
+          <div class="score-label">YOUR SCORE</div>
+          <div class="score-num" id="myScoreNum">0</div>
+        </div>
+        <div class="score-meta">
+          <div class="score-label">CHALLENGES COMPLETED</div>
+          <div class="score-num" id="myCompletedNum">0 / 35</div>
+        </div>
+      </div>
+      <div class="challenge-grid" id="challengeGrid"></div>
+    </div>
+  </div>
+
+  <!-- ── LEADERBOARD TAB ── -->
+  <div class="tab-content" id="tab-leaderboard">
+    <div class="loading-state" id="lbLoading">
+      <div class="loading-spinner"></div>
+      Loading leaderboard…
+    </div>
+    <table class="leaderboard-table" id="lbTable" style="display:none">
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th>PLAYER</th>
+          <th style="text-align:center">COMPLETED</th>
+          <th style="text-align:right">SCORE</th>
+        </tr>
+      </thead>
+      <tbody id="lbBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── ADMIN TAB ── -->
+  <div class="tab-content" id="tab-admin">
+    <div class="loading-state" id="adminLoading">
+      <div class="loading-spinner"></div>
+      Loading submissions…
+    </div>
+    <div id="adminContent"></div>
+  </div>
+
+  <!-- ── UPLOAD MODAL ── -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span id="modalTitle">Challenge</span>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalAlreadySubmitted" class="modal-already-submitted" style="display:none">
+          <img id="modalThumb" src="" alt="Your submission">
+          <div class="submitted-msg" id="modalSubmittedMsg"></div>
+          <div class="resubmit-note" id="modalResubmitNote"></div>
+        </div>
+        <div id="modalUploadForm">
+          <div class="modal-challenge-text" id="modalChallengeText"></div>
+          <div class="modal-pts" id="modalPts"></div>
+          <img class="upload-preview" id="uploadPreview" alt="Preview">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" accept="image/*" capture="environment" id="fileInput" onchange="handleFileSelect(event)">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Tap to take a photo or choose from your gallery</div>
+          </div>
+          <button class="submit-btn" id="submitPhotoBtn" onclick="submitPhoto()" disabled>Submit Photo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LIGHTBOX ── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close">✕</button>
+    <img id="lightboxImg" src="" alt="Full photo">
+  </div>
+
+  <!-- ── TOAST ── -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p class="footer-text">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Joyce Just a Wee Bit 40 &nbsp;|&nbsp; June 2026</p>
+  </footer>
+
+<script>
+  // ════════════════════════════════════════════════════════
+  // SUPABASE — using shared client from js/supabase.js
+  // (credentials: https://uzdefjgipyrhqucjwpmj.supabase.co)
+  // ════════════════════════════════════════════════════════
+  const ADMIN_EMAIL = 'varonow@gmail.com';
+  const STORAGE_BUCKET = 'scavenger-hunt';
+
+  /*
+  ══════════════════════════════════════════════════════════
+  SUPABASE SETUP — run this SQL in your Supabase dashboard:
+
+  CREATE TABLE scavenger_submissions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    challenge_id INTEGER NOT NULL,
+    user_email TEXT NOT NULL,
+    user_name TEXT NOT NULL,
+    photo_url TEXT NOT NULL,
+    status TEXT DEFAULT 'active',
+    submitted_at TIMESTAMPTZ DEFAULT NOW(),
+    dismissed_at TIMESTAMPTZ,
+    dismissed_by TEXT
+  );
+
+  ALTER TABLE scavenger_submissions ENABLE ROW LEVEL SECURITY;
+
+  CREATE POLICY "Users insert own" ON scavenger_submissions
+    FOR INSERT WITH CHECK (auth.email() = user_email);
+
+  CREATE POLICY "Everyone reads" ON scavenger_submissions
+    FOR SELECT USING (true);
+
+  CREATE POLICY "Admin updates" ON scavenger_submissions
+    FOR UPDATE USING (auth.email() = 'varonow@gmail.com');
+
+  Also create a storage bucket named 'scavenger-hunt' (public).
+  ══════════════════════════════════════════════════════════
+  */
+
+  // ════════════════════════════════════════════════════════
+  // CHALLENGE DATA
+  // ════════════════════════════════════════════════════════
+  const CHALLENGES = [
+    { id: 1,  text: "Photo next to a Scottish flag 🏴󠁧󠁢󠁳󠁣󠁴󠁿", points: 2, diff: 'easy' },
+    { id: 2,  text: "Photo with someone wearing a kilt (not your group!)", points: 2, diff: 'easy' },
+    { id: 3,  text: "Photo with a red phone box", points: 2, diff: 'easy' },
+    { id: 4,  text: "Photo of haggis on a menu", points: 2, diff: 'easy' },
+    { id: 5,  text: "Photo inside a pub with a drink in hand", points: 2, diff: 'easy' },
+    { id: 6,  text: "Photo on the Royal Mile with the castle in the background", points: 2, diff: 'easy' },
+    { id: 7,  text: "Photo in front of a shop on Victoria Street", points: 2, diff: 'easy' },
+    { id: 8,  text: "Photo with a thistle 🌿", points: 2, diff: 'easy' },
+    { id: 9,  text: "Photo of a Scottish newspaper or magazine", points: 2, diff: 'easy' },
+    { id: 10, text: "Photo of a sheep road sign 🐑", points: 2, diff: 'easy' },
+    { id: 11, text: "Photo with a bagpiper", points: 4, diff: 'medium' },
+    { id: 12, text: "Photo touching Edinburgh Castle walls", points: 4, diff: 'medium' },
+    { id: 13, text: "Photo wearing a tartan accessory you bought in Scotland", points: 4, diff: 'medium' },
+    { id: 14, text: "Photo inside Edinburgh's underground vaults", points: 4, diff: 'medium' },
+    { id: 15, text: "Photo at Calton Hill with the city panorama behind you", points: 4, diff: 'medium' },
+    { id: 16, text: "Photo doing the 'hands on hips' Highland dance pose mid-ceilidh", points: 4, diff: 'medium' },
+    { id: 17, text: "Photo at Loch Lomond with the water behind you", points: 4, diff: 'medium' },
+    { id: 18, text: "Photo inside or at the gate of a Scottish castle en route", points: 4, diff: 'medium' },
+    { id: 19, text: "Photo on the deck of the Celtic Warrior champagne cruise", points: 4, diff: 'medium' },
+    { id: 20, text: "Photo of a Scottish castle reflected in water", points: 4, diff: 'medium' },
+    { id: 21, text: "Photo of a Scottish sunrise or sunset over the Highlands", points: 4, diff: 'medium' },
+    { id: 22, text: "Photo inside a centuries-old church or cathedral", points: 4, diff: 'medium' },
+    { id: 23, text: "Photo holding the reins on a horse during pony trekking 🐴", points: 4, diff: 'medium' },
+    { id: 24, text: "Photo with a Highland cow 🐄", points: 6, diff: 'hard' },
+    { id: 25, text: "Photo with a bird of prey on your arm during falconry", points: 6, diff: 'hard' },
+    { id: 26, text: "Photo on a pony mid-trek 🐴", points: 6, diff: 'hard' },
+    { id: 27, text: "Photo of the whole group of 10 together (everyone visible!)", points: 6, diff: 'hard' },
+    { id: 28, text: "Photo mid-ceilidh — must be airborne or spinning!", points: 6, diff: 'hard' },
+    { id: 29, text: "Photo with a local Scotsman who tells you his clan name — write it in the caption", points: 6, diff: 'hard' },
+    { id: 30, text: "Photo of Joyce doing something embarrassing 😂 (her permission required!)", points: 6, diff: 'hard' },
+    { id: 31, text: "Photo of a hidden close or alleyway in Edinburgh's Old Town that no tourist would normally find", points: 6, diff: 'hard' },
+    { id: 32, text: "Photo of a red squirrel in the wild", points: 6, diff: 'hard' },
+    { id: 33, text: "Photo of Joyce toasting on the Celtic Warrior 🥂", points: 6, diff: 'hard' },
+    { id: 34, text: "Photo of the whole group with feet in Loch Lomond", points: 6, diff: 'hard' },
+    { id: 35, text: "Photo on a boat on Loch Lomond", points: 4, diff: 'medium' },
+  ];
+
+  // ════════════════════════════════════════════════════════
+  // INIT
+  // ════════════════════════════════════════════════════════
+  // 'db' client is provided by js/supabase.js
+
+  let currentUser = null;
+  let allSubmissions = [];
+  let selectedChallenge = null;
+  let selectedFile = null;
+
+  async function init() {
+    const { data: { session } } = await db.auth.getSession();
+    currentUser = session?.user || null;
+
+    if (currentUser?.email === ADMIN_EMAIL) {
+      document.getElementById('adminTabBtn').style.display = 'block';
+    }
+
+    await loadSubmissions();
+
+    if (currentUser) {
+      document.getElementById('notLoggedInMsg').style.display = 'none';
+      document.getElementById('challengesInner').style.display = 'block';
+      renderChallenges();
+      updateMyScore();
+    } else {
+      document.getElementById('notLoggedInMsg').style.display = 'block';
+    }
+
+    renderLeaderboard();
+  }
+
+  async function loadSubmissions() {
+    const { data, error } = await db
+      .from('scavenger_submissions')
+      .select('*')
+      .order('submitted_at', { ascending: true });
+    if (!error) allSubmissions = data || [];
+  }
+
+  // ════════════════════════════════════════════════════════
+  // SCORING LOGIC
+  // ════════════════════════════════════════════════════════
+  function getActiveSubmissions(challengeId) {
+    return allSubmissions
+      .filter(s => s.challenge_id === challengeId && s.status === 'active')
+      .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+  }
+
+  function calcScore(email) {
+    let score = 0;
+    let completed = 0;
+    CHALLENGES.forEach(c => {
+      const active = getActiveSubmissions(c.id);
+      const myIdx = active.findIndex(s => s.user_email === email);
+      if (myIdx === -1) return;
+      completed++;
+      if (myIdx === 0) {
+        score += c.points * 2; // first = double
+      } else {
+        score += c.points;
+      }
+    });
+    return { score, completed };
+  }
+
+  function getMySubmission(challengeId) {
+    return allSubmissions
+      .filter(s => s.challenge_id === challengeId && s.user_email === currentUser?.email)
+      .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0] || null;
+  }
+
+  function getChallengeStatus(challengeId) {
+    if (!currentUser) return 'none';
+    const mine = getMySubmission(challengeId);
+    if (!mine) return 'none';
+    if (mine.status === 'dismissed') return 'dismissed';
+    const active = getActiveSubmissions(challengeId);
+    if (active[0]?.user_email === currentUser.email) return 'won';
+    return 'submitted';
+  }
+
+  // ════════════════════════════════════════════════════════
+  // RENDER CHALLENGES
+  // ════════════════════════════════════════════════════════
+  function renderChallenges() {
+    const grid = document.getElementById('challengeGrid');
+    grid.innerHTML = '';
+    CHALLENGES.forEach(c => {
+      const status = getChallengeStatus(c.id);
+      const mine = getMySubmission(c.id);
+      const activeFirst = getActiveSubmissions(c.id)[0];
+      const firstPts = c.points * 2;
+
+      const card = document.createElement('div');
+      card.className = `challenge-card${status === 'submitted' || status === 'won' ? ' submitted' : ''}${status === 'won' ? ' won' : ''}${status === 'dismissed' ? ' dismissed' : ''}`;
+      card.onclick = () => openModal(c);
+
+      const statusLabel = {
+        none: '<span class="card-status not-done">📷 Tap to submit</span>',
+        submitted: '<span class="card-status submitted-status">⏳ Submitted</span>',
+        won: `<span class="card-status won-status">🥇 ${firstPts} pts earned!</span>`,
+        dismissed: '<span class="card-status dismissed-status">❌ Dismissed — resubmit?</span>',
+      }[status];
+
+      const ptsLabel = status === 'none' && !activeFirst
+        ? `<span class="pts-badge ${c.diff}">${firstPts} pts if first · ${c.points} pts</span>`
+        : `<span class="pts-badge ${c.diff}">${c.points} pts${!activeFirst ? ` · ${firstPts} if first` : ''}</span>`;
+
+      card.innerHTML = `
+        <div class="card-difficulty-bar ${c.diff}"></div>
+        ${mine?.photo_url && status !== 'none' ? `<img class="card-thumb" src="${mine.photo_url}" alt="Your photo">` : ''}
+        <div class="card-body">
+          <div class="card-num">CHALLENGE #${c.id}</div>
+          <div class="card-text">${c.text}</div>
+          <div class="card-footer">
+            ${ptsLabel}
+            ${statusLabel}
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function updateMyScore() {
+    if (!currentUser) return;
+    const { score, completed } = calcScore(currentUser.email);
+    document.getElementById('myScoreNum').textContent = score;
+    document.getElementById('myCompletedNum').textContent = `${completed} / 35`;
+  }
+
+  // ════════════════════════════════════════════════════════
+  // LEADERBOARD
+  // ════════════════════════════════════════════════════════
+  function renderLeaderboard() {
+    document.getElementById('lbLoading').style.display = 'none';
+    const table = document.getElementById('lbTable');
+    const tbody = document.getElementById('lbBody');
+    table.style.display = 'table';
+
+    // collect all players
+    const players = {};
+    allSubmissions.forEach(s => {
+      if (!players[s.user_email]) players[s.user_email] = s.user_name;
+    });
+
+    const rows = Object.entries(players).map(([email, name]) => {
+      const { score, completed } = calcScore(email);
+      return { email, name, score, completed };
+    }).sort((a, b) => b.score - a.score || b.completed - a.completed);
+
+    if (rows.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:30px">No submissions yet — be the first! 🏴󠁧󠁢󠁳󠁣󠁴󠁿</td></tr>';
+    } else {
+      tbody.innerHTML = rows.map((r, i) => {
+        const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+        const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+        return `<tr>
+          <td class="rank-cell ${rankClass}">${rankIcon}</td>
+          <td>${r.name}</td>
+          <td class="completed-cell">${r.completed}</td>
+          <td class="score-cell">${r.score}</td>
+        </tr>`;
+      }).join('');
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN
+  // ════════════════════════════════════════════════════════
+  async function renderAdmin() {
+    document.getElementById('adminLoading').style.display = 'none';
+    const content = document.getElementById('adminContent');
+
+    // group by challenge
+    const byChallengeId = {};
+    allSubmissions.forEach(s => {
+      if (!byChallengeId[s.challenge_id]) byChallengeId[s.challenge_id] = [];
+      byChallengeId[s.challenge_id].push(s);
+    });
+
+    if (Object.keys(byChallengeId).length === 0) {
+      content.innerHTML = '<div class="empty-state">No submissions yet.</div>';
+      return;
+    }
+
+    let html = '';
+    Object.keys(byChallengeId).sort((a,b)=>+a-+b).forEach(cid => {
+      const c = CHALLENGES.find(x => x.id === +cid);
+      const subs = byChallengeId[cid].sort((a,b) => new Date(a.submitted_at)-new Date(b.submitted_at));
+      const active = subs.filter(s => s.status === 'active');
+
+      html += `<div class="admin-section-title">Challenge #${cid} — ${c?.text || ''}</div>`;
+      html += `<div class="admin-card"><div class="admin-card-body">`;
+      subs.forEach((s, idx) => {
+        const activeIdx = active.findIndex(x => x.id === s.id);
+        const rankLabel = s.status === 'dismissed' ? 'dismissed'
+          : activeIdx === 0 ? '🥇 1st — double points'
+          : `#${activeIdx + 1}`;
+        const rankClass = s.status === 'dismissed' ? '' : activeIdx === 0 ? 'first' : 'other';
+        const date = new Date(s.submitted_at).toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+
+        html += `<div class="submission-row">
+          <img class="sub-thumb" src="${s.photo_url}" alt="" onclick="openLightbox('${s.photo_url}')">
+          <div class="sub-info">
+            <div class="sub-name">${s.user_name}</div>
+            <div class="sub-time">${date}</div>
+            <div class="sub-rank ${rankClass}">${rankLabel}</div>
+            <div class="sub-actions">
+              ${s.status === 'active'
+                ? `<button class="btn-dismiss" onclick="dismissSubmission('${s.id}')">Dismiss</button>`
+                : `<button class="btn-restore" onclick="restoreSubmission('${s.id}')">Restore</button>`}
+              <span class="sub-status-badge ${s.status}">${s.status}</span>
+            </div>
+          </div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+
+    content.innerHTML = html;
+  }
+
+  async function dismissSubmission(id) {
+    const { error } = await db
+      .from('scavenger_submissions')
+      .update({ status: 'dismissed', dismissed_at: new Date().toISOString(), dismissed_by: currentUser.email })
+      .eq('id', id);
+    if (!error) {
+      await loadSubmissions();
+      renderAdmin();
+      renderChallenges();
+      updateMyScore();
+      renderLeaderboard();
+      showToast('Photo dismissed ✓');
+    }
+  }
+
+  async function restoreSubmission(id) {
+    const { error } = await db
+      .from('scavenger_submissions')
+      .update({ status: 'active', dismissed_at: null, dismissed_by: null })
+      .eq('id', id);
+    if (!error) {
+      await loadSubmissions();
+      renderAdmin();
+      renderChallenges();
+      updateMyScore();
+      renderLeaderboard();
+      showToast('Photo restored ✓');
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  // UPLOAD MODAL
+  // ════════════════════════════════════════════════════════
+  function openModal(challenge) {
+    if (!currentUser) { window.location.href = 'login.html'; return; }
+    selectedChallenge = challenge;
+    selectedFile = null;
+
+    document.getElementById('modalTitle').textContent = `Challenge #${challenge.id}`;
+    document.getElementById('modalChallengeText').textContent = challenge.text;
+    document.getElementById('modalPts').innerHTML = `
+      <strong>${challenge.points * 2} pts</strong> if you're first to submit &nbsp;·&nbsp;
+      <strong>${challenge.points} pts</strong> otherwise
+    `;
+
+    const mine = getMySubmission(challenge.id);
+    const status = getChallengeStatus(challenge.id);
+
+    if (mine && status !== 'dismissed') {
+      document.getElementById('modalAlreadySubmitted').style.display = 'block';
+      document.getElementById('modalUploadForm').style.display = 'none';
+      document.getElementById('modalThumb').src = mine.photo_url;
+      document.getElementById('modalThumb').onclick = () => openLightbox(mine.photo_url);
+      if (status === 'won') {
+        document.getElementById('modalSubmittedMsg').textContent = `🥇 You were first! You earned ${challenge.points * 2} pts!`;
+        document.getElementById('modalResubmitNote').textContent = '';
+      } else {
+        const active = getActiveSubmissions(challenge.id);
+        const myRank = active.findIndex(s => s.user_email === currentUser.email) + 1;
+        document.getElementById('modalSubmittedMsg').textContent = `✅ Photo submitted (#${myRank})`;
+        document.getElementById('modalResubmitNote').textContent = `You earned ${challenge.points} pts for this challenge.`;
+      }
+    } else {
+      document.getElementById('modalAlreadySubmitted').style.display = 'none';
+      document.getElementById('modalUploadForm').style.display = 'block';
+      document.getElementById('uploadPreview').style.display = 'none';
+      document.getElementById('uploadPreview').src = '';
+      document.getElementById('uploadZone').style.display = 'block';
+      document.getElementById('submitPhotoBtn').disabled = true;
+      document.getElementById('fileInput').value = '';
+
+      if (status === 'dismissed') {
+        document.getElementById('modalPts').innerHTML += ' <span style="color:#e05060;font-weight:700">⚠️ Your previous photo was dismissed. You may resubmit!</span>';
+      }
+    }
+
+    document.getElementById('uploadModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('uploadModal').classList.remove('open');
+    selectedChallenge = null;
+    selectedFile = null;
+  }
+
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    selectedFile = file;
+    const preview = document.getElementById('uploadPreview');
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('submitPhotoBtn').disabled = false;
+  }
+
+  async function submitPhoto() {
+    if (!selectedFile || !selectedChallenge || !currentUser) return;
+    const btn = document.getElementById('submitPhotoBtn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading…';
+
+    try {
+      const ext = selectedFile.name.split('.').pop() || 'jpg';
+      const path = `${selectedChallenge.id}/${currentUser.email.replace('@','_')}/${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await db.storage
+        .from(STORAGE_BUCKET)
+        .upload(path, selectedFile, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = db.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      const photoUrl = urlData.publicUrl;
+
+      const userName = currentUser.user_metadata?.full_name
+        || currentUser.email.split('@')[0];
+
+      const { error: dbError } = await db
+        .from('scavenger_submissions')
+        .insert({
+          challenge_id: selectedChallenge.id,
+          user_email: currentUser.email,
+          user_name: userName,
+          photo_url: photoUrl,
+          status: 'active',
+        });
+      if (dbError) throw dbError;
+
+      await loadSubmissions();
+      renderChallenges();
+      updateMyScore();
+      renderLeaderboard();
+      closeModal();
+      showToast('Photo submitted! 🏴󠁧󠁢󠁳󠁣󠁴󠁿');
+    } catch (err) {
+      console.error(err);
+      showToast('Upload failed — please try again');
+      btn.disabled = false;
+      btn.textContent = 'Submit Photo';
+    }
+  }
+
+  // ════════════════════════════════════════════════════════
+  // TABS
+  // ════════════════════════════════════════════════════════
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    btn.classList.add('active');
+    if (tab === 'leaderboard') renderLeaderboard();
+    if (tab === 'admin') renderAdmin();
+  }
+
+  // ════════════════════════════════════════════════════════
+  // LIGHTBOX
+  // ════════════════════════════════════════════════════════
+  function openLightbox(url) {
+    document.getElementById('lightboxImg').src = url;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  // ════════════════════════════════════════════════════════
+  // TOAST
+  // ════════════════════════════════════════════════════════
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ════════════════════════════════════════════════════════
+  // NAV
+  // ════════════════════════════════════════════════════════
+  function toggleMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const dropdown = document.getElementById('navDropdown');
+    const overlay = document.getElementById('navOverlay');
+    hamburger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+
+  // Close modal on overlay click
+  document.getElementById('uploadModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  init();
+
+  // Require login — redirects to login.html if not authenticated
+  requireAuth();
+</script>
+</body>
+</html>
