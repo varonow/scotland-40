@@ -31,12 +31,24 @@
 
     /* ── PAGE HERO ── */
     .hunt-hero {
-      background: var(--forest);
+      background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
       color: var(--gold);
       text-align: center;
-      padding: 36px 20px 28px;
+      padding: 3rem 2rem 2rem;
       border-bottom: 3px solid var(--gold);
+      position: relative;
+      overflow: hidden;
     }
+    .hunt-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image:
+        repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+        repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+    }
+    .hunt-hero > * { position: relative; z-index: 2; }
     .hunt-hero h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.6rem, 4vw, 2.4rem);
