@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="images/joyce-logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Tips | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--forest:#2C4A3E;--heather:#7B5EA7;--gold:#C9A84C;--cream:#F9F5EE;--stone:#5C4A2A;--mist:#E8E4DC;--dark:#0D0D0D}
+  html{scroll-behavior:smooth}
+  body{font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--dark);font-size:18px;line-height:1.7;min-height:100vh;padding-top:56px}
+
+  /* HEADER */
+  header{background:linear-gradient(160deg,#1a2e28 0%,#2C4A3E 40%,#3d2a5a 100%);padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;opacity:.04;background-image:repeating-linear-gradient(0deg,#fff 0,#fff 2px,transparent 2px,transparent 40px),repeating-linear-gradient(90deg,#fff 0,#fff 2px,transparent 2px,transparent 40px)}
+  .header-content{position:relative;z-index:2}
+  .header-eyebrow{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+  header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:400;color:white;margin-bottom:.5rem}
+  header p{font-style:italic;color:rgba(255,255,255,.7);font-size:1.1rem}
+  .gold-rule{width:48px;height:2px;background:var(--gold);margin:1.25rem auto 0}
+
+  /* PAGE */
+  .page-content{max-width:760px;margin:0 auto;padding:3rem 1.25rem 5rem}
+
+  /* SECTION */
+  .tip-section{margin-bottom:2.5rem;background:white;border-radius:16px;border:1px solid var(--mist);overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.04)}
+  .tip-header{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.5rem;cursor:pointer;user-select:none;border-bottom:1px solid var(--mist);transition:background .15s}
+  .tip-header:hover{background:#faf8f4}
+  .tip-emoji{font-size:1.5rem;flex-shrink:0}
+  .tip-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;color:var(--forest);flex:1}
+  .tip-chev{color:var(--stone);font-size:.75rem;transition:transform .3s;opacity:.5}
+  .tip-section.collapsed .tip-chev{transform:rotate(-90deg)}
+  .tip-body{overflow:hidden;transition:max-height .4s ease;max-height:2000px}
+  .tip-section.collapsed .tip-body{max-height:0}
+  .tip-inner{padding:1.5rem}
+
+  /* TIP ITEMS */
+  .tip-item{display:flex;gap:.9rem;padding:.7rem 0;border-bottom:1px solid var(--mist)}
+  .tip-item:last-child{border-bottom:none;padding-bottom:0}
+  .tip-item:first-child{padding-top:0}
+  .tip-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:.65rem}
+  .tip-text p{font-size:.95rem;line-height:1.6;color:var(--dark)}
+  .tip-label{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--heather);display:block;margin-bottom:2px}
+
+  /* PHRASE CARDS */
+  .phrase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem}
+  .phrase-card{background:var(--cream);border:1px solid var(--mist);border-radius:10px;padding:1rem 1.1rem}
+  .phrase-scottish{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--forest);display:block;margin-bottom:.2rem}
+  .phrase-meaning{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone)}
+  .phrase-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:var(--heather);margin-top:.35rem;display:block}
+
+  /* CEILIDH DANCES */
+  .dance-list{display:flex;flex-direction:column;gap:.5rem}
+  .dance-item{background:var(--cream);border-radius:8px;padding:.75rem 1rem;border-left:3px solid var(--heather)}
+  .dance-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--forest)}
+  .dance-desc{font-size:.88rem;color:var(--stone);margin-top:2px}
+
+  /* ETIQUETTE */
+  .etiq-item{display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--mist);align-items:flex-start}
+  .etiq-item:last-child{border-bottom:none;padding-bottom:0}
+  .etiq-item:first-child{padding-top:0}
+  .etiq-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+  .etiq-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--forest);display:block;margin-bottom:2px}
+  .etiq-desc{font-size:.92rem;line-height:1.55;color:var(--dark)}
+
+  /* FOOD HIGHLIGHT */
+  .food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+  .food-card{background:var(--cream);border-radius:10px;padding:1rem;border:1px solid var(--mist);text-align:center}
+  .food-emoji{font-size:1.6rem;display:block;margin-bottom:.4rem}
+  .food-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--forest);display:block;margin-bottom:.2rem}
+  .food-note{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:.1em;color:var(--stone);text-transform:uppercase}
+
+  /* HIGHLIGHT BOX */
+  .highlight-box{background:linear-gradient(135deg,#f0ebe8,#ede8f5);border:1px solid #d9d0ec;border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1rem;display:flex;gap:.75rem;align-items:flex-start}
+  .highlight-icon{font-size:1.2rem;flex-shrink:0}
+  .highlight-text{font-style:italic;font-size:.95rem;color:var(--stone);line-height:1.6}
+
+  /* NAV */
+  .nav-bar{position:fixed;top:0;left:0;right:0;z-index:500;height:56px;background:#2C4A3E;display:flex;align-items:center;justify-content:flex-end;padding:0 1.25rem;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+  .hamburger{position:absolute;left:1.25rem;background:transparent;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px;z-index:600}
+  .hamburger span{display:block;width:24px;height:2px;background:white;border-radius:2px;transition:all .3s ease}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger.open span:nth-child(2){opacity:0}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .nav-logo-center img{height:38px;width:auto}
+  .nav-dropdown{position:fixed;top:56px;left:0;width:280px;z-index:490;background:#2C4A3E;max-height:0;overflow:hidden;transition:max-height .35s ease;box-shadow:4px 8px 24px rgba(0,0,0,.3);border-radius:0 0 12px 0}
+  .nav-dropdown.open{max-height:700px}
+  .nav-dropdown-inner{padding:.5rem 0 1rem;display:flex;flex-direction:column}
+  .nav-dropdown-inner a{font-family:'Josefin Sans',sans-serif;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);text-decoration:none;padding:.85rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.07);transition:all .2s;display:flex;align-items:center;gap:.75rem}
+  .nav-dropdown-inner a:hover{background:rgba(255,255,255,.07);color:#C9A84C}
+  .nav-signout{color:rgba(255,255,255,.4)!important;margin-top:.5rem}
+  .nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:480}
+  .nav-overlay.open{display:block}
+
+  @media(max-width:600px){
+    .tip-inner{padding:1.1rem}
+    .phrase-grid{grid-template-columns:1fr}
+    .food-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height:38px;width:auto;">
+  </div>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
+    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
+    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
+    <a href="tips.html" onclick="setTimeout(closeMenu,50)">💡 Travel Tips</a>
+    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
+    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
+    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
+    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
+    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+
+<header>
+  <div class="header-content">
+    <p class="header-eyebrow">Scotland 2026 &nbsp;·&nbsp; June 1–5</p>
+    <h1>💡 Travel Tips</h1>
+    <p>Everything you need to know before you go</p>
+    <div class="gold-rule"></div>
+  </div>
+</header>
+
+<div class="page-content">
+
+  <!-- GETTING AROUND -->
+  <div class="tip-section" id="s-transport">
+    <div class="tip-header" onclick="toggle('s-transport')">
+      <span class="tip-emoji">🚌</span>
+      <span class="tip-title">Getting Around</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">✨</span>
+          <p class="highlight-text">All of your transportation is taken care of — private transfers, buses, and drivers are arranged for the entire trip. Just show up and enjoy the ride.</p>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Driving</span><p>Scots drive on the left side of the road. You're not driving, but good to know when crossing streets — look right first!</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Tipping</span><p>Tipping is appreciated but less expected than in the US. A 10–15% tip at restaurants is generous and very well received. Tips are not expected at bars when ordering drinks. A few pounds for hotel porters is always a nice touch.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Distances</span><p>Scotland is smaller than you think — Edinburgh to Loch Lomond is only about 1.5 hours. Edinburgh to Stirling is under an hour. Everything on our itinerary is very manageable.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONEY -->
+  <div class="tip-section" id="s-money">
+    <div class="tip-header" onclick="toggle('s-money')">
+      <span class="tip-emoji">💷</span>
+      <span class="tip-title">Money & Practicalities</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Currency</span><p>Scotland uses British pounds sterling (£), not Euros. Don't show up with Euros expecting them to be accepted — they won't be.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Cards</span><p>Credit and debit cards are accepted almost everywhere. Notify your bank before you travel so your card isn't flagged. Always carry a backup card.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Cash</span><p>Worth having some British pounds on hand for tips, market stalls on the Royal Mile, and smaller spots that prefer cash. ATMs (called "cashpoints" in Scotland) are widely available.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">UK Plug Adapter</span><p>The UK uses Type G plugs — three rectangular pins. This is different from US, European, and most other plugs. You need one per device. Do not forget this.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">VAT Refund</span><p>As a visitor, you may be eligible for a VAT refund on purchases over £30. Ask shops on Buchanan Street for a VAT refund form — it's worth it on cashmere and larger purchases.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAYING CONNECTED -->
+  <div class="tip-section" id="s-connected">
+    <div class="tip-header" onclick="toggle('s-connected')">
+      <span class="tip-emoji">📱</span>
+      <span class="tip-title">Staying Connected</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">International Roaming</span><p>Enable international roaming with your carrier before you leave home — or pick up a local UK SIM card at Edinburgh Airport on arrival. Either way, sort it before you leave the airport.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">WhatsApp</span><p>WhatsApp is how everyone communicates in the UK. Make sure it's downloaded and set up before you arrive — this is how the group will stay in touch throughout the trip.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">WiFi</span><p>Both The Balmoral and Cameron House have excellent WiFi. Most restaurants and venues do too. You won't be disconnected.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Emergency Number</span><p>The emergency number in Scotland (and all of the UK) is 999 — not 911. Save it in your phone just in case.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="tip-section" id="s-weather">
+    <div class="tip-header" onclick="toggle('s-weather')">
+      <span class="tip-emoji">🌦️</span>
+      <span class="tip-title">Weather in June</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+          <p class="highlight-text">There is a saying in Scotland: "If you don't like the weather, wait five minutes." June can give you brilliant sunshine, sideways rain, and cool mist all before lunch. This is not an exaggeration.</p>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Temperature</span><p>June temperatures typically range from 50°F–65°F (10°C–18°C). It feels warmer in the sun and significantly cooler near the water or in the wind. Never assume it will be warm.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Layering</span><p>The key to Scottish weather is layers. Something you can add and remove easily throughout the day. A light base, a warm mid-layer, and a waterproof outer layer covers every scenario.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Daylight</span><p>June is the best month for daylight in Scotland — it stays light until nearly 10:30pm. The long evenings are truly magical, especially at Loch Lomond.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Rain</span><p>Pack your windproof umbrella and your waterproof jacket. You may not need them — but you'll be very happy you have them if you do.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOD & DRINK -->
+  <div class="tip-section" id="s-food">
+    <div class="tip-header" onclick="toggle('s-food')">
+      <span class="tip-emoji">🍽️</span>
+      <span class="tip-title">Food & Drink</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">ℹ️</span>
+          <p class="highlight-text">Our group does not eat meat, poultry, or shellfish. All restaurant reservations have been made with this in mind. Scotland's fish, dairy, and vegetarian options are exceptional.</p>
+        </div>
+
+        <p style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--forest);margin-bottom:1rem">Scottish specialties to try:</p>
+
+        <div class="food-grid" style="margin-bottom:1.25rem">
+          <div class="food-card">
+            <span class="food-emoji">🐟</span>
+            <span class="food-name">Scottish Smoked Salmon</span>
+            <span class="food-note">World class — try it everywhere</span>
+          </div>
+          <div class="food-card">
+            <span class="food-emoji">🥣</span>
+            <span class="food-name">Cullen Skink</span>
+            <span class="food-note">Smoked haddock chowder</span>
+          </div>
+          <div class="food-card">
+            <span class="food-emoji">🧀</span>
+            <span class="food-name">Scottish Cheese</span>
+            <span class="food-note">Seriously underrated</span>
+          </div>
+          <div class="food-card">
+            <span class="food-emoji">🍓</span>
+            <span class="food-name">Cranachan</span>
+            <span class="food-note">Cream, oats, raspberries & whisky</span>
+          </div>
+          <div class="food-card">
+            <span class="food-emoji">🥞</span>
+            <span class="food-name">Tattie Scones</span>
+            <span class="food-note">Potato scones — breakfast staple</span>
+          </div>
+          <div class="food-card">
+            <span class="food-emoji">🌾</span>
+            <span class="food-name">Scottish Porridge</span>
+            <span class="food-note">Not your average oatmeal</span>
+          </div>
+        </div>
+
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Whisky</span><p>Scotland produces some of the world's finest whisky (spelled without an 'e' — that's the Irish way). You'll experience it at the Sköll & Hati Norse Bar on Day 2. Don't be afraid to ask for recommendations — bartenders in Scotland take whisky very seriously and love talking about it.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Scottish Breakfast</span><p>A Scottish breakfast is a serious event. Expect eggs, smoked salmon, tattie scones, grilled tomatoes, mushrooms, and fresh pastries. It will keep you going all day — pace yourself.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Dietary Note</span><p>When in doubt at a restaurant, ask about fish and vegetarian options — Scotland's coastal access means the fish is always fresh and outstanding. All our restaurants are aware of our dietary restrictions.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIDGES -->
+  <div class="tip-section" id="s-midges">
+    <div class="tip-header" onclick="toggle('s-midges')">
+      <span class="tip-emoji">🦟</span>
+      <span class="tip-title">The Midges — Scotland's Tiny Nemesis</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">⚠️</span>
+          <p class="highlight-text">Midges are Scotland's tiny biting insects and they are the one thing every visitor wishes someone had warned them about. Consider yourself warned.</p>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">What Are They?</span><p>Midges are extremely small flying insects — barely visible — that bite and swarm in clouds near water and vegetation. They are most active in June, particularly in the morning and evening, and especially near lochs and parks like Pollok Country Park and Loch Lomond.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Smidge</span><p>The best repellent is a Scottish brand called Smidge. It's specifically formulated for Scottish midges and works far better than standard DEET sprays. You can order it before the trip or find it in pharmacies in Edinburgh.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">When to Watch Out</span><p>Midges love calm, overcast, humid conditions — peak midge weather. On breezy or sunny days they're much less of a problem. Keep Smidge in your bag during Pollok Country Park and anytime you're outdoors near Loch Lomond.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHOPPING -->
+  <div class="tip-section" id="s-shopping">
+    <div class="tip-header" onclick="toggle('s-shopping')">
+      <span class="tip-emoji">🛍️</span>
+      <span class="tip-title">Shopping</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Royal Mile, Edinburgh</span><p>Edinburgh's famous mile-long stretch from the castle to Holyrood Palace is lined with shops. Great for tartan souvenirs, Scottish whisky, shortbread, cashmere, and one-of-a-kind gifts. A mix of tourist shops and genuine local gems — look beyond the obvious.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Buchanan Street, Glasgow</span><p>Glasgow's premier shopping street is significantly more upscale than the Royal Mile. Think designer boutiques, high street fashion, and the beautiful Princes Square mall. This is where you'll find the cashmere and luxury Scottish goods worth splurging on.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">What to Buy</span><p>Scottish cashmere is world-renowned and worth every penny. Tartan and tweed make beautiful gifts. A bottle of single malt whisky. Shortbread. And anything with a thistle on it that makes you smile.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">Bags</span><p>Plastic bags cost extra in Scotland (10p–25p). Bring your reusable tote — you've already packed it!</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CEILIDH -->
+  <div class="tip-section" id="s-ceilidh">
+    <div class="tip-header" onclick="toggle('s-ceilidh')">
+      <span class="tip-emoji">💃</span>
+      <span class="tip-title">What to Expect at a Ceilidh</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">🎶</span>
+          <p class="highlight-text">A ceilidh (pronounced "KAY-lee") is Scotland's beloved tradition of communal dancing to live folk music. No experience is needed and no one is watching — everyone is in the same boat. It is one of the most joyful, sweaty, laugh-out-loud experiences Scotland has to offer.</p>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Caller</span><p>Every ceilidh has a "caller" — someone who explains and calls out each dance step by step before the music starts. You will be taught everything before you have to do it. No prior knowledge needed whatsoever.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Music</span><p>Expect live fiddles, accordion, and sometimes bagpipes. The music is fast, joyful, and completely infectious. You will not be able to stand still.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Dances</span><p>Classic dances you'll likely encounter:</p></div>
+        </div>
+        <div class="dance-list" style="margin:0.5rem 0 1rem 1.5rem">
+          <div class="dance-item">
+            <p class="dance-name">Strip the Willow</p>
+            <p class="dance-desc">Fast, spinning, and chaotic in the best way. Hold on tight.</p>
+          </div>
+          <div class="dance-item">
+            <p class="dance-name">The Gay Gordons</p>
+            <p class="dance-desc">Classic partner dance — simple to follow and a great opener.</p>
+          </div>
+          <div class="dance-item">
+            <p class="dance-name">Dashing White Sergeant</p>
+            <p class="dance-desc">Done in threes — lots of spinning and changing partners.</p>
+          </div>
+          <div class="dance-item">
+            <p class="dance-name">The Flying Scotsman</p>
+            <p class="dance-desc">One of the fastest and most exhilarating. Pure chaos. Pure fun.</p>
+          </div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">What to Wear</span><p>You will work up a sweat — this is guaranteed. Wear something you can move freely in and comfortable flat shoes. The Edinburgh Ceilidh Club floor has seen enough stiletto casualties.</p></div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-dot"></div>
+          <div class="tip-text"><span class="tip-label">The Golden Rule</span><p>Smile, go with it, and don't take yourself too seriously. The whole point is to laugh, spin, and have the time of your life.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUP ETIQUETTE -->
+  <div class="tip-section" id="s-etiquette">
+    <div class="tip-header" onclick="toggle('s-etiquette')">
+      <span class="tip-emoji">🎩</span>
+      <span class="tip-title">Group Etiquette & Travel Tips</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="etiq-item">
+          <span class="etiq-icon">⏰</span>
+          <div><span class="etiq-title">Be on Time — Every Time</span><p class="etiq-desc">With 10–12 people, one person running late affects everyone. Please be ready 5 minutes early for every pickup, activity, and dinner reservation. When in doubt, be early. The group will love you for it.</p></div>
+        </div>
+
+
+        <div class="etiq-item">
+          <span class="etiq-icon">🥂</span>
+          <div><span class="etiq-title">Embrace Every Moment</span><p class="etiq-desc">Say yes. Try the whisky. Dance at the ceilidh. Pet the Highland coos. Talk to the locals. Step outside your comfort zone — that's where the best travel memories are made.</p></div>
+        </div>
+        <div class="etiq-item">
+          <span class="etiq-icon">🏨</span>
+          <div><span class="etiq-title">Hotel Communication</span><p class="etiq-desc">Use WhatsApp to communicate room to room — it's the easiest way to coordinate. Share your room number with at least one other person when you check in.</p></div>
+        </div>
+        <div class="etiq-item">
+          <span class="etiq-icon">🌟</span>
+          <div><span class="etiq-title">Bring the Energy</span><p class="etiq-desc">A group trip is only as good as the energy each person brings. Leave the stress of home at home. This trip was planned with love — meet it with the same. Scotland is waiting.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOTTISH PHRASES -->
+  <div class="tip-section" id="s-phrases">
+    <div class="tip-header" onclick="toggle('s-phrases')">
+      <span class="tip-emoji">🗣️</span>
+      <span class="tip-title">Scottish Greetings & Phrases</span>
+      <span class="tip-chev">▼</span>
+    </div>
+    <div class="tip-body">
+      <div class="tip-inner">
+        <div class="highlight-box">
+          <span class="highlight-icon">😄</span>
+          <p class="highlight-text">Scots speak English — but with a vocabulary all their own. A few of these will go a long way and the locals will absolutely love that you tried.</p>
+        </div>
+
+        <div class="phrase-grid">
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Alright?"</span>
+            <span class="phrase-meaning">Hello / How are you?</span>
+            <span class="phrase-note">The correct response is "Alright?" back — not an explanation of how you're actually doing. Americans always get this one wrong 😄</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Cheers"</span>
+            <span class="phrase-meaning">Thank you / You're welcome / Goodbye / Toast</span>
+            <span class="phrase-note">Used constantly for everything. When in doubt, say "cheers" — it's always appropriate</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Hiya" / "Hiya hen"</span>
+            <span class="phrase-meaning">Hi / Hi sweetheart</span>
+            <span class="phrase-note">"Hen" is an affectionate term for a woman — warm and friendly, not rude at all</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Aye"</span>
+            <span class="phrase-meaning">Yes</span>
+            <span class="phrase-note">The most Scottish word there is. Use it freely</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Nae"</span>
+            <span class="phrase-meaning">No</span>
+            <span class="phrase-note">As in "nae bother" — no problem</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Wee"</span>
+            <span class="phrase-meaning">Small / little</span>
+            <span class="phrase-note">Used constantly — "a wee drink," "a wee walk," "just a wee bit 40"  😉</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Grand"</span>
+            <span class="phrase-meaning">Great / wonderful</span>
+            <span class="phrase-note">"That's grand!" is about the highest compliment you'll receive</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Brilliant"</span>
+            <span class="phrase-meaning">Excellent / awesome</span>
+            <span class="phrase-note">The Scottish/British equivalent of "awesome." Use it and watch locals smile</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Braw"</span>
+            <span class="phrase-meaning">Beautiful / lovely</span>
+            <span class="phrase-note">As in "what a braw day!" — use this one and you'll sound like a local</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Bonnie"</span>
+            <span class="phrase-meaning">Beautiful</span>
+            <span class="phrase-note">"Bonnie lass" means beautiful woman. As in the "bonnie banks" of Loch Lomond</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Dinnae fash"</span>
+            <span class="phrase-meaning">Don't worry about it</span>
+            <span class="phrase-note">One of our favorites. Very calming energy</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"The bill"</span>
+            <span class="phrase-meaning">The check at a restaurant</span>
+            <span class="phrase-note">Never say "check please" — ask for "the bill"</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"The toilet" / "The loo"</span>
+            <span class="phrase-meaning">The bathroom</span>
+            <span class="phrase-note">Never say "bathroom" — they'll think you want to bathe. Ask for the toilet or the loo</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Queue"</span>
+            <span class="phrase-meaning">A line</span>
+            <span class="phrase-note">As in "join the queue." Cutting the queue is considered extremely rude — even more than in the US</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"I'm away"</span>
+            <span class="phrase-meaning">I'm leaving / I'm off</span>
+            <span class="phrase-note">Said as a casual goodbye — "right, I'm away!"</span>
+          </div>
+          <div class="phrase-card">
+            <span class="phrase-scottish">"Ta"</span>
+            <span class="phrase-meaning">Thanks</span>
+            <span class="phrase-note">Quick, casual thank you — used constantly in everyday interactions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  requireAuth();
+
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+</script>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('navDropdown').classList.toggle('open');
+    document.getElementById('navOverlay').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+</script>
+</body>
+</html>
