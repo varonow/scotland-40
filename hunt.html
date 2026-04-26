@@ -781,6 +781,7 @@
   let allSubmissions = [];
   let selectedChallenge = null;
   let selectedFile = null;
+  let guestMode = false;
 
   async function init() {
     const { data: { session } } = await db.auth.getSession();
@@ -788,6 +789,12 @@
 
     if (currentUser?.email === ADMIN_EMAIL) {
       document.getElementById('adminTabBtn').style.display = 'block';
+    }
+
+    // Guest mode check
+    if (currentUser && currentUser.email.toLowerCase() === 'varonow@yahoo.com') {
+      guestMode = true;
+      document.getElementById('guestBanner').style.display = 'block';
     }
 
     await loadSubmissions();
@@ -868,10 +875,11 @@
 
       const card = document.createElement('div');
       card.className = `challenge-card${status === 'submitted' || status === 'won' ? ' submitted' : ''}${status === 'won' ? ' won' : ''}${status === 'dismissed' ? ' dismissed' : ''}`;
-      card.onclick = () => openModal(c);
+      card.onclick = () => { if (!guestMode) openModal(c); };
+      if (guestMode) card.style.cursor = 'default';
 
       const statusLabel = {
-        none: '<span class="card-status not-done">📷 Tap to submit</span>',
+        none: guestMode ? '<span class="card-status not-done">📷 View only</span>' : '<span class="card-status not-done">📷 Tap to submit</span>',
         submitted: '<span class="card-status submitted-status">⏳ Submitted</span>',
         won: `<span class="card-status won-status">🥇 ${firstPts} pts earned!</span>`,
         dismissed: '<span class="card-status dismissed-status">❌ Dismissed — resubmit?</span>',
@@ -1195,15 +1203,7 @@
 
   init();
 
-  // Require login — redirects to login.html if not authenticated
-  let guestMode = false;
-  requireAuth().then(async () => {
-    const guest = await isGuest();
-    if (guest) {
-      guestMode = true;
-      document.getElementById('guestBanner').style.display = 'block';
-    }
-  });
+  // Auth handled inside init()
 </script>
 </body>
 </html>
