@@ -368,6 +368,16 @@
 </style>
 
 <style>
+  .guest-banner {
+    background: var(--forest);
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
   .nav-bar {
     position: fixed;
     top: 0;
@@ -473,6 +483,7 @@
   </div>
 </div>
 <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+<div class="guest-banner" id="guestBanner" style="display:none">👀 Viewing as Guest — Read Only</div>
 
 <header>
   <div class="header-content">
@@ -527,7 +538,14 @@
 </footer>
 
 <script>
-  requireAuth();
+  requireAuth().then(async () => {
+    const guest = await isGuest();
+    if (guest) {
+      document.getElementById('guestBanner').style.display = 'block';
+      const ws = document.querySelector('.write-section');
+      if (ws) ws.style.display = 'none';
+    }
+  });
 
   // Reveal date: June 1 2026 noon Edinburgh time (BST = UTC+1)
   const REVEAL_DATE = new Date('2026-06-01T12:00:00+01:00');

@@ -55,6 +55,15 @@ async function isAdmin() {
   return profile ? profile.is_admin : false;
 }
 
+// Guest email — read-only observer account
+const GUEST_EMAIL = 'varonow@yahoo.com';
+
+// Check if current user is the guest/observer account
+async function isGuest() {
+  const user = await getCurrentUser();
+  return user ? user.email.toLowerCase() === GUEST_EMAIL.toLowerCase() : false;
+}
+
 // Sign out
 async function signOut() {
   await db.auth.signOut();

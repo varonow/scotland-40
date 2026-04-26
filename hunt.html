@@ -580,6 +580,7 @@
   </div>
 </div>
 <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+<div class="guest-banner" id="guestBanner" style="display:none">👀 Viewing as Guest — Read Only</div>
 
   <!-- ── HERO ── -->
   <div class="hunt-hero">
@@ -1195,7 +1196,14 @@
   init();
 
   // Require login — redirects to login.html if not authenticated
-  requireAuth();
+  let guestMode = false;
+  requireAuth().then(async () => {
+    const guest = await isGuest();
+    if (guest) {
+      guestMode = true;
+      document.getElementById('guestBanner').style.display = 'block';
+    }
+  });
 </script>
 </body>
 </html>
