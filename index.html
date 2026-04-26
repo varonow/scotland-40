@@ -57,22 +57,35 @@
   </div>
 </div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 45px; width: auto;">
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
   </div>
-  <a href="#flights">Flights</a>
-  <a href="#hotels">Hotels</a>
-  <a href="#itinerary">Itinerary</a>
-  <a href="guide.html">Local Guide</a>
-  <a href="#guests">Our Group</a>
-  <a href="rooms.html">Room Draw</a>
-  <a href="messages.html">Birthday Messages</a>
-  <a href="journal.html">Journal</a>
-  <a href="photos.html">Photos</a>
-  <a href="#" onclick="signOut()" style="color: rgba(255,255,255,0.4);">Sign Out</a>
-</nav>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
+    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
+    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
+    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
+    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
+    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
+    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
+    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <!-- FLIGHTS -->
 <section id="flights">
@@ -235,8 +248,8 @@
         <span class="event-time">11AM–1PM</span>
         <div class="event-content">
           <p class="event-name">Kiltmaking</p>
-          <p class="event-address">Edinburgh Old Town</p>
-          <p class="event-desc">One of Scotland's most iconic crafts — you'll learn the art of kiltmaking from a master craftsman, discovering the history of tartans and the intricate technique behind this beloved national garment. A uniquely Scottish experience that connects you to centuries of Highland tradition.</p>
+          <p class="event-address">French Institute of Scotland · West Parliament Square, Edinburgh EH1 1RN · Enter via George IV Bridge</p>
+          <p class="event-desc">One of Scotland's most iconic crafts — you'll learn the art of kiltmaking from a master craftsman, discovering the history of tartans and the intricate technique behind this beloved national garment. A uniquely Scottish experience that connects you to centuries of Highland tradition. The workshop takes place at the French Institute of Scotland — access is via the George IV Bridge entrance.</p>
         </div>
       </li>
       <li class="event-item" onclick="toggleDesc(this)">
@@ -274,17 +287,129 @@
     </ul>
   </div>
 
-  <!-- DAYS 3 & 4 -->
+  <!-- DAY 3 -->
   <div class="day-block">
     <div class="day-header">
-      <span class="day-number">Days 3 & 4</span>
-      <span class="day-title">Journey to Loch Lomond</span>
-      <span class="day-date">June 3 – 4, 2026</span>
+      <span class="day-number">Day 3</span>
+      <span class="day-title">Loch Lomond & Glasgow</span>
+      <span class="day-date">June 3, 2026</span>
     </div>
-    <div class="tbd-block">
-      Details coming soon — departing Edinburgh, a castle visit en route,<br>
-      and arriving at Cameron House on the shores of Loch Lomond.
+    <ul class="event-list">
+
+      <!-- FIRST HALF PLACEHOLDER -->
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:00AM</span>
+        <div class="event-content">
+          <p class="event-name">Luggage Transfer — The Balmoral to Cameron House</p>
+          <p class="event-address">The Balmoral Hotel · 1 Princes Street, Edinburgh EH2 2EQ</p>
+          <p class="event-desc">Your luggage is collected from The Balmoral and transported directly to Cameron House on Loch Lomond, so you can spend the day exploring hands-free. Your bags will be waiting in your rooms when you arrive.</p>
+        </div>
+      </li>
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:30AM</span>
+        <div class="event-content">
+          <p class="event-name">Stirling Castle</p>
+          <p class="event-address">Castle Wynd, Stirling FK8 1EJ</p>
+          <p class="event-desc">One of Scotland's grandest and most storied castles, Stirling sits atop a volcanic rock with sweeping views across the Highlands. Home to Mary Queen of Scots and the Stuart monarchs, the castle is a masterpiece of Renaissance architecture. Explore the Royal Palace, the Great Hall, and the famous Stirling Heads — and don't miss the views of the Wallace Monument and the battlefield of Bannockburn in the distance. A truly unmissable piece of Scottish history.</p>
+        </div>
+      </li>
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">1:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Lunch — The Garden Restaurant</p>
+          <p class="event-address">MacDonald Forest Hills Hotel & Spa · Kinlochard, Aberfoyle FK8 3TL</p>
+          <p class="event-desc">Nestled in the heart of the Trossachs on the shores of Loch Ard, the Garden Restaurant at MacDonald Forest Hills offers stunning loch views and a menu celebrating the very best of Scottish produce. A beautiful and peaceful stop between Edinburgh and Loch Lomond — the perfect way to ease into the second chapter of the trip.</p>
+        </div>
+      </li>
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">3:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Check In — Cameron House</p>
+          <p class="event-address">Cameron House Resort · Loch Lomond, G83 8QZ</p>
+          <p class="event-desc">Welcome to your home on the loch. Cameron House is one of Scotland's most iconic five-star resorts, set on the southern shores of Loch Lomond with Ben Lomond rising dramatically behind it. Check into your rooms, take in those views, and get ready for an evening in Glasgow.</p>
+        </div>
+      </li>
+
+      <!-- GLASGOW EVENING -->
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">5:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Depart Cameron House</p>
+          <p class="event-address">Private transport · ~30 min drive to Glasgow via A82</p>
+          <p class="event-desc">Your private vehicle picks up the group from Cameron House for the short scenic drive down into Glasgow city centre — one of Scotland's most vibrant and under-rated cities.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">5:45PM</span>
+        <div class="event-content">
+          <p class="event-name">Pollok Country Park — Highland Coos</p>
+          <p class="event-address">Pollok Country Park, Glasgow G43 1AT · Free entry</p>
+          <p class="event-desc">Glasgow's only country park is home to the famous Pollok Fold — a herd of around 50 pedigree Highland cattle that have grazed the estate for nearly 200 years. June is calving season, which means adorable fluffy calves alongside the famous shaggy-haired adults. Just 10 minutes from the city centre but it feels like you've wandered straight into the Highlands. Free to visit, no booking required — your driver waits while you explore.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">6:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Buchanan Street & Princes Square</p>
+          <p class="event-address">Buchanan Street, Glasgow G1 · Princes Square, 48 Buchanan St</p>
+          <p class="event-desc">Glasgow's elegant pedestrianised main street is one of the finest shopping boulevards in the UK — wide, beautiful and lined with everything from boutiques to beautiful architecture. Duck inside Princes Square, a stunning Victorian atrium shopping centre with a gorgeous domed roof, wrought iron balconies and stylish boutiques. The perfect hour to stroll, browse and soak in the city before dinner.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">7:15PM</span>
+        <div class="event-content">
+          <p class="event-name">Dinner — Amarone</p>
+          <p class="event-address">2 Nelson Mandela Place, Glasgow G2 1BT · 0141 333 1122</p>
+          <p class="event-desc">Named Glasgow's Best Overall Restaurant of the Year, Amarone is a beloved Italian institution right off Buchanan Street. Step down into the semi-basement to find an open pizza kitchen, an impressive wine cellar and a warm, buzzing atmosphere. The menu is built around beautiful fresh pasta, wood-fired pizza and outstanding fish and seafood — perfect for the group's tastes. The fish dishes (sea bream, linguine) and pasta are exceptional.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:45PM</span>
+        <div class="event-content">
+          <p class="event-name">Blue Dog Piano Bar</p>
+          <p class="event-address">151 West George Street, Glasgow G2 2JJ · bluedogglasgow.co.uk</p>
+          <p class="event-desc">Glasgow's legendary New York-style piano and cocktail bar — a sleek baby grand piano at its heart, with live music every night until 3am. The pianist plays an irresistible mix of jazz, blues and crowd-pleasing classics, and the whole room sings along. Award-winning cocktails, table service, and an atmosphere that reviewers consistently describe as electric.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">11:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Return to Cameron House</p>
+          <p class="event-address">Private transport · ~35 min back along the A82</p>
+          <p class="event-desc">Your driver collects the group and whisks you back along the A82 to Cameron House, arriving just after midnight. Loch Lomond at night is something else entirely.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 4</span>
+      <span class="day-title">Born to be on the Loch</span>
+      <span class="day-date">June 4, 2026</span>
     </div>
+    <ul class="event-list">
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:30AM</span>
+        <div class="event-content">
+          <p class="event-name">Breakfast at the Cameron Grill</p>
+          <p class="event-address">Cameron House Resort · Loch Lomond, G83 8QZ</p>
+          <p class="event-desc">Start the morning in style at Cameron House's signature restaurant, overlooking the shimmering waters of Loch Lomond. Elegant and welcoming, the Cameron Grill is renowned for its exceptional service and a sumptuous breakfast spread — from a full Scottish with East Lothian haggis and Campbells black pudding, to fresh fruit, pastries and specialty coffees. Plush booths, sophisticated décor with baronial touches, and those breathtaking loch views make this the most beautiful breakfast backdrop in Scotland.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">12:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Champagne Cruise on Loch Lomond</p>
+          <p class="event-address">Cameron House Marina · Celtic Warrior · Loch Lomond</p>
+          <p class="event-desc">Happy Birthday, Joyce! Climb aboard the Celtic Warrior — Cameron House's magnificent 46ft luxury cruiser — for an unforgettable one-hour cruise across the bonnie banks of Loch Lomond. Departing from the Cameron House Marina, your skipper will glide past the loch's iconic islands including Inchmurrin and discover hidden coves only visible by boat, all while sharing fascinating tales of the loch's rich history. Sip champagne from the open upper deck as Ben Lomond towers above and the water sparkles below. A birthday moment that simply doesn't get more Scottish or more magical. 🥂🏴󠁧󠁢󠁳󠁣󠁴󠁿</p>
+        </div>
+      </li>
+    </ul>
   </div>
 
   <!-- DAY 5 -->
@@ -307,77 +432,6 @@
   </div>
 </section>
 
-<!-- GUESTS -->
-<section id="guests">
-  <p class="section-label">Our group</p>
-  <h2 class="section-title">The Birthday Party</h2>
-  <div class="gold-rule"></div>
-  <div class="guest-grid">
-
-    <!-- Birthday girl — photo -->
-    <div class="guest-card birthday">
-      <img class="guest-photo" src="images/joyce-saad.jpg" alt="Joyce Saad">
-      <p class="guest-name">Joyce<br>Saad</p>
-      <p class="birthday-badge">★ Birthday Girl ★</p>
-    </div>
-
-    <!-- Victoria — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/victoria-aronow.jpg" alt="Victoria Aronow">
-      <p class="guest-name">Victoria<br>Aronow</p>
-    </div>
-
-    <!-- Danielle — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/danielle-dabah.jpg" alt="Danielle Dabah">
-      <p class="guest-name">Danielle<br>Dabah</p>
-    </div>
-
-    <!-- Ginger — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/ginger-aronow.jpg" alt="Ginger Aronow">
-      <p class="guest-name">Ginger<br>Aronow</p>
-    </div>
-
-    <!-- Kimberly — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/kimberly-dabah.jpg" alt="Kimberly Dabah">
-      <p class="guest-name">Kimberly<br>Dabah</p>
-    </div>
-
-    <!-- Stephanie — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/stephanie-kattan.jpg" alt="Stephanie Kattan">
-      <p class="guest-name">Stephanie<br>Kattan</p>
-    </div>
-
-    <!-- Rachel — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/rachel-harari.jpg" alt="Rachel Harari">
-      <p class="guest-name">Rachel<br>Harari</p>
-    </div>
-
-    <!-- Joyce Salame — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/joyce-salame.jpg" alt="Joyce Salame">
-      <p class="guest-name">Joyce<br>Salame</p>
-    </div>
-
-    <!-- Ann — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/ann-salame.jpg" alt="Ann Salame">
-      <p class="guest-name">Ann<br>Salame</p>
-    </div>
-
-    <!-- Susie — photo -->
-    <div class="guest-card">
-      <img class="guest-photo" src="images/susie-sutton.jpg" alt="Susie Sutton">
-      <p class="guest-name">Susie<br>Sutton</p>
-    </div>
-
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
@@ -388,6 +442,20 @@
 
 <script>
   requireAuth();
+
+  function toggleMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const dropdown = document.getElementById('navDropdown');
+    const overlay = document.getElementById('navOverlay');
+    hamburger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
 
   function toggleDesc(item) {
     const isOpen = item.classList.contains('open');

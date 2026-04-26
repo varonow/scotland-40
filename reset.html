@@ -169,8 +169,112 @@
   /* New password form - shown after clicking reset link in email */
   .new-password-section { display: none; }
 </style>
+
+<style>
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    height: 56px;
+    background: #2C4A3E;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1.25rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .hamburger {
+    position: absolute;
+    left: 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 600;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-logo-center img { height: 38px; width: auto; }
+  .nav-dropdown {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 280px;
+    z-index: 490;
+    background: #2C4A3E;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    box-shadow: 4px 8px 24px rgba(0,0,0,0.3);
+    border-radius: 0 0 12px 0;
+  }
+  .nav-dropdown.open { max-height: 600px; }
+  .nav-dropdown-inner { padding: 0.5rem 0 1rem; display: flex; flex-direction: column; }
+  .nav-dropdown-inner a {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 0.85rem 1.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nav-dropdown-inner a:hover { background: rgba(255,255,255,0.07); color: #C9A84C; }
+  .nav-signout { color: rgba(255,255,255,0.4) !important; margin-top: 0.5rem; }
+  .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 480; }
+  .nav-overlay.open { display: block; }
+  body { padding-top: 56px; }
+</style>
 </head>
 <body>
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
+  </div>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
+    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
+    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
+    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
+    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
+    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
+    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
+    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <div class="card">
 
@@ -329,5 +433,21 @@
   }
 </script>
 
+
+<script>
+  function toggleMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const dropdown = document.getElementById('navDropdown');
+    const overlay = document.getElementById('navOverlay');
+    hamburger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+</script>
 </body>
 </html>

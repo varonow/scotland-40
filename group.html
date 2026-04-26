@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="images/joyce-logo.png">
+<title>Our Group — Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+
+<style>
+  :root {
+    --forest: #2C4A3E;
+    --gold: #C9A84C;
+    --heather: #7B5EA7;
+    --cream: #F9F5EE;
+    --mist: #EDE8DF;
+    --stone: #8C7B6B;
+    --dark: #1C1C1C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); font-family: 'Josefin Sans', sans-serif; padding-top: 56px; }
+
+  /* NAV */
+  .nav-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    height: 56px; background: var(--forest);
+    display: flex; align-items: center; justify-content: flex-end;
+    padding: 0 1.25rem; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .hamburger {
+    position: absolute; left: 1.25rem; background: transparent;
+    border: none; cursor: pointer; padding: 6px;
+    display: flex; flex-direction: column; gap: 5px; z-index: 600;
+  }
+  .hamburger span { display: block; width: 24px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s ease; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-logo-center img { height: 38px; width: auto; }
+  .nav-dropdown {
+    position: fixed; top: 56px; left: 0; width: 280px; z-index: 490;
+    background: var(--forest); max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease; box-shadow: 4px 8px 24px rgba(0,0,0,0.3);
+    border-radius: 0 0 12px 0;
+  }
+  .nav-dropdown.open { max-height: 600px; }
+  .nav-dropdown-inner { padding: 0.5rem 0 1rem; display: flex; flex-direction: column; }
+  .nav-dropdown-inner a {
+    font-family: 'Josefin Sans', sans-serif; font-size: 13px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); text-decoration: none;
+    padding: 0.85rem 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem;
+  }
+  .nav-dropdown-inner a:hover { background: rgba(255,255,255,0.07); color: var(--gold); }
+  .nav-signout { color: rgba(255,255,255,0.4) !important; margin-top: 0.5rem; }
+  .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 480; }
+  .nav-overlay.open { display: block; }
+
+  /* HERO */
+  .page-hero {
+    background: linear-gradient(135deg, #1a2e28 0%, #2C4A3E 50%, #3d2a5a 100%);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(44,74,62,0.95) 18px, rgba(44,74,62,0.95) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.85) 44px, rgba(123,94,167,0.85) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.95) 56px, rgba(44,74,62,0.95) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.85) 82px, rgba(201,168,76,0.85) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.95) 92px, rgba(44,74,62,0.95) 110px, transparent 110px, transparent 128px),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(44,74,62,0.5) 18px, rgba(44,74,62,0.5) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.4) 44px, rgba(123,94,167,0.4) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.5) 56px, rgba(44,74,62,0.5) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.4) 82px, rgba(201,168,76,0.4) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.5) 92px, rgba(44,74,62,0.5) 110px, transparent 110px, transparent 128px);
+    opacity: 0.4;
+  }
+  .page-hero-content { position: relative; z-index: 2; }
+  .page-hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.75rem;
+  }
+  .page-hero-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 400; color: white; margin-bottom: 0.5rem;
+  }
+  .page-hero-title em { font-style: italic; color: var(--gold); }
+  .page-hero-subtitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: rgba(255,255,255,0.7); font-size: 1.1rem;
+  }
+
+  /* SECTION TABS */
+  .section-tabs {
+    display: flex; justify-content: center; gap: 0;
+    background: white; border-bottom: 1px solid var(--mist);
+    position: sticky; top: 56px; z-index: 100;
+  }
+  .section-tab {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--stone); background: none; border: none;
+    padding: 1.1rem 2rem; cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .section-tab:hover { color: var(--forest); }
+  .section-tab.active { color: var(--forest); border-bottom-color: var(--gold); }
+
+  /* FLIP CARDS SECTION */
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  .flip-intro {
+    text-align: center; padding: 2.5rem 2rem 1.5rem;
+    max-width: 600px; margin: 0 auto;
+  }
+  .flip-intro p {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: var(--stone); font-size: 1rem;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* FLIP CARD */
+  .flip-card {
+    height: 420px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+  .flip-card-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+
+  .flip-front, .flip-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* FRONT */
+  .flip-front {
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 1rem; padding: 2rem;
+    border: 1px solid var(--mist);
+    transition: box-shadow 0.2s;
+  }
+  .flip-card:hover .flip-front { box-shadow: 0 8px 32px rgba(44,74,62,0.15); }
+
+  .flip-photo-wrap {
+    width: 160px; height: 160px; border-radius: 50%;
+    overflow: hidden; border: 3px solid var(--mist);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .flip-photo-wrap.birthday { border-color: var(--gold); box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+  .flip-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+  .flip-name {
+    font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    font-weight: 400; color: var(--dark); text-align: center;
+    line-height: 1.3;
+  }
+  .flip-birthday-tag {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .flip-hint {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--stone); opacity: 0.6;
+  }
+
+  /* BACK */
+  .flip-back {
+    transform: rotateY(180deg);
+    background: var(--forest);
+    display: flex; flex-direction: column;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .flip-badge {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .flip-badge-title {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.1rem; color: white; margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .flip-facts { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .flip-fact {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+    color: rgba(255,255,255,0.85); line-height: 1.5;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba(201,168,76,0.4);
+  }
+
+  .flip-prediction-label {
+    font-family: 'Josefin Sans', sans-serif; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.3rem;
+  }
+  .flip-prediction {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--forest); text-align: center; padding: 2.5rem 2rem;
+  }
+  footer img { height: 50px; width: auto; opacity: 0.8; margin-bottom: 1rem; }
+  .footer-text {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  @media (max-width: 600px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1rem 1rem 3rem;
+      max-width: 420px;
+    }
+    .flip-card { height: 420px; }
+    .flip-photo-wrap { width: 140px; height: 140px; }
+    .flip-name { font-size: 1.2rem; }
+    .flip-back { padding: 1.25rem; }
+    .flip-badge-title { font-size: 1.05rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; }
+    .flip-fact { font-size: 0.9rem; line-height: 1.45; }
+    .flip-prediction { font-size: 0.88rem; }
+
+    .section-tab { padding: 1rem 1.2rem; font-size: 10px; letter-spacing: 0.1em; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HAMBURGER NAV -->
+<div class="nav-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-logo-center">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
+  </div>
+</div>
+<div class="nav-dropdown" id="navDropdown">
+  <div class="nav-dropdown-inner">
+    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
+    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
+    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
+    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
+    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
+    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
+    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
+    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
+    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
+    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
+    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
+    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
+    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
+  </div>
+</div>
+<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-eyebrow">Scotland 2026 · The Women</p>
+    <h1 class="page-hero-title">Our <em>Group</em></h1>
+    <p class="page-hero-subtitle">Ten women. Five days. One unforgettable adventure.</p>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="section-tabs">
+  <button class="section-tab active" onclick="showSection('cards')">👩‍👩‍👧 The Group</button>
+</div>
+
+<!-- FLIP CARDS -->
+<div class="section-panel active" id="panel-cards">
+  <div class="flip-intro">
+    <p>Tap any card to reveal her Highland badge, fun facts & trip prediction 🏴󠁧󠁢󠁳󠁣󠁴󠁿</p>
+  </div>
+  <div class="cards-grid">
+
+    <!-- JOYCE SAAD -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap birthday">
+            <img src="images/joyce-saad.jpg" alt="Joyce Saad">
+          </div>
+          <p class="flip-name">Joyce Saad</p>
+          <p class="flip-birthday-tag">★ Birthday Girl ★</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Joyce Saad</p>
+          <p class="flip-badge-title">The Duchess of Delight</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Likes to hide in her closet in the dark a couple times a week</p>
+            <p class="flip-fact">Is dabbling in medieval drawing</p>
+            <p class="flip-fact">Knows the entire Greek alphabet</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will convince the group to recreate the same photo in 10 different locations"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VICTORIA ARONOW -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/victoria-aronow.jpg" alt="Victoria Aronow">
+          </div>
+          <p class="flip-name">Victoria Aronow</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Victoria Aronow</p>
+          <p class="flip-badge-title">The Magic in the Mist</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Sees colours around people that tell her if they are good or evil</p>
+            <p class="flip-fact">Fantasizes about being an FBI agent</p>
+            <p class="flip-fact">Spends way too much time watching TikToks</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will fall so in love with Loch Lomond she books a return trip before leaving"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANIELLE DABAH -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/danielle-dabah.jpg" alt="Danielle Dabah">
+          </div>
+          <p class="flip-name">Danielle Dabah</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Danielle Dabah</p>
+          <p class="flip-badge-title">The Ceilidh Queen</p>
+          <div class="flip-facts">
+            <p class="flip-fact">If she sees chopsticks she has to put them in her mouth like a walrus — her kids all inherited this trait</p>
+            <p class="flip-fact">Boys called her a linebacker in middle school</p>
+            <p class="flip-fact">Had her first kiss at 14 in Europe with an Italian boy she almost rode off on a motorcycle with, never to be seen again</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will attempt a Scottish accent that sounds nothing like Scotland"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GINGER ARONOW -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/ginger-aronow.jpg" alt="Ginger Aronow">
+          </div>
+          <p class="flip-name">Ginger Aronow</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Ginger Aronow</p>
+          <p class="flip-badge-title">The Marchioness of Mischief</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Once slowed down on Ocean Avenue to say hi to a guy and hit the car in front of her</p>
+            <p class="flip-fact">Feels a physical urge to curl anyone's straight eyelashes</p>
+            <p class="flip-fact">Gets nervous in her dreams about things that haven't happened yet</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will get asked to dance by every person in the room"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KIMBERLY DABAH -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/kimberly-dabah.jpg" alt="Kimberly Dabah">
+          </div>
+          <p class="flip-name">Kimberly Dabah</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Kimberly Dabah</p>
+          <p class="flip-badge-title">The Baroness of Banter</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Hides snacks in coffee cups so her kids don't know she's eating them</p>
+            <p class="flip-fact">Once ran into her celebrity crush at Sable's</p>
+            <p class="flip-fact">Is dying to visit the Amazon rainforest</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will make friends with a local who gives the group an insider tip that becomes the highlight of the trip"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEPHANIE KATTAN -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/stephanie-kattan.jpg" alt="Stephanie Kattan">
+          </div>
+          <p class="flip-name">Stephanie Kattan</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Stephanie Kattan</p>
+          <p class="flip-badge-title">The Tartan Trendsetter</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Had 2 life-size cardboard cutouts of Justin Bieber in her room for years</p>
+            <p class="flip-fact">Has a 2 hour skincare routine every morning AND night</p>
+            <p class="flip-fact">Always finds the best hair and manicure places wherever she goes</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will convince the entire group to do a face mask together at Cameron House"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RACHEL HARARI -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/rachel-harari.jpg" alt="Rachel Harari">
+          </div>
+          <p class="flip-name">Rachel Harari</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Rachel Harari</p>
+          <p class="flip-badge-title">The Court Enchantress</p>
+          <div class="flip-facts">
+            <p class="flip-fact">The sun makes her sneeze</p>
+            <p class="flip-fact">Pays for no ads on her iPhone games</p>
+            <p class="flip-fact">Has never tried Scotch — until now!</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will become the group's unofficial whisky expert by Day 3"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOYCE SALAME -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/joyce-salame.jpg" alt="Joyce Salame">
+          </div>
+          <p class="flip-name">Joyce Salame</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Joyce Salame</p>
+          <p class="flip-badge-title">The Keeper of the Crown</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Her heart is located lower in her chest than the average person</p>
+            <p class="flip-fact">Always gets the hiccups after eating a hard boiled egg</p>
+            <p class="flip-fact">Cannot sleep with anything covering her feet</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will photobomb a stranger's tourist photo and become internet famous"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANN SALAME -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/ann-salame.jpg" alt="Ann Salame">
+          </div>
+          <p class="flip-name">Ann Salame</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Ann Salame</p>
+          <p class="flip-badge-title">The Rune Reader of the Glen</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Failed her road test 3 times</p>
+            <p class="flip-fact">Never finished the Harry Potter series but pretends she did</p>
+            <p class="flip-fact">Smoked pot once at a Phish concert</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will know all the ceilidh steps before anyone else figures them out"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUSIE SUTTON -->
+    <div class="flip-card" onclick="flipCard(this)">
+      <div class="flip-card-inner">
+        <div class="flip-front">
+          <div class="flip-photo-wrap">
+            <img src="images/susie-sutton.jpg" alt="Susie Sutton">
+          </div>
+          <p class="flip-name">Susie Sutton</p>
+          <p class="flip-hint">tap to reveal</p>
+        </div>
+        <div class="flip-back">
+          <p class="flip-badge">🏴󠁧󠁢󠁳󠁣󠁴󠁿 Susie Sutton</p>
+          <p class="flip-badge-title">The Wild Heather Spirit</p>
+          <div class="flip-facts">
+            <p class="flip-fact">Can solve the Monday crossword in under 8 minutes</p>
+            <p class="flip-fact">Knows every word of Bohemian Rhapsody</p>
+            <p class="flip-fact">Played Peter Pan in 9th grade</p>
+          </div>
+          <p class="flip-prediction-label">🔮 Trip Prediction</p>
+          <p class="flip-prediction">"Will have a moment alone with the Scottish landscape that moves her to tears"</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40">
+  <p class="footer-text">Joyce Saad · 40th Birthday · June 1–5, 2026</p>
+</footer>
+
+<script>
+  requireAuth();
+
+  // NAV
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('navDropdown').classList.toggle('open');
+    document.getElementById('navOverlay').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('navDropdown').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('open');
+  }
+
+  // TABS
+  function showSection(id) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // FLIP CARDS — only one card flipped at a time
+  function flipCard(card) {
+    const wasFlipped = card.classList.contains('flipped');
+    // flip every open card back down first
+    document.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
+    // if the tapped card wasn't already open, open it
+    if (!wasFlipped) card.classList.add('flipped');
+  }
+
+</script>
+</body>
+</html>
