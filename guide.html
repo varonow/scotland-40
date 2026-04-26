@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="images/joyce-logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edinburgh Guide | Joyce Just a Wee Bit 40</title>
+<title>Local Guide | Joyce Just a Wee Bit 40</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
@@ -383,7 +383,6 @@
     <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
     <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
     <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
-    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
     <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
   </div>
 </div>
@@ -391,9 +390,9 @@
 
 <header>
   <div class="header-content">
-    <p class="header-eyebrow">Scotland 2026 · Edinburgh</p>
+    <p class="header-eyebrow">Scotland 2026 · Edinburgh · Glasgow · Loch Lomond</p>
     <h1 class="header-title">The <em>Local</em> Guide</h1>
-    <p class="header-subtitle">Our curated picks for Edinburgh's best</p>
+    <p class="header-subtitle">Our curated picks across the whole trip</p>
   </div>
 </header>
 
@@ -406,6 +405,8 @@
   <button class="category-tab" onclick="showCategory('snacks')">🍦 Snacks</button>
   <button class="category-tab" onclick="showCategory('shopping')">🛍️ Shopping</button>
   <button class="category-tab" onclick="showCategory('sights')">🏰 Sights</button>
+  <button class="category-tab" onclick="showCategory('glasgow')">🏙️ Glasgow</button>
+  <button class="category-tab" onclick="showCategory('lochlomomd')">🏔️ Loch Lomond</button>
 </div>
 
 <main>
@@ -942,6 +943,228 @@
         <a href="https://maps.google.com/?q=National+Museum+of+Scotland+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
         <p class="place-desc">One of the best free museums in Europe — a spectacular Victorian building housing thousands of years of Scottish and world history. From Dolly the Sheep to ancient Scottish treasures, Viking artefacts, and the story of Scotland's clans and tartans. Perfect for an hour on a rainy afternoon.</p>
         <div class="place-tip"><strong>Tip:</strong> Head to the top floor rooftop terrace for free views of the Old Town skyline — Edinburgh Castle looks incredible from here.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GLASGOW -->
+  <div class="category-section" id="cat-glasgow">
+    <div class="section-header">
+      <p class="section-eyebrow">Day 3 Evening · June 3rd</p>
+      <h2 class="section-title">Glasgow</h2>
+      <p class="section-desc">Scotland's most vibrant city — a brilliant mix of architecture, art, world-class bars, and electric nightlife</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎹</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://thesocialclub.co.uk" target="_blank" rel="noopener">The Social Club</a></p>
+            <span class="place-tag gold">Piano Bar · Live Music</span>
+          </div>
+        </div>
+        <p class="place-address">42 Union Street, Glasgow G1 3QX</p>
+        <a href="https://maps.google.com/?q=The+Social+Club+42+Union+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Glasgow's beloved piano bar — an intimate, lively venue where a resident pianist plays everything from pop to jazz while guests sing along, drink cocktails, and dance. This is the kind of place where birthdays become legends. Expect a beautifully dressed crowd, theatrical cocktails, and an atmosphere that builds all night long.</p>
+        <div class="place-tip"><strong>Tip:</strong> Request a song for Joyce! The pianists here are brilliant improvisers and love a birthday request.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🦩</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.tikibar.co.uk/glasgow" target="_blank" rel="noopener">Tiki Bar & Kitsch Inn</a></p>
+            <span class="place-tag gold">Glasgow Institution</span>
+          </div>
+        </div>
+        <p class="place-address">214 Bath Street, Glasgow G2 4HW</p>
+        <a href="https://maps.google.com/?q=Tiki+Bar+214+Bath+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of Glasgow's most iconic and outrageously fun bars — a riot of colour, kitsch décor, and brilliant cocktails served in ceramic skulls and tiki mugs. The upstairs Kitsch Inn has a completely different vibe — retro wallpaper, mismatched furniture, and a gloriously eccentric atmosphere. The kind of place you stay for three hours when you only planned one.</p>
+        <div class="place-tip"><strong>Tip:</strong> Order the "Glasgow Punch Bowl" for sharing — it's theatrical, enormous, and perfect for a group of women celebrating.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍝</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.cafezique.com" target="_blank" rel="noopener">Café Zique</a></p>
+            <span class="place-tag">Dinner · West End</span>
+          </div>
+        </div>
+        <p class="place-address">66 Hyndland Street, Glasgow G11 5PT</p>
+        <a href="https://maps.google.com/?q=Cafe+Zique+66+Hyndland+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Glasgow's most charming neighbourhood bistro — a French-inspired café and wine bar tucked into the beautiful West End. Gorgeous seasonal dishes, an exceptional natural wine list, and the kind of warm, unhurried atmosphere that makes an evening stretch beautifully. Perfect for a group dinner before a night out.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book well in advance — this tiny gem fills up fast. The charcuterie board and steak frites are essential orders.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍸</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.theargyle.co.uk" target="_blank" rel="noopener">Alston Bar & Beef</a></p>
+            <span class="place-tag">Cocktails · City Centre</span>
+          </div>
+        </div>
+        <p class="place-address">Grand Central Hotel, 99 Gordon St, Glasgow G1 3SF</p>
+        <a href="https://maps.google.com/?q=Alston+Bar+Grand+Central+Hotel+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Nestled in the vaulted Victorian underbelly of the Grand Central Hotel — one of Glasgow's most atmospheric and beautiful drinking spots. Stone arches, moody lighting, exceptional cocktails, and the kind of setting that makes you feel like you're in a different era. The cocktail menu is playful and Scottish-inspired.</p>
+        <div class="place-tip"><strong>Tip:</strong> Start here for pre-dinner cocktails — the arched Victorian ceilings make for an incredible backdrop. Ask for the bar manager's seasonal cocktail recommendation.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏛️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.kelvingrovemuseum.co.uk" target="_blank" rel="noopener">Kelvingrove Art Gallery</a></p>
+            <span class="place-tag">Free Entry · Daytime</span>
+          </div>
+        </div>
+        <p class="place-address">Argyle Street, Glasgow G3 8AG</p>
+        <a href="https://maps.google.com/?q=Kelvingrove+Art+Gallery+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of the most beautiful free museums in Scotland — a stunning Spanish Baroque sandstone building housing Dalí's Christ of Saint John of the Cross, a hanging Spitfire, Egyptian mummies, and one of the finest art collections in the UK. Set in Kelvingrove Park, it's equally breathtaking from the outside. Free entry, takes about an hour.</p>
+        <div class="place-tip"><strong>Tip:</strong> There's a daily organ recital at 1pm — completely free and absolutely magical in the grand central hall. The park outside is perfect for a picnic in good weather.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🛍️</span>
+          <div class="place-title-group">
+            <p class="place-name">Princes Square & Buchanan Street</p>
+            <span class="place-tag gold">Best Shopping in Scotland</span>
+          </div>
+        </div>
+        <p class="place-address">Buchanan Street, Glasgow G1</p>
+        <a href="https://maps.google.com/?q=Princes+Square+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Glasgow genuinely has better shopping than Edinburgh — Buchanan Street is Scotland's finest retail thoroughfare, and Princes Square is a stunning Victorian-era atrium mall filled with boutiques, design stores, and great restaurants. Also worth exploring: Argyll Arcade for jewellery, Merchant City for independent boutiques, and the gorgeous Mackintosh-designed streets of the West End.</p>
+        <div class="place-tip"><strong>Tip:</strong> Duck into Princes Square just for the building — the ornate iron balconies and peacock sculptures make it one of Scotland's most beautiful interiors.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎷</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.oran-mor.co.uk" target="_blank" rel="noopener">Oran Mór</a></p>
+            <span class="place-tag">Bar · Music · West End Icon</span>
+          </div>
+        </div>
+        <p class="place-address">731 Great Western Road, Glasgow G12 8QX</p>
+        <a href="https://maps.google.com/?q=Oran+Mor+731+Great+Western+Road+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A converted church at the top of Byres Road that's become one of Glasgow's most iconic venues — a bar, restaurant, nightclub, and arts space all under one glorious painted ceiling. The ceiling mural by Alasdair Gray is spectacular. A brilliant place for a drink in the West End with a truly unique atmosphere. Live music nights are legendary.</p>
+        <div class="place-tip"><strong>Tip:</strong> Look up — the entire ceiling is a stunning hand-painted mural. The beer garden out back is one of Glasgow's most popular spots on a warm evening.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOCH LOMOND -->
+  <div class="category-section" id="cat-lochlomomd">
+    <div class="section-header">
+      <p class="section-eyebrow">Days 3 & 4 · Cameron House</p>
+      <h2 class="section-title">Loch Lomond</h2>
+      <p class="section-desc">Scotland's most romantic loch — castles, villages, lochside walks, and pubs with views that take your breath away</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🐄</span>
+          <div class="place-title-group">
+            <p class="place-name">Luss Village</p>
+            <span class="place-tag gold">Most Picturesque Village</span>
+          </div>
+        </div>
+        <p class="place-address">Luss, Loch Lomond G83 8NY</p>
+        <a href="https://maps.google.com/?q=Luss+Village+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Scotland's most photographed village — a cluster of impossibly pretty stone cottages draped in roses, right on the shores of Loch Lomond. Wander the cobbled lanes, visit the ancient 13th-century parish church, and take the short walk to the loch beach for views of Ben Lomond across the water. Just 5 minutes from Cameron House.</p>
+        <div class="place-tip"><strong>Tip:</strong> Go early morning before the tour buses arrive — the village is magical in the quiet morning light. The Highland Coo statues near the beach are iconic photo spots.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍺</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.lusstavern.co.uk" target="_blank" rel="noopener">The Luss Tavern</a></p>
+            <span class="place-tag gold">Lochside Pub</span>
+          </div>
+        </div>
+        <p class="place-address">Luss, Loch Lomond G83 8NY</p>
+        <a href="https://maps.google.com/?q=The+Luss+Tavern+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The quintessential Scottish pub lunch spot — a stone-built village inn right in Luss with an outdoor terrace looking directly out over Loch Lomond. Traditional Scottish pub food done beautifully: cullen skink, haggis, fresh sandwiches, and local ales. Sitting outside here on a sunny afternoon with Loch Lomond glittering in front of you is one of Scotland's great simple pleasures.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a table on the terrace and order the cullen skink — it's one of the best versions in Scotland. Perfect for a relaxed group lunch.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🛶</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.sweeneyscruises.co.uk" target="_blank" rel="noopener">Sweeney's Cruises</a></p>
+            <span class="place-tag">Loch Cruise · Balloch</span>
+          </div>
+        </div>
+        <p class="place-address">Balloch Road, Balloch G83 8LQ</p>
+        <a href="https://maps.google.com/?q=Sweeney+Cruises+Balloch+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The best way to see Loch Lomond is from the water — Sweeney's runs scenic cruises across the loch, past the wooded islands of Inchmurrin and Inchcailloch and up toward the Highland boundary. A one-hour cruise gives you the full sweep of Ben Lomond, the islands, and Cameron House itself from the water. Utterly gorgeous on a clear day.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book the private charter for your group — worth it entirely. Bring a bottle of prosecco and let Ben Lomond be your backdrop.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏰</span>
+          <div class="place-title-group">
+            <p class="place-name">Balloch Castle & Country Park</p>
+            <span class="place-tag">Free · 200 Acres</span>
+          </div>
+        </div>
+        <p class="place-address">Balloch Castle Country Park, Balloch G83 8LX</p>
+        <a href="https://maps.google.com/?q=Balloch+Castle+Country+Park" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A beautiful 200-acre country park on the southern shores of Loch Lomond — woodland trails, walled gardens, and the early 19th-century Balloch Castle overlooking the loch. Free entry and perfect for a morning walk with spectacular views. The lochside path gives gorgeous views of the water and the mountains beyond.</p>
+        <div class="place-tip"><strong>Tip:</strong> The walled garden is especially beautiful in early June when everything is in bloom. Combine with Luss for a perfect morning out.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧀</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.lochlomondshores.com" target="_blank" rel="noopener">Loch Lomond Shores</a></p>
+            <span class="place-tag">Shopping · Cafés · Waterfront</span>
+          </div>
+        </div>
+        <p class="place-address">Ben Lomond Way, Balloch G83 8QL</p>
+        <a href="https://maps.google.com/?q=Loch+Lomond+Shores+Balloch" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The waterfront retail and leisure hub at Balloch — a cluster of Scottish artisan shops, cafés, and restaurants right at the foot of the loch. Excellent for picking up quality Scottish gifts, local food and drink, cashmere, and whisky. The Loch Lomond Whisky & Visitor Centre is here, along with a good Marks & Spencer Food for loch picnic supplies.</p>
+        <div class="place-tip"><strong>Tip:</strong> The M&S Simply Food here is perfect for stocking up on picnic supplies, snacks, or a bottle of something for the hotel room. The lochside walk from here to the pier is lovely.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🌿</span>
+          <div class="place-title-group">
+            <p class="place-name">Cameron House Lochside Walk</p>
+            <span class="place-tag gold">Best Morning Activity</span>
+          </div>
+        </div>
+        <p class="place-address">Cameron House, Loch Lomond G83 8QZ</p>
+        <a href="https://maps.google.com/?q=Cameron+House+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The grounds of Cameron House sit right on the banks of Loch Lomond — the lochside walk from the hotel grounds gives views of Ben Lomond, the islands, and the water in the early morning light that are genuinely unforgettable. There's a beautiful fallen tree at the water's edge that's become one of the area's most famous photo spots. Go before breakfast while the mist is still on the water.</p>
+        <div class="place-tip"><strong>Tip:</strong> This is the ideal spot for your group photo session with the Scottish dresses — golden hour light on Loch Lomond with Ben Lomond behind you. Photographer Paul Saunders (paulsaundersphotography.com) knows this exact spot well.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧖‍♀️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.cameronhouse.co.uk/spa" target="_blank" rel="noopener">Cameron House Spa</a></p>
+            <span class="place-tag gold">On-Site · Book Early</span>
+          </div>
+        </div>
+        <p class="place-address">Cameron House, Loch Lomond G83 8QZ</p>
+        <a href="https://maps.google.com/?q=Cameron+House+Spa+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The award-winning spa at Cameron House is one of Scotland's finest — a stunning loch-view facility with indoor and outdoor pools, a thermal suite, and a full treatment menu. Treatments fill up fast, especially for groups. Even an hour in the thermal suite with views over Loch Lomond is an extraordinary experience. Perfect for a morning before lunch at Luss.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book spa treatments at the same time as your hotel reservation — they sell out weeks in advance, especially for groups wanting the same time slot.</div>
       </div>
 
     </div>
