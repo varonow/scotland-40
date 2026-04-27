@@ -628,7 +628,10 @@
           <img id="modalThumb" src="" alt="Your submission">
           <div class="submitted-msg" id="modalSubmittedMsg"></div>
           <div class="resubmit-note" id="modalResubmitNote"></div>
-        </div>
+          <button class="submit-btn" id="replacePhotoBtn" onclick="showReplaceForm()" style="background:transparent;color:var(--gold);border:1.5px solid var(--gold);margin-top:1rem">
+    📷 Replace Photo
+          </button>
+      </div>
         <div id="modalUploadForm">
           <div class="modal-challenge-text" id="modalChallengeText"></div>
           <div class="modal-pts" id="modalPts"></div>
@@ -1043,6 +1046,20 @@
 
     document.getElementById('uploadModal').classList.add('open');
   }
+
+  function showReplaceForm() {
+  // Hide the "already submitted" view, show the upload form
+  document.getElementById('modalAlreadySubmitted').style.display = 'none';
+  document.getElementById('modalUploadForm').style.display = 'block';
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('uploadPreview').src = '';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('submitPhotoBtn').disabled = true;
+  document.getElementById('submitPhotoBtn').textContent = 'Replace Photo';
+  document.getElementById('fileInput').value = '';
+  document.getElementById('submitPhotoBtn').textContent = 'Submit Photo';
+  selectedFile = null;
+}
 
   function closeModal() {
     document.getElementById('uploadModal').classList.remove('open');
