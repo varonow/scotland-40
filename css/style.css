@@ -713,9 +713,8 @@ nav { display: none !important; }
   transform: translateY(-7px) rotate(-45deg);
 }
 
-.nav-logo-center img {
-  height: 38px;
-  width: auto;
+.nav-logo-center {
+  display: none;
 }
 
 /* DROPDOWN MENU */
