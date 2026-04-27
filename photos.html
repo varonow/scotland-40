@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
+<script src="js/image-compress.js"></script>
 <link rel="stylesheet" href="css/nav.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -647,7 +648,8 @@
 
     let uploaded = 0;
 
-    for (const file of selectedFiles) {
+    for (const original of selectedFiles) {
+      const file = await compressImage(original);
       const ext = file.name.split('.').pop();
       const fileName = `${currentUser.id}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
 

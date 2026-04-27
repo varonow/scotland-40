@@ -6,6 +6,7 @@
   <title>Scavenger Hunt | Joyce Just a Wee Bit 40 🏴󠁧󠁢󠁳󠁣󠁴󠁿</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
+  <script src="js/image-compress.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/nav.css">
   <style>
@@ -1066,13 +1067,14 @@
     btn.disabled = true;
     btn.textContent = 'Uploading…';
 
-    try {
-      const ext = selectedFile.name.split('.').pop() || 'jpg';
+  try {
+      const file = await compressImage(selectedFile);
+      const ext = file.name.split('.').pop() || 'jpg';
       const path = `${selectedChallenge.id}/${currentUser.email.replace('@','_')}/${Date.now()}.${ext}`;
 
       const { error: uploadError } = await db.storage
         .from(STORAGE_BUCKET)
-        .upload(path, selectedFile, { upsert: true });
+        .upload(path, file, { upsert: true });
       if (uploadError) throw uploadError;
 
       const { data: urlData } = db.storage.from(STORAGE_BUCKET).getPublicUrl(path);
