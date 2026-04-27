@@ -10,6 +10,68 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ============================================
+   SHARED NAVIGATION
+   Single source of truth for the menu.
+   To add/remove/rename a menu item, just edit
+   the NAV_ITEMS array below.
+   ============================================ */
+
+const NAV_ITEMS = [
+  { href: 'index.html',           emoji: '🏰', label: 'Home' },
+  { href: 'index.html#flights',   emoji: '✈️', label: 'Flights' },
+  { href: 'index.html#hotels',    emoji: '🏨', label: 'Hotels' },
+  { href: 'index.html#itinerary', emoji: '📅', label: 'Itinerary' },
+  { href: 'guide.html',           emoji: '📍', label: 'Local Guide' },
+  { href: 'tips.html',            emoji: '💡', label: 'Travel Tips' },
+  { href: 'group.html',           emoji: '👭', label: 'The Girls' },
+  { href: 'rooms.html',           emoji: '🛏️', label: 'Room Draw' },
+  { href: 'messages.html',        emoji: '💬', label: 'Birthday Messages' },
+  { href: 'journal.html',         emoji: '📖', label: 'Journal' },
+  { href: 'photos.html',          emoji: '📸', label: 'Photos' },
+  { href: 'hunt.html',            emoji: '🔍', label: 'Scavenger Hunt' },
+  { href: 'packing.html',         emoji: '🧳', label: 'Packing List' }
+];
+
+function injectNav() {
+  // Don't inject twice
+  if (document.getElementById('shared-nav')) return;
+
+  const linksHTML = NAV_ITEMS.map(item =>
+  `<a href="${item.href}" onclick="setTimeout(closeMenu,50)">${item.emoji} ${item.label}</a>`
+).join('');
+
+  const navHTML = `
+    <div id="shared-nav">
+      <div class="nav-bar">
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="nav-dropdown" id="navDropdown">
+        <div class="nav-dropdown-inner">
+          ${linksHTML}
+        </div>
+      </div>
+      <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('afterbegin', navHTML);
+}
+
+function toggleMenu() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('navDropdown').classList.toggle('open');
+  document.getElementById('navOverlay').classList.toggle('open');
+}
+
+function closeMenu() {
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('navDropdown').classList.remove('open');
+  document.getElementById('navOverlay').classList.remove('open');
+}
+
+/* ============================================
    AUTH HELPERS
    ============================================ */
 
@@ -19,6 +81,7 @@ async function requireAuth() {
     window.location.href = 'login.html';
     return null;
   }
+  injectNav();
   injectSignOutButton();
   return user;
 }

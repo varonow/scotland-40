@@ -13,7 +13,7 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{--forest:#2C4A3E;--heather:#7B5EA7;--gold:#C9A84C;--cream:#F9F5EE;--stone:#5C4A2A;--mist:#E8E4DC;--dark:#0D0D0D}
   html{scroll-behavior:smooth}
-  body{font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--dark);font-size:18px;line-height:1.7;min-height:100vh;padding-top:56px}
+  body{font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--dark);font-size:18px;line-height:1.7;min-height:100vh}
 
   /* HEADER */
   header{background:linear-gradient(160deg,#1a2e28 0%,#2C4A3E 40%,#3d2a5a 100%);padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden}
@@ -80,23 +80,6 @@
   .highlight-icon{font-size:1.2rem;flex-shrink:0}
   .highlight-text{font-style:italic;font-size:.95rem;color:var(--stone);line-height:1.6}
 
-  /* NAV */
-  .nav-bar{position:fixed;top:0;left:0;right:0;z-index:500;height:56px;background:#2C4A3E;display:flex;align-items:center;justify-content:flex-end;padding:0 1.25rem;box-shadow:0 2px 12px rgba(0,0,0,.2)}
-  .hamburger{position:absolute;left:1.25rem;background:transparent;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px;z-index:600}
-  .hamburger span{display:block;width:24px;height:2px;background:white;border-radius:2px;transition:all .3s ease}
-  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-  .hamburger.open span:nth-child(2){opacity:0}
-  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  .nav-logo-center img{height:38px;width:auto}
-  .nav-dropdown{position:fixed;top:56px;left:0;width:280px;z-index:490;background:#2C4A3E;max-height:0;overflow:hidden;transition:max-height .35s ease;box-shadow:4px 8px 24px rgba(0,0,0,.3);border-radius:0 0 12px 0}
-  .nav-dropdown.open{max-height:700px}
-  .nav-dropdown-inner{padding:.5rem 0 1rem;display:flex;flex-direction:column}
-  .nav-dropdown-inner a{font-family:'Josefin Sans',sans-serif;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);text-decoration:none;padding:.85rem 1.75rem;border-bottom:1px solid rgba(255,255,255,.07);transition:all .2s;display:flex;align-items:center;gap:.75rem}
-  .nav-dropdown-inner a:hover{background:rgba(255,255,255,.07);color:#C9A84C}
-  .nav-signout{color:rgba(255,255,255,.4)!important;margin-top:.5rem}
-  .nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:480}
-  .nav-overlay.open{display:block}
-
   @media(max-width:600px){
     .tip-inner{padding:1.1rem}
     .phrase-grid{grid-template-columns:1fr}
@@ -105,34 +88,6 @@
 </style>
 </head>
 <body>
-
-<div class="nav-bar">
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="nav-logo-center">
-    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height:38px;width:auto;">
-  </div>
-</div>
-<div class="nav-dropdown" id="navDropdown">
-  <div class="nav-dropdown-inner">
-    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
-    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
-    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
-    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
-    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
-    <a href="tips.html" onclick="setTimeout(closeMenu,50)">💡 Travel Tips</a>
-    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
-    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
-    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
-    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
-    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
-    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
-    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
-    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
-  </div>
-</div>
-<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <header>
   <div class="header-content">
@@ -585,19 +540,6 @@
 
   function toggle(id) {
     document.getElementById(id).classList.toggle('collapsed');
-  }
-</script>
-
-<script>
-  function toggleMenu() {
-    document.getElementById('hamburger').classList.toggle('open');
-    document.getElementById('navDropdown').classList.toggle('open');
-    document.getElementById('navOverlay').classList.toggle('open');
-  }
-  function closeMenu() {
-    document.getElementById('hamburger').classList.remove('open');
-    document.getElementById('navDropdown').classList.remove('open');
-    document.getElementById('navOverlay').classList.remove('open');
   }
 </script>
 </body>

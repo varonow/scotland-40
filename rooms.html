@@ -263,36 +263,6 @@
 </style>
 </head>
 <body>
-<!-- HAMBURGER NAV -->
-<div class="nav-bar">
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-  <div class="nav-logo-center">
-    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 38px; width: auto;">
-  </div>
-</div>
-<div class="nav-dropdown" id="navDropdown">
-  <div class="nav-dropdown-inner">
-    <a href="index.html" onclick="setTimeout(closeMenu,50)">🏠 Home</a>
-    <a href="index.html#flights" onclick="setTimeout(closeMenu,50)">✈️ Flights</a>
-    <a href="index.html#hotels" onclick="setTimeout(closeMenu,50)">🏨 Hotels</a>
-    <a href="index.html#itinerary" onclick="setTimeout(closeMenu,50)">📅 Itinerary</a>
-    <a href="guide.html" onclick="setTimeout(closeMenu,50)">🗺️ Local Guide</a>
-    <a href="tips.html" onclick="setTimeout(closeMenu,50)">💡 Travel Tips</a>
-    <a href="group.html" onclick="setTimeout(closeMenu,50)">👩‍👩‍👧 Our Group</a>
-    <a href="rooms.html" onclick="setTimeout(closeMenu,50)">🎩 Room Draw</a>
-    <a href="messages.html" onclick="setTimeout(closeMenu,50)">💌 Birthday Messages</a>
-    <a href="journal.html" onclick="setTimeout(closeMenu,50)">📖 Journal</a>
-    <a href="photos.html" onclick="setTimeout(closeMenu,50)">📸 Photos</a>
-    <a href="hunt.html" onclick="setTimeout(closeMenu,50)">🏆 Scavenger Hunt</a>
-    <a href="packing.html" onclick="setTimeout(closeMenu,50)">🧳 Packing List</a>
-    <a href="#" onclick="signOut()" class="nav-signout">Sign Out</a>
-  </div>
-</div>
-<div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
 
 <header>
   <div class="header-content">
@@ -489,21 +459,5 @@
   initAdminControls();
 </script>
 
-
-<script>
-  function toggleMenu() {
-    const hamburger = document.getElementById('hamburger');
-    const dropdown = document.getElementById('navDropdown');
-    const overlay = document.getElementById('navOverlay');
-    hamburger.classList.toggle('open');
-    dropdown.classList.toggle('open');
-    overlay.classList.toggle('open');
-  }
-  function closeMenu() {
-    document.getElementById('hamburger').classList.remove('open');
-    document.getElementById('navDropdown').classList.remove('open');
-    document.getElementById('navOverlay').classList.remove('open');
-  }
-</script>
 </body>
 </html>

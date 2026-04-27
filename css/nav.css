@@ -68,14 +68,14 @@ body {
   z-index: 490;
   background: #2C4A3E;
   max-height: 0;
-  overflow: hidden;
+  overflow-y: auto;  
   transition: max-height 0.35s ease;
   box-shadow: 4px 8px 24px rgba(0, 0, 0, 0.3);
   border-radius: 0 0 12px 0;
 }
 
 .nav-dropdown.open {
-  max-height: 600px;
+  max-height: 800px;
 }
 
 .nav-dropdown-inner {
