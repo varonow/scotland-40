@@ -1,0 +1,164 @@
+/* ============================================
+   SCOTLAND 40 — Shared Nav Bar Styles
+   css/nav.css
+   Used by every page that has the hamburger nav.
+   ============================================ */
+
+/* --- TOP NAV BAR --- */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  height: 56px;
+  background: #2C4A3E;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 1.25rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Pushes page content below fixed nav */
+body {
+  padding-top: 56px;
+}
+
+/* --- HAMBURGER ICON --- */
+.hamburger {
+  position: absolute;
+  left: 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 600;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* --- HIDE THE OLD CENTER LOGO --- */
+/* The Sign Out button now occupies the right corner; the logo
+   in the top bar is no longer needed on any page. */
+.nav-logo-center {
+  display: none;
+}
+
+/* --- DROPDOWN MENU --- */
+.nav-dropdown {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 280px;
+  z-index: 490;
+  background: #2C4A3E;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  box-shadow: 4px 8px 24px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 12px 0;
+}
+
+.nav-dropdown.open {
+  max-height: 600px;
+}
+
+.nav-dropdown-inner {
+  padding: 0.5rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-dropdown-inner a {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 0.85rem 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-dropdown-inner a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #C9A84C;
+}
+
+.nav-signout {
+  color: rgba(255, 255, 255, 0.4) !important;
+  margin-top: 0.5rem;
+}
+
+/* --- DROPDOWN OVERLAY (dimmed background when menu open) --- */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 480;
+}
+
+.nav-overlay.open {
+  display: block;
+}
+
+/* ============================================
+   FLOATING SIGN OUT BUTTON
+   Injected by requireAuth() in js/supabase.js
+   ============================================ */
+#floating-signout {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  background-color: rgba(15, 30, 20, 0.35);
+  color: #c9a84c;
+  border: 1px solid rgba(201, 168, 76, 0.6);
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#floating-signout:hover {
+  background-color: rgba(201, 168, 76, 0.9);
+  color: #0f3d1f;
+  border-color: #c9a84c;
+}
+
+@media (max-width: 600px) {
+  #floating-signout {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+}
