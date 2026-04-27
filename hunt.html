@@ -1062,10 +1062,16 @@
 }
 
   function closeModal() {
-    document.getElementById('uploadModal').classList.remove('open');
-    selectedChallenge = null;
-    selectedFile = null;
+  document.getElementById('uploadModal').classList.remove('open');
+  selectedChallenge = null;
+  selectedFile = null;
+  // Reset the submit button so it's clean next time the modal opens
+  const btn = document.getElementById('submitPhotoBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Submit Photo';
   }
+}
 
   function handleFileSelect(event) {
     const file = event.target.files[0];
