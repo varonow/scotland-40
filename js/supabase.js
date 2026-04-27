@@ -13,9 +13,8 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
    AUTH HELPERS
    ============================================ */
 
-// Call this on any protected page — redirects to login if not signed in
 async function requireAuth() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { user } } = await db.auth.getUser();
   if (!user) {
     window.location.href = 'login.html';
     return null;
