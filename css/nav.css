@@ -162,3 +162,19 @@ body {
     letter-spacing: 1px;
   }
 }
+
+/* ============================================
+   GUEST BANNER
+   Shown on pages where the guest user can view
+   but not interact (read-only mode)
+   ============================================ */
+.guest-banner {
+  background: #2C4A3E;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  padding: 0.6rem 1rem;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}

@@ -571,12 +571,7 @@
   </div>
 
   <!-- ── CHALLENGES TAB ── -->
-  <div class="tab-content active" id="tab-challenges">
-    <div id="notLoggedInMsg" class="not-logged-in" style="display:none">
-      <h3>Sign in to play!</h3>
-      <p>You need to be logged in to submit photos and track your score.</p>
-      <a href="login.html" class="login-link">Sign In</a>
-    </div>
+  <div class="tab-content active" id="tab-challenges">    
     <div id="challengesInner" style="display:none">
       <div class="my-score-bar">
         <div>
@@ -754,8 +749,8 @@
   let guestMode = false;
 
   async function init() {
-    const { data: { session } } = await db.auth.getSession();
-    currentUser = session?.user || null;
+    currentUser = await requireAuth();
+    if (!currentUser) return;  // requireAuth redirects to login if not signed in
 
     if (currentUser?.email === ADMIN_EMAIL) {
       document.getElementById('adminTabBtn').style.display = 'block';
@@ -768,15 +763,10 @@
     }
 
     await loadSubmissions();
-
-    if (currentUser) {
-      document.getElementById('notLoggedInMsg').style.display = 'none';
-      document.getElementById('challengesInner').style.display = 'block';
-      renderChallenges();
-      updateMyScore();
-    } else {
-      document.getElementById('notLoggedInMsg').style.display = 'block';
-    }
+   
+    document.getElementById('challengesInner').style.display = 'block';
+    renderChallenges();
+    updateMyScore();
 
     renderLeaderboard();
   }
