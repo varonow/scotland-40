@@ -15,12 +15,24 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Call this on any protected page — redirects to login if not signed in
 async function requireAuth() {
-  const { data: { session } } = await db.auth.getSession();
-  if (!session) {
-    window.location.href = '/login.html';
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) {
+    window.location.href = 'login.html';
     return null;
   }
-  return session;
+  injectSignOutButton();
+  return user;
+}
+
+function injectSignOutButton() {
+  // Don't add it twice
+  if (document.getElementById('floating-signout')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'floating-signout';
+  btn.textContent = 'Sign Out';
+  btn.onclick = signOut;
+  document.body.appendChild(btn);
 }
 
 // Call this on login/register pages — redirects home if already signed in
