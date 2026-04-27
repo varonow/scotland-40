@@ -1085,12 +1085,17 @@
 
       const { error: dbError } = await db
         .from('scavenger_submissions')
-        .insert({
+        .upsert({
           challenge_id: selectedChallenge.id,
           user_email: currentUser.email,
           user_name: userName,
           photo_url: photoUrl,
           status: 'active',
+          submitted_at: new Date().toISOString(),
+          dismissed_at: null,
+          dismissed_by: null
+        }, {
+          onConflict: 'challenge_id,user_email'
         });
       if (dbError) throw dbError;
 
