@@ -18,6 +18,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const NAV_ITEMS = [
   { href: 'index.html',           emoji: '🏰', label: 'Home' },
+  { href: 'airport-swap.html',    emoji: '👕', label: 'Airport Swap' },
   { href: 'index.html#flights',   emoji: '✈️', label: 'Flights' },
   { href: 'index.html#hotels',    emoji: '🏨', label: 'Hotels' },
   { href: 'index.html#itinerary', emoji: '📅', label: 'Itinerary' },
