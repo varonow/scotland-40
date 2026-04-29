@@ -101,7 +101,8 @@
   /* INFO BANNERS */
   .info-banner {
     background: white; border-radius: 12px;
-    padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+    padding: 1.25rem 1.5rem; margin: 0 auto 1.5rem;
+    max-width: 720px;
     border: 1px solid var(--mist);
     text-align: center;
   }
@@ -252,10 +253,11 @@
 
   /* ADMIN PANEL */
   .admin-panel {
-    background: var(--dark); color: white;
+    background: white;
     border-radius: 12px; padding: 1.5rem;
-    max-width: 600px; margin: 2rem auto 0;
-    border: 1px solid var(--gold);
+    max-width: 720px; margin: 0 auto 1.5rem;
+    border: 1px solid var(--mist);
+    border-left: 4px solid var(--gold);
   }
   .admin-eyebrow {
     font-family: 'Josefin Sans', sans-serif; font-size: 10px;
@@ -264,21 +266,21 @@
   }
   .admin-title {
     font-family: 'Playfair Display', serif; font-size: 1.2rem;
-    margin-bottom: 1rem;
+    color: var(--forest); margin-bottom: 0.75rem;
   }
   .admin-status {
     font-family: 'Cormorant Garamond', serif; font-size: 1rem;
-    color: rgba(255,255,255,0.85); margin-bottom: 1rem;
+    color: var(--dark); line-height: 1.5; margin-bottom: 1rem;
   }
   .admin-btn {
-    background: var(--gold); color: var(--dark); border: none;
+    background: var(--forest); color: white; border: none;
     padding: 0.85rem 1.75rem; border-radius: 8px; cursor: pointer;
     font-family: 'Josefin Sans', sans-serif; font-size: 12px;
     letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;
     transition: all 0.2s;
   }
-  .admin-btn:hover { background: white; }
-  .admin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .admin-btn:hover { background: var(--gold); color: var(--forest); }
+  .admin-btn:disabled { opacity: 0.4; cursor: not-allowed; background: var(--stone); }
 
   /* POST-REVEAL — MATRIX SUMMARY */
   .matrix-section {
@@ -698,6 +700,7 @@
   // ════════════════════════════════════════════════════════
   const REVEAL_AT = new Date('2026-05-31T23:45:00Z'); // 7:45 PM EST = 23:45 UTC
   const STORAGE_BUCKET = 'airport-swap';
+  const GUEST_EMAIL = 'varonow@yahoo.com';
 
   // The 10 girls (mirrors group.html data, keyed by name)
   const GIRLS = [
