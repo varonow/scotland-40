@@ -8,7 +8,7 @@
    keep showing the old cached version for up to 24h.)
    ============================================ */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `scotland40-${CACHE_VERSION}`;
 
 // Files we want available offline

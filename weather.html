@@ -67,7 +67,7 @@
   /* CITY TOGGLE */
   .city-toggle {
     display: flex; justify-content: center; gap: 0;
-    max-width: 380px; margin: 2rem auto 0;
+    max-width: 520px; margin: 2rem auto 0;
     background: white; border-radius: 10px; padding: 4px;
     box-shadow: 0 4px 16px rgba(44,74,62,0.12);
     position: relative; z-index: 5;
@@ -163,9 +163,15 @@
   .forecast-day-name {
     font-family: 'Josefin Sans', sans-serif; font-size: 9px;
     letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--stone); margin-bottom: 0.4rem;
+    color: var(--stone); margin-bottom: 0.1rem;
   }
   .forecast-day.today .forecast-day-name { color: var(--gold); }
+  .forecast-day-date {
+    font-family: 'Josefin Sans', sans-serif; font-size: 9px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--stone); opacity: 0.7; margin-bottom: 0.3rem;
+  }
+  .forecast-day.today .forecast-day-date { color: rgba(255,255,255,0.6); opacity: 1; }
   .forecast-day-icon { font-size: 1.6rem; margin: 0.3rem 0; line-height: 1; }
   .forecast-high {
     font-family: 'Playfair Display', serif; font-size: 1rem;
@@ -275,8 +281,9 @@
   </div>
 
   <div class="city-toggle">
-    <button class="city-btn active" onclick="switchCity('edinburgh')">🏰 Edinburgh</button>
-    <button class="city-btn" onclick="switchCity('lomond')">🚣 Loch Lomond</button>
+    <button class="city-btn active" onclick="switchCity('edinburgh', this)">🏰 Edinburgh</button>
+    <button class="city-btn" onclick="switchCity('lomond', this)">🚣 Loch Lomond</button>
+    <button class="city-btn" onclick="switchCity('glasgow', this)">🏙️ Glasgow</button>
   </div>
 </header>
 
@@ -311,6 +318,14 @@
       lon: -4.5833,
       emoji: '🚣',
       note: 'Loch Lomond sits in the Highlands where weather changes quickly. Layers are your best friend — it can be glorious one moment and misty the next. That\'s part of the magic.'
+    },
+    glasgow: {
+      name: 'Glasgow',
+      label: 'Scotland',
+      lat: 55.8642,
+      lon: -4.2518,
+      emoji: '🏙️',
+      note: 'Glasgow in June tends to be mild with long bright evenings. It rains a little more than Edinburgh but the locals barely notice — they just keep going. Pack a light rain jacket and enjoy the city.'
     }
   };
 
@@ -405,8 +420,13 @@
       // Build 7-day forecast cards
       const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       const forecastCards = daily.time.map((dateStr, i) => {
-        const d = new Date(dateStr + 'T12:00:00');
-        const dayName = i === 0 ? 'Today' : days[d.getDay()];
+        // Parse date in UTC to avoid timezone shifting the date
+        const [year, month, dayNum] = dateStr.split('-').map(Number);
+        const d = new Date(Date.UTC(year, month - 1, dayNum));
+        const dayName = days[d.getUTCDay()];
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const dateLabel = `${monthNames[d.getUTCMonth()]} ${d.getUTCDate()}`;
+
         const wmo = getWMO(daily.weathercode[i]);
         const hi  = Math.round(daily.temperature_2m_max[i]);
         const lo  = Math.round(daily.temperature_2m_min[i]);
@@ -414,12 +434,15 @@
 
         // Is this a trip date?
         const isTripDay = d >= TRIP_START && d <= TRIP_END;
-        const isToday   = i === 0;
+        // Match today by comparing date strings directly (avoids timezone issues)
+        const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+        const isToday  = dateStr === todayStr;
 
         return `
           <div class="forecast-day${isToday ? ' today' : ''}${isTripDay ? ' trip-day' : ''}"
                title="${wmo.desc}${isTripDay ? ' · Trip Day!' : ''}">
-            <div class="forecast-day-name">${dayName}</div>
+            <div class="forecast-day-name">${isToday ? 'Today' : dayName}</div>
+            <div class="forecast-day-date">${dateLabel}</div>
             <div class="forecast-day-icon">${wmo.icon}</div>
             <div class="forecast-high">${hi}°</div>
             <div class="forecast-low">${lo}°</div>
@@ -543,11 +566,11 @@
   // ═══════════════════════════════════════════════
   // CITY TOGGLE
   // ═══════════════════════════════════════════════
-  function switchCity(city) {
+  function switchCity(city, btn) {
     if (city === activeCity) return;
     activeCity = city;
-    document.querySelectorAll('.city-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    document.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
     renderWeather(city);
   }
 
