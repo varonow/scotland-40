@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<title>Weather | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<link rel="stylesheet" href="css/nav.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+
+<style>
+  :root {
+    --forest: #2C4A3E;
+    --gold: #C9A84C;
+    --heather: #7B5EA7;
+    --cream: #F9F5EE;
+    --mist: #EDE8DF;
+    --stone: #8C7B6B;
+    --dark: #1C1C1C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); font-family: 'Josefin Sans', sans-serif; padding-top: 56px; }
+
+  /* HERO */
+  .page-hero {
+    background: linear-gradient(135deg, #1a2e28 0%, #2C4A3E 50%, #3d2a5a 100%);
+    padding: 3.5rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%; max-width: none; margin: 0;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(44,74,62,0.95) 18px, rgba(44,74,62,0.95) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.85) 44px, rgba(123,94,167,0.85) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.95) 56px, rgba(44,74,62,0.95) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.85) 82px, rgba(201,168,76,0.85) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.95) 92px, rgba(44,74,62,0.95) 110px, transparent 110px, transparent 128px),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 18px, rgba(44,74,62,0.5) 18px, rgba(44,74,62,0.5) 40px, transparent 40px, transparent 44px, rgba(123,94,167,0.4) 44px, rgba(123,94,167,0.4) 52px, transparent 52px, transparent 56px, rgba(44,74,62,0.5) 56px, rgba(44,74,62,0.5) 78px, transparent 78px, transparent 82px, rgba(201,168,76,0.4) 82px, rgba(201,168,76,0.4) 88px, transparent 88px, transparent 92px, rgba(44,74,62,0.5) 92px, rgba(44,74,62,0.5) 110px, transparent 110px, transparent 128px);
+    opacity: 0.4;
+  }
+  .page-hero-content { position: relative; z-index: 2; }
+  .page-hero-eyebrow {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.75rem;
+  }
+  .page-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 400; color: white; margin-bottom: 0.5rem;
+  }
+  .page-hero-title em { font-style: italic; color: var(--gold); }
+  .page-hero-subtitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: rgba(255,255,255,0.7); font-size: 1.05rem;
+  }
+
+  /* CITY TOGGLE */
+  .city-toggle {
+    display: flex; justify-content: center; gap: 0;
+    max-width: 380px; margin: 2rem auto 0;
+    background: white; border-radius: 10px; padding: 4px;
+    box-shadow: 0 4px 16px rgba(44,74,62,0.12);
+    position: relative; z-index: 5;
+  }
+  .city-btn {
+    flex: 1; padding: 0.7rem 1rem; border: none;
+    background: transparent; cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--stone); border-radius: 7px;
+    transition: all 0.2s;
+  }
+  .city-btn.active {
+    background: var(--forest); color: white;
+  }
+
+  /* CONTENT */
+  .content { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* LAST UPDATED */
+  .last-updated {
+    text-align: center; margin-bottom: 1.5rem;
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
+  }
+
+  /* CURRENT CONDITIONS */
+  .current-card {
+    background: var(--forest); border-radius: 16px;
+    padding: 2rem; margin-bottom: 1.5rem;
+    color: white; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .current-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 30%, rgba(201,168,76,0.15) 0%, transparent 60%);
+  }
+  .current-card-inner { position: relative; z-index: 2; }
+  .current-city {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .current-icon { font-size: 4rem; margin: 0.5rem 0; line-height: 1; }
+  .current-temp {
+    font-family: 'Playfair Display', serif; font-size: 4rem;
+    font-weight: 600; color: white; line-height: 1;
+  }
+  .current-desc {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.3rem; color: rgba(255,255,255,0.85); margin: 0.5rem 0 1.5rem;
+  }
+  .current-stats {
+    display: flex; justify-content: center; gap: 2rem;
+    flex-wrap: wrap; padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .current-stat { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+  .current-stat-label {
+    font-family: 'Josefin Sans', sans-serif; font-size: 9px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .current-stat-value {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem; color: white;
+  }
+
+  /* 7-DAY FORECAST */
+  .forecast-title {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--stone); margin-bottom: 1rem;
+    text-align: center;
+  }
+  .forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .forecast-day {
+    background: white; border-radius: 12px;
+    padding: 0.85rem 0.4rem; text-align: center;
+    box-shadow: 0 2px 8px rgba(44,74,62,0.06);
+    border: 1px solid var(--mist);
+    transition: transform 0.15s;
+  }
+  .forecast-day:hover { transform: translateY(-2px); }
+  .forecast-day.today {
+    background: var(--forest); border-color: var(--forest);
+  }
+  .forecast-day-name {
+    font-family: 'Josefin Sans', sans-serif; font-size: 9px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--stone); margin-bottom: 0.4rem;
+  }
+  .forecast-day.today .forecast-day-name { color: var(--gold); }
+  .forecast-day-icon { font-size: 1.6rem; margin: 0.3rem 0; line-height: 1; }
+  .forecast-high {
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    color: var(--dark); font-weight: 600;
+  }
+  .forecast-day.today .forecast-high { color: white; }
+  .forecast-low {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    color: var(--stone); margin-top: 0.1rem;
+  }
+  .forecast-day.today .forecast-low { color: rgba(255,255,255,0.6); }
+  .forecast-rain {
+    font-family: 'Josefin Sans', sans-serif; font-size: 9px;
+    color: var(--heather); margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+  .forecast-day.today .forecast-rain { color: rgba(201,168,76,0.9); }
+
+  /* TRIP WEEK HIGHLIGHT */
+  .trip-banner {
+    background: white; border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+    border: 1px solid var(--mist);
+    border-left: 4px solid var(--gold);
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .trip-banner-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .trip-banner-text {
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    color: var(--dark); line-height: 1.5;
+  }
+  .trip-banner-text strong {
+    font-family: 'Playfair Display', serif; color: var(--forest);
+  }
+
+  /* WHAT TO PACK */
+  .pack-card {
+    background: white; border-radius: 12px;
+    padding: 1.5rem; margin-bottom: 1rem;
+    border: 1px solid var(--mist);
+    box-shadow: 0 2px 8px rgba(44,74,62,0.06);
+  }
+  .pack-title {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem;
+    color: var(--forest); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .pack-items { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pack-item {
+    background: var(--cream); border: 1px solid var(--mist);
+    border-radius: 6px; padding: 0.35rem 0.75rem;
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--dark);
+  }
+
+  /* SCOTLAND NOTE */
+  .scotland-note {
+    background: linear-gradient(135deg, var(--forest) 0%, #3d2a5a 100%);
+    border-radius: 12px; padding: 1.5rem;
+    color: white; text-align: center;
+  }
+  .scotland-note-title {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.2rem; color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .scotland-note-text {
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    color: rgba(255,255,255,0.85); line-height: 1.6;
+  }
+
+  /* LOADING / ERROR */
+  .loading-state {
+    text-align: center; padding: 4rem 2rem;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: var(--stone); font-size: 1.1rem;
+  }
+  .loading-state span { display: block; font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+  .error-state {
+    background: white; border-radius: 12px; padding: 2rem;
+    text-align: center; border: 1px solid var(--mist);
+    color: var(--stone); font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .forecast-grid { grid-template-columns: repeat(4, 1fr); }
+    .forecast-grid .forecast-day:nth-child(n+5) {
+      grid-column: span 1;
+    }
+    .current-temp { font-size: 3rem; }
+    .current-stats { gap: 1.2rem; }
+  }
+  @media (max-width: 400px) {
+    .forecast-grid { grid-template-columns: repeat(4, 1fr); }
+    .forecast-day-icon { font-size: 1.3rem; }
+  }
+</style>
+</head>
+
+<body>
+<header class="page-hero">
+  <div class="page-hero-content">
+    <p class="page-hero-eyebrow">Scotland 2026</p>
+    <h1 class="page-hero-title">The <em>Weather</em></h1>
+    <p class="page-hero-subtitle">What to expect on the bonnie banks and beyond</p>
+  </div>
+
+  <div class="city-toggle">
+    <button class="city-btn active" onclick="switchCity('edinburgh')">🏰 Edinburgh</button>
+    <button class="city-btn" onclick="switchCity('lomond')">🚣 Loch Lomond</button>
+  </div>
+</header>
+
+<div class="content">
+  <div id="weatherContent">
+    <div class="loading-state">
+      <span>🌦️</span>
+      Loading the forecast from the Highlands…
+    </div>
+  </div>
+</div>
+
+<script>
+  requireAuth();
+
+  // ═══════════════════════════════════════════════
+  // CONFIG
+  // ═══════════════════════════════════════════════
+  const CITIES = {
+    edinburgh: {
+      name: 'Edinburgh',
+      label: 'Scotland',
+      lat: 55.9533,
+      lon: -3.1883,
+      emoji: '🏰',
+      note: 'Edinburgh in June is mild and long — 17 hours of daylight means evenings that feel like afternoon. Expect a mix of sunshine and showers.'
+    },
+    lomond: {
+      name: 'Loch Lomond',
+      label: 'Cameron House',
+      lat: 56.0167,
+      lon: -4.5833,
+      emoji: '🚣',
+      note: 'Loch Lomond sits in the Highlands where weather changes quickly. Layers are your best friend — it can be glorious one moment and misty the next. That\'s part of the magic.'
+    }
+  };
+
+  // Trip dates: June 1–5, 2026
+  const TRIP_START = new Date('2026-06-01');
+  const TRIP_END   = new Date('2026-06-05');
+
+  let activeCity = 'edinburgh';
+  let weatherCache = {};
+
+  // WMO Weather Code → emoji + description
+  const WMO = {
+    0:  { icon: '☀️', desc: 'Clear Sky' },
+    1:  { icon: '🌤️', desc: 'Mainly Clear' },
+    2:  { icon: '⛅', desc: 'Partly Cloudy' },
+    3:  { icon: '☁️', desc: 'Overcast' },
+    45: { icon: '🌫️', desc: 'Foggy' },
+    48: { icon: '🌫️', desc: 'Icy Fog' },
+    51: { icon: '🌦️', desc: 'Light Drizzle' },
+    53: { icon: '🌦️', desc: 'Drizzle' },
+    55: { icon: '🌧️', desc: 'Heavy Drizzle' },
+    61: { icon: '🌧️', desc: 'Light Rain' },
+    63: { icon: '🌧️', desc: 'Rain' },
+    65: { icon: '🌧️', desc: 'Heavy Rain' },
+    71: { icon: '🌨️', desc: 'Light Snow' },
+    73: { icon: '🌨️', desc: 'Snow' },
+    75: { icon: '❄️', desc: 'Heavy Snow' },
+    77: { icon: '🌨️', desc: 'Snow Grains' },
+    80: { icon: '🌦️', desc: 'Light Showers' },
+    81: { icon: '🌧️', desc: 'Showers' },
+    82: { icon: '⛈️', desc: 'Heavy Showers' },
+    85: { icon: '🌨️', desc: 'Snow Showers' },
+    86: { icon: '🌨️', desc: 'Heavy Snow Showers' },
+    95: { icon: '⛈️', desc: 'Thunderstorm' },
+    96: { icon: '⛈️', desc: 'Thunderstorm + Hail' },
+    99: { icon: '⛈️', desc: 'Thunderstorm + Heavy Hail' }
+  };
+
+  function getWMO(code) {
+    return WMO[code] || { icon: '🌡️', desc: 'Unknown' };
+  }
+
+  // ═══════════════════════════════════════════════
+  // FETCH WEATHER
+  // ═══════════════════════════════════════════════
+  async function fetchWeather(city) {
+    if (weatherCache[city]) return weatherCache[city];
+
+    const { lat, lon } = CITIES[city];
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,windspeed_10m_max&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=Europe%2FLondon&forecast_days=7`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Weather API error');
+    const data = await res.json();
+    weatherCache[city] = data;
+    return data;
+  }
+
+  // ═══════════════════════════════════════════════
+  // RENDER
+  // ═══════════════════════════════════════════════
+  async function renderWeather(cityKey) {
+    const container = document.getElementById('weatherContent');
+    container.innerHTML = `
+      <div class="loading-state">
+        <span>${CITIES[cityKey].emoji}</span>
+        Fetching the Highland forecast…
+      </div>
+    `;
+
+    try {
+      const data = await fetchWeather(cityKey);
+      const city = CITIES[cityKey];
+      const current = data.current_weather;
+      const daily = data.daily;
+      const currentWMO = getWMO(current.weathercode);
+
+      // Today's full data
+      const todayMax  = Math.round(daily.temperature_2m_max[0]);
+      const todayMin  = Math.round(daily.temperature_2m_min[0]);
+      const todayWind = Math.round(current.windspeed);
+      const todayRain = (daily.precipitation_sum[0] || 0).toFixed(2);
+      const todayRainPct = daily.precipitation_probability_max[0] || 0;
+
+      // Last updated
+      const now = new Date();
+      const updatedStr = now.toLocaleString('en-US', {
+        month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+      });
+
+      // Build 7-day forecast cards
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const forecastCards = daily.time.map((dateStr, i) => {
+        const d = new Date(dateStr + 'T12:00:00');
+        const dayName = i === 0 ? 'Today' : days[d.getDay()];
+        const wmo = getWMO(daily.weathercode[i]);
+        const hi  = Math.round(daily.temperature_2m_max[i]);
+        const lo  = Math.round(daily.temperature_2m_min[i]);
+        const rain = daily.precipitation_probability_max[i] || 0;
+
+        // Is this a trip date?
+        const isTripDay = d >= TRIP_START && d <= TRIP_END;
+        const isToday   = i === 0;
+
+        return `
+          <div class="forecast-day${isToday ? ' today' : ''}${isTripDay ? ' trip-day' : ''}"
+               title="${wmo.desc}${isTripDay ? ' · Trip Day!' : ''}">
+            <div class="forecast-day-name">${dayName}</div>
+            <div class="forecast-day-icon">${wmo.icon}</div>
+            <div class="forecast-high">${hi}°</div>
+            <div class="forecast-low">${lo}°</div>
+            ${rain > 0 ? `<div class="forecast-rain">💧${rain}%</div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Trip weather note (if any trip days are in range)
+      let tripBanner = '';
+      const tripDaysInForecast = daily.time.filter(dateStr => {
+        const d = new Date(dateStr + 'T12:00:00');
+        return d >= TRIP_START && d <= TRIP_END;
+      });
+
+      if (tripDaysInForecast.length > 0) {
+        const tripTemps = tripDaysInForecast.map((dateStr, idx) => {
+          const i = daily.time.indexOf(dateStr);
+          return Math.round(daily.temperature_2m_max[i]);
+        });
+        const avgTripTemp = Math.round(tripTemps.reduce((a,b) => a+b, 0) / tripTemps.length);
+        tripBanner = `
+          <div class="trip-banner">
+            <div class="trip-banner-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+            <div class="trip-banner-text">
+              <strong>Trip Week Forecast</strong> — ${tripDaysInForecast.length} trip days visible in this forecast.
+              Average high around <strong>${avgTripTemp}°F</strong>. Check back closer to June 1 for the most accurate picture!
+            </div>
+          </div>
+        `;
+      }
+
+      // What to pack based on avg temp
+      const avgMax = Math.round(daily.temperature_2m_max.reduce((a,b) => a+b, 0) / daily.temperature_2m_max.length);
+      const packItems = getPackItems(avgMax, daily.precipitation_probability_max);
+
+      container.innerHTML = `
+        <p class="last-updated">Last updated ${updatedStr}</p>
+
+        <div class="current-card">
+          <div class="current-card-inner">
+            <p class="current-city">${city.emoji} ${city.name} · ${city.label}</p>
+            <div class="current-icon">${currentWMO.icon}</div>
+            <div class="current-temp">${Math.round(current.temperature)}°F</div>
+            <p class="current-desc">${currentWMO.desc}</p>
+            <div class="current-stats">
+              <div class="current-stat">
+                <span class="current-stat-label">High</span>
+                <span class="current-stat-value">${todayMax}°F</span>
+              </div>
+              <div class="current-stat">
+                <span class="current-stat-label">Low</span>
+                <span class="current-stat-value">${todayMin}°F</span>
+              </div>
+              <div class="current-stat">
+                <span class="current-stat-label">Wind</span>
+                <span class="current-stat-value">${todayWind} mph</span>
+              </div>
+              <div class="current-stat">
+                <span class="current-stat-label">Rain chance</span>
+                <span class="current-stat-value">${todayRainPct}%</span>
+              </div>
+              <div class="current-stat">
+                <span class="current-stat-label">Precip</span>
+                <span class="current-stat-value">${todayRain}"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${tripBanner}
+
+        <p class="forecast-title">7-Day Forecast</p>
+        <div class="forecast-grid">${forecastCards}</div>
+
+        <div class="pack-card">
+          <p class="pack-title">🧳 What to Bring</p>
+          <div class="pack-items">
+            ${packItems.map(item => `<span class="pack-item">${item}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="scotland-note">
+          <p class="scotland-note-title">A wee word about Scottish weather</p>
+          <p class="scotland-note-text">${city.note}</p>
+        </div>
+      `;
+
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = `
+        <div class="error-state">
+          <p style="font-size:2rem;margin-bottom:0.75rem">🌧️</p>
+          <p>Couldn't load the forecast right now — even the internet can't always predict a Scottish summer.</p>
+          <p style="margin-top:0.5rem;font-size:0.9rem">Try refreshing the page.</p>
+        </div>
+      `;
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // PACK ITEMS (based on forecast)
+  // ═══════════════════════════════════════════════
+  function getPackItems(avgMaxF, rainProbs) {
+    const avgRain = rainProbs.reduce((a,b) => a+b, 0) / rainProbs.length;
+    const items = ['Light layers', 'Comfortable walking shoes'];
+
+    if (avgMaxF < 55) items.push('Warm coat', 'Gloves', 'Wool scarf');
+    else if (avgMaxF < 65) items.push('Light jacket', 'Mid-layer fleece');
+    else items.push('Light cardigan');
+
+    if (avgRain > 30) items.push('Rain jacket', 'Travel umbrella', 'Waterproof shoes');
+    else if (avgRain > 15) items.push('Packable rain jacket');
+
+    items.push('Sunglasses', 'Sunscreen');
+
+    if (avgMaxF < 60) items.push('Cozy knitwear');
+    return items;
+  }
+
+  // ═══════════════════════════════════════════════
+  // CITY TOGGLE
+  // ═══════════════════════════════════════════════
+  function switchCity(city) {
+    if (city === activeCity) return;
+    activeCity = city;
+    document.querySelectorAll('.city-btn').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    renderWeather(city);
+  }
+
+  // ═══════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════
+  renderWeather('edinburgh');
+</script>
+</body>
+</html>

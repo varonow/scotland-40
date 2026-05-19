@@ -30,6 +30,7 @@ const NAV_ITEMS = [
   { href: 'journal.html',         emoji: '📖', label: 'Journal' },
   { href: 'photos.html',          emoji: '📸', label: 'Photos' },
   { href: 'hunt.html',            emoji: '🔍', label: 'Scavenger Hunt' },
+  { href: 'weather.html',         emoji: '🌦️', label: 'Weather' },
   { href: 'packing.html',         emoji: '🧳', label: 'Packing List' }
 ];
 
