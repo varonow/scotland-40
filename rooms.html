@@ -360,6 +360,57 @@
     }
   }
 
+  async function applyFixedPairs(hotel) {
+    // Fetch any fixed pairs for this hotel (admin-only table, silently ignored if empty)
+    const { data: pairs, error } = await db
+      .from('room_fixed_pairs')
+      .select('guest_1, guest_2')
+      .eq('hotel', hotel);
+
+    if (error || !pairs || pairs.length === 0) return;
+
+    // Get current room assignments
+    const { data: rooms } = await db
+      .from('rooms')
+      .select('*')
+      .eq('hotel', hotel);
+
+    if (!rooms) return;
+
+    for (const pair of pairs) {
+      const g1 = pair.guest_1;
+      const g2 = pair.guest_2;
+
+      // Find where each person currently is
+      const g1Room = rooms.find(r => r.guest_1 === g1 || r.guest_2 === g1);
+      const g2Room = rooms.find(r => r.guest_1 === g2 || r.guest_2 === g2);
+
+      if (!g1Room || !g2Room) continue;
+
+      // Already together — nothing to do
+      if (g1Room.room_number === g2Room.room_number) continue;
+
+      // Find who g1 is currently paired with
+      const g1CurrentPartner = g1Room.guest_1 === g1 ? g1Room.guest_2 : g1Room.guest_1;
+
+      // Put g2 into g1's room
+      const g1Field = g1Room.guest_1 === g1 ? 'guest_2' : 'guest_1';
+      await db.from('rooms')
+        .update({ [g1Field]: g2 })
+        .eq('id', g1Room.id);
+
+      // Put g1's old partner into g2's old room
+      const g2Field = g2Room.guest_1 === g2 ? 'guest_1' : 'guest_2';
+      await db.from('rooms')
+        .update({ [g2Field]: g1CurrentPartner })
+        .eq('id', g2Room.id);
+
+      // Update local array so subsequent pairs in same draw are accurate
+      g1Room[g1Field] = g2;
+      g2Room[g2Field] = g1CurrentPartner;
+    }
+  }
+
   async function drawHotel(hotel) {
     const key = hotel.toLowerCase();
     const drawBtn = document.getElementById(`${key}DrawBtn`);
@@ -368,20 +419,24 @@
     drawBtn.disabled = true;
     statusMsg.textContent = 'Drawing rooms...';
 
-    const shuffled = shuffle(GUESTS);
-    const rows = [];
-    for (let i = 0; i < 10; i += 2) {
-      rows.push({
-        hotel,
-        room_number: `Room ${i / 2 + 1}`,
-        guest_1: shuffled[i],
-        guest_2: shuffled[i + 1]
-      });
-    }
-
     try {
+      // Fully random draw
+      const shuffled = shuffle(GUESTS);
+      const rows = [];
+      for (let i = 0; i < 10; i += 2) {
+        rows.push({
+          hotel,
+          room_number: `Room ${i / 2 + 1}`,
+          guest_1: shuffled[i],
+          guest_2: shuffled[i + 1]
+        });
+      }
+
       await db.from('rooms').delete().eq('hotel', hotel);
       await db.from('rooms').insert(rows);
+
+      // Silently apply any admin-configured fixed pairs from the server
+      await applyFixedPairs(hotel);
 
       const label = hotel === 'Cameron' ? 'Cameron House' : 'Balmoral';
       statusMsg.textContent = `✓ ${label} rooms drawn!`;
