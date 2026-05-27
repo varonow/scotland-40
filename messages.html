@@ -437,11 +437,28 @@
       const ws = document.querySelector('.write-section');
       if (ws) ws.style.display = 'none';
     }
+
+    // Joyce is the birthday girl — she reads messages, doesn't write one
+    const profile = await getUserProfile();
+    if (profile?.name === 'Joyce Saad') {
+      const ws = document.querySelector('.write-section');
+      if (ws) {
+        ws.innerHTML = `
+          <p class="section-label">Your message</p>
+          <h2 class="section-title">Write to Joyce</h2>
+          <div class="gold-rule"></div>
+          <div class="message-box" style="text-align:center;padding:2rem;font-style:italic;color:var(--stone);">
+            🎂 This page is for the girls to write to <em>you</em>, Joyce!<br>
+            Come back on June 1st to read all their messages.
+          </div>
+        `;
+      }
+    }
   });
 
   // Reveal date: June 1 2026 noon Edinburgh time (BST = UTC+1)
   const REVEAL_DATE = new Date('2026-06-01T12:00:00+01:00');
-  const TOTAL_GUESTS = 10;
+  const TOTAL_GUESTS = 9; // Joyce doesn't write to herself
 
   let currentUser = null;
   let currentMessage = null;
