@@ -358,6 +358,7 @@
       <a class="lightbox-download" id="lightboxDownload" href="#" download="scotland-photo.jpg" target="_blank">
         ⬇ Save
       </a>
+      <button class="lightbox-btn" id="lightboxDelete" style="display:none" onclick="deleteCurrent()" title="Delete photo">🗑️</button>
       <button class="lightbox-btn" onclick="closeLightbox()" title="Close">✕</button>
     </div>
   </div>
@@ -371,7 +372,6 @@
   <div class="lightbox-bottom">
     <p class="lightbox-author" id="lightboxAuthor"></p>
     <p class="lightbox-caption" id="lightboxCaption"></p>
-    <button class="lightbox-delete" id="lightboxDelete" style="display:none" onclick="deleteCurrent()">Delete photo</button>
   </div>
 </div>
 
@@ -540,7 +540,6 @@
   function renderLightbox() {
     const photo = allPhotos[lightboxIndex];
     const url = photo._url;
-    const isOwn = currentUser && photo.user_id === currentUser.id;
 
     // Image
     document.getElementById('lightboxImg').src = url;
@@ -549,7 +548,7 @@
     document.getElementById('lightboxCounter').textContent =
       `${lightboxIndex + 1} / ${allPhotos.length}`;
 
-    // Download — use anchor trick so it saves to camera roll
+    // Download
     const dl = document.getElementById('lightboxDownload');
     dl.href = url;
     dl.download = `scotland-${photo.user_name.split(' ')[0].toLowerCase()}-${lightboxIndex + 1}.jpg`;
@@ -560,12 +559,11 @@
     cap.textContent = photo.caption || '';
     cap.style.display = photo.caption ? 'block' : 'none';
 
-    // Delete (own photos or admin)
+    // Delete — visible to admin OR photo owner
     const canDelete = isAdminUser || (currentUser && photo.user_id === currentUser.id);
-    const del = document.getElementById('lightboxDelete');
-    del.style.display = canDelete ? 'block' : 'none';
+    document.getElementById('lightboxDelete').style.display = canDelete ? 'inline-flex' : 'none';
 
-    // Hide arrows if only 1 photo
+    // Arrows
     document.getElementById('lightboxPrev').style.display = allPhotos.length > 1 ? 'flex' : 'none';
     document.getElementById('lightboxNext').style.display = allPhotos.length > 1 ? 'flex' : 'none';
   }
