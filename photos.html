@@ -6,12 +6,16 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Photo Wall | Joyce Just a Wee Bit 40</title>
+<title>Photo Album | Joyce Just a Wee Bit 40</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/image-compress.js"></script>
 <link rel="stylesheet" href="css/nav.css">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -31,726 +35,486 @@
     font-family: 'Cormorant Garamond', serif;
     background: var(--cream);
     color: var(--dark);
-    font-size: 18px;
-    line-height: 1.7;
     min-height: 100vh;
   }
 
+  /* HEADER */
   header {
     background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 2.5rem;
     text-align: center;
     position: relative;
     overflow: hidden;
+    width: 100%; max-width: none; margin: 0;
   }
-
   header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.04;
+    content: ''; position: absolute; inset: 0; opacity: 0.04;
     background-image:
       repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
       repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
   }
-
   .header-content { position: relative; z-index: 2; }
-
-  .back-link {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    transition: color 0.2s;
-  }
-
-  .back-link:hover { color: var(--gold); }
-
   .header-eyebrow {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.75rem;
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.75rem;
   }
-
   .header-title {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 400;
-    color: white;
-    line-height: 1.1;
-    margin-bottom: 0.5rem;
+    font-weight: 400; color: white; line-height: 1.1; margin-bottom: 0.5rem;
   }
-
   .header-title em { font-style: italic; color: var(--gold); }
-
   .header-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    color: rgba(255,255,255,0.7);
-    font-size: 1.2rem;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: rgba(255,255,255,0.7); font-size: 1.2rem;
   }
 
-  main { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
 
   /* UPLOAD SECTION */
   .upload-section {
-    background: white;
-    border-radius: 12px;
+    background: white; border-radius: 14px;
     border: 1px solid var(--mist);
-    padding: 2rem;
-    margin-bottom: 2.5rem;
+    padding: 1.5rem; margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(44,74,62,0.07);
   }
-
+  .upload-label {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
   .upload-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    color: var(--forest);
-    margin-bottom: 1.5rem;
+    font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    color: var(--forest); margin-bottom: 1rem;
   }
-
-  .upload-zone {
-    border: 2px dashed var(--mist);
-    border-radius: 12px;
-    padding: 2.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
+  .upload-drop-zone {
+    border: 2px dashed var(--mist); border-radius: 10px;
+    padding: 2rem; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 1rem;
   }
-
-  .upload-zone:hover, .upload-zone.dragover {
-    border-color: var(--gold);
-    background: #fdf8ee;
+  .upload-drop-zone:hover,
+  .upload-drop-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .upload-drop-zone input { display: none; }
+  .upload-drop-icon { font-size: 2.5rem; opacity: 0.35; margin-bottom: 0.5rem; }
+  .upload-drop-text {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone);
   }
-
-  .upload-zone input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
+  .upload-drop-sub {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: var(--stone); opacity: 0.7; margin-top: 0.3rem;
   }
-
-  .upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-
-  .upload-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--forest);
-    margin-bottom: 0.25rem;
-  }
-
-  .upload-hint {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--stone);
-  }
-
-  /* PREVIEWS */
   .preview-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.75rem;
-    margin-top: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.4rem; margin-bottom: 1rem;
   }
-
-  .preview-item {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    aspect-ratio: 1;
-  }
-
-  .preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
+  .preview-item { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; }
+  .preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .preview-remove {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.6);
-    color: white;
-    border: none;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
+    position: absolute; top: 3px; right: 3px;
+    background: rgba(0,0,0,0.6); color: white;
+    border: none; border-radius: 50%;
+    width: 20px; height: 20px; font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
   }
-
-  .upload-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-top: 1.25rem;
+  .upload-options { display: flex; gap: 0.75rem; align-items: flex-start; flex-wrap: wrap; }
+  .caption-input {
+    flex: 1; min-width: 200px; padding: 0.65rem 0.9rem;
+    border: 1px solid var(--mist); border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    background: var(--cream);
   }
-
-  .upload-options select, .upload-options input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--mist);
-    border-radius: 8px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    color: var(--dark);
-    background: white;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .upload-options select:focus,
-  .upload-options input:focus { border-color: var(--forest); }
-
+  .caption-input:focus { outline: 2px solid var(--gold); outline-offset: -2px; }
   .upload-btn {
-    background: var(--forest);
-    color: var(--gold);
-    border: none;
-    padding: 0.9rem 2rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background 0.2s, transform 0.1s;
-    width: 100%;
+    background: var(--forest); color: var(--gold);
+    border: none; padding: 0.65rem 1.4rem;
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    border-radius: 8px; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s;
   }
-
-  .upload-btn:hover { background: #1a2e28; transform: translateY(-1px); }
-  .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
+  .upload-btn:hover { background: #1a2e28; }
+  .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .upload-progress {
-    margin-top: 0.75rem;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    color: var(--heather);
-    min-height: 18px;
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.1em; color: var(--heather);
+    margin-top: 0.5rem; min-height: 16px;
   }
 
-  /* FILTER TABS */
-  .filter-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    align-items: center;
+  /* PHOTO COUNT */
+  .album-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .album-count {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
   }
 
-  .filter-tab {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 0.5rem 1.1rem;
-    border-radius: 8px;
-    border: 1px solid var(--mist);
-    background: white;
-    color: var(--stone);
-    cursor: pointer;
-    transition: all 0.2s;
+  /* MASONRY PHOTO GRID */
+  .photo-grid {
+    columns: 3 220px;
+    column-gap: 0.6rem;
   }
-
-  .filter-tab:hover { border-color: var(--gold); color: var(--gold); }
-  .filter-tab.active { background: var(--forest); color: var(--gold); border-color: var(--forest); }
-
-  .photo-count {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--stone);
-    margin-left: auto;
-  }
-
-  /* MASONRY GRID */
-  .masonry {
-    columns: 3;
-    column-gap: 1rem;
-  }
-
   .photo-card {
-    break-inside: avoid;
-    margin-bottom: 1rem;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    border: 1px solid var(--mist);
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.3s, transform 0.3s, box-shadow 0.2s;
-  }
-
-  .photo-card.revealed { opacity: 1; transform: translateY(0); }
-  .photo-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-
-  .photo-card img {
-    width: 100%;
-    display: block;
-    cursor: pointer;
-  }
-
-  .photo-info { padding: 0.85rem 1rem 1rem; }
-
-  .photo-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .photo-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center center;
-    flex-shrink: 0;
-  }
-
-  .photo-avatar-initials {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--forest);
-    color: var(--gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 0.7rem;
-    flex-shrink: 0;
-  }
-
-  .photo-author {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--heather);
-    flex: 1;
-  }
-
-  .photo-day-badge {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.1em;
+    break-inside: avoid; margin-bottom: 0.6rem;
+    border-radius: 10px; overflow: hidden;
+    cursor: pointer; position: relative;
     background: var(--mist);
-    color: var(--stone);
-    padding: 2px 8px;
-    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.35s, transform 0.35s;
+  }
+  .photo-card.revealed { opacity: 1; transform: translateY(0); }
+  .photo-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 8px 24px rgba(44,74,62,0.18); }
+  .photo-card img {
+    width: 100%; display: block;
+    object-fit: cover;
+  }
+  .photo-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    padding: 0.75rem 0.75rem 0.6rem;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .photo-card:hover .photo-overlay { opacity: 1; }
+  .photo-author {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .photo-caption-text {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: rgba(255,255,255,0.8);
+    margin-top: 0.2rem; line-height: 1.3;
   }
 
-  .photo-caption {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    color: var(--dark);
-    font-style: italic;
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-  }
-
-  .photo-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .photo-time {
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    color: var(--stone);
-  }
-
-  .photo-delete {
-    background: transparent;
-    border: none;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--stone);
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-
-  .photo-delete:hover { color: #e05c5c; }
-
-  /* LIGHTBOX */
-  .lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-
-  .lightbox.open { display: flex; }
-
-  .lightbox img {
-    max-width: 90vw;
-    max-height: 85vh;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-
-  .lightbox-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-
-  .lightbox-close:hover { opacity: 1; }
-
+  /* EMPTY STATE */
   .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--stone);
-    font-style: italic;
-    font-size: 1.1rem;
-    background: white;
-    border-radius: 12px;
+    text-align: center; padding: 4rem 2rem;
+    color: var(--stone); font-style: italic; font-size: 1.1rem;
+    background: white; border-radius: 12px;
     border: 1px dashed var(--mist);
   }
+  .empty-state span { display: block; font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; }
 
-  footer {
-    background: var(--forest);
+  /* ─── LIGHTBOX ─────────────────────────────── */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.94);
+    z-index: 900; display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem;
+    touch-action: pan-y;
+  }
+  .lightbox.open { display: flex; }
+
+  .lightbox-top {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(rgba(0,0,0,0.6), transparent);
+    z-index: 10;
+  }
+  .lightbox-counter {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6);
+  }
+  .lightbox-top-right { display: flex; gap: 0.5rem; align-items: center; }
+
+  .lightbox-btn {
+    background: rgba(255,255,255,0.12); border: none;
+    color: white; width: 40px; height: 40px; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .lightbox-download {
+    background: var(--gold); color: var(--dark);
+    border: none; border-radius: 20px;
+    padding: 0.4rem 1rem; cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;
+    display: flex; align-items: center; gap: 0.4rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .lightbox-download:hover { background: white; }
+
+  .lightbox-img-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    width: 100%; max-height: calc(100vh - 140px);
+    position: relative;
+  }
+  .lightbox-img-wrap img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain; border-radius: 4px;
+    display: block;
+    user-select: none; -webkit-user-drag: none;
+  }
+
+  /* prev/next arrows */
+  .lightbox-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1); border: none;
+    color: white; width: 44px; height: 44px; border-radius: 50%;
+    font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    z-index: 5;
+  }
+  .lightbox-arrow:hover { background: rgba(255,255,255,0.25); }
+  .lightbox-arrow.prev { left: -52px; }
+  .lightbox-arrow.next { right: -52px; }
+
+  .lightbox-bottom {
+    width: 100%; max-width: 700px;
+    padding: 0.75rem 0 0;
     text-align: center;
-    padding: 2rem;
-    font-family: 'Josefin Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
   }
-
-  @media (max-width: 700px) {
-    .masonry { columns: 2; }
-    .upload-options { grid-template-columns: 1fr; }
+  .lightbox-author {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-bottom: 0.25rem;
   }
+  .lightbox-caption {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.1rem; color: rgba(255,255,255,0.8); line-height: 1.4;
+  }
+  .lightbox-delete {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(255,100,100,0.5); background: transparent;
+    border: none; cursor: pointer; margin-top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .lightbox-delete:hover { color: rgba(255,100,100,0.9); }
 
-  @media (max-width: 400px) {
-    .masonry { columns: 1; }
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .photo-grid { columns: 2 140px; }
+    .lightbox-arrow.prev { left: 4px; }
+    .lightbox-arrow.next { right: 4px; }
+    .lightbox-img-wrap { max-height: calc(100vh - 160px); }
   }
 </style>
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<meta name="theme-color" content="#2C4A3E">
 </head>
+
 <body>
 <div class="guest-banner" id="guestBanner" style="display:none">👀 Viewing as Guest — Read Only</div>
 
 <header>
   <div class="header-content">
-    
-    <p class="header-eyebrow">Scotland 2026 · Our Memories</p>
-    <h1 class="header-title">The <em>Photo</em> Wall</h1>
-    <p class="header-subtitle">Every moment, captured together</p>
+    <p class="header-eyebrow">Scotland 2026</p>
+    <h1 class="header-title">The <em>Album</em></h1>
+    <p class="header-subtitle">Every moment, together</p>
   </div>
 </header>
 
 <main>
 
   <!-- UPLOAD -->
-  <div class="upload-section">
-    <p class="upload-title">Share a Photo</p>
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="fileInput" accept="image/*" multiple>
-      <div class="upload-icon">📷</div>
-      <p class="upload-text">Tap to choose photos</p>
-      <p class="upload-hint">JPG, PNG, HEIC · Multiple files welcome</p>
+  <div class="upload-section" id="uploadSection">
+    <p class="upload-label">Share a memory</p>
+    <p class="upload-title">Add to the Album</p>
+    <div class="upload-drop-zone" id="dropZone"
+         onclick="document.getElementById('fileInput').click()"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         ondrop="handleDrop(event)">
+      <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(Array.from(this.files))">
+      <div class="upload-drop-icon">📷</div>
+      <p class="upload-drop-text">Tap to add photos</p>
+      <p class="upload-drop-sub">Camera or photo library</p>
     </div>
     <div class="preview-grid" id="previewGrid"></div>
-    <div class="upload-options" id="uploadOptions" style="display:none;">
-      <select id="daySelect">
-        <option value="">Which day?</option>
-        <option value="1">Day 1 — Arrival in Edinburgh</option>
-        <option value="2">Day 2 — Kilts, Norse & Ceilidh</option>
-        <option value="3">Day 3 — Journey to Loch Lomond</option>
-        <option value="4">Day 4 — Cameron House</option>
-        <option value="5">Day 5 — Farewell Scotland</option>
-      </select>
-      <input type="text" id="captionInput" placeholder="Add a caption... (optional)">
+    <div class="upload-options" id="uploadOptions" style="display:none">
+      <input type="text" class="caption-input" id="captionInput" placeholder="Add a caption... (optional)" maxlength="200">
+      <button class="upload-btn" id="uploadBtn" onclick="uploadPhotos()">Upload</button>
     </div>
-    <button class="upload-btn" id="uploadBtn" style="display:none;" onclick="uploadPhotos()">Upload Photos</button>
     <p class="upload-progress" id="uploadProgress"></p>
   </div>
 
-  <!-- FILTER -->
-  <div class="filter-tabs">
-    <button class="filter-tab active" onclick="filterDay(0)" id="filterAll">All Photos</button>
-    <button class="filter-tab" onclick="filterDay(1)" id="filter1">Day 1</button>
-    <button class="filter-tab" onclick="filterDay(2)" id="filter2">Day 2</button>
-    <button class="filter-tab" onclick="filterDay(3)" id="filter3">Day 3</button>
-    <button class="filter-tab" onclick="filterDay(4)" id="filter4">Day 4</button>
-    <button class="filter-tab" onclick="filterDay(5)" id="filter5">Day 5</button>
-    <span class="photo-count" id="photoCount"></span>
+  <!-- ALBUM -->
+  <div class="album-bar">
+    <p class="album-count" id="photoCount"></p>
   </div>
-
-  <!-- PHOTO GRID -->
-  <div class="masonry" id="photoGrid"></div>
+  <div class="photo-grid" id="photoGrid">
+    <div class="empty-state"><span>📸</span>No photos yet — be the first to share a moment!</div>
+  </div>
 
 </main>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">×</button>
-  <img id="lightboxImg" src="" alt="">
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-top">
+    <span class="lightbox-counter" id="lightboxCounter"></span>
+    <div class="lightbox-top-right">
+      <a class="lightbox-download" id="lightboxDownload" href="#" download="scotland-photo.jpg" target="_blank">
+        ⬇ Save
+      </a>
+      <button class="lightbox-btn" onclick="closeLightbox()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <div class="lightbox-img-wrap" id="lightboxImgWrap">
+    <button class="lightbox-arrow prev" id="lightboxPrev" onclick="stepLightbox(-1)">‹</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-arrow next" id="lightboxNext" onclick="stepLightbox(1)">›</button>
+  </div>
+
+  <div class="lightbox-bottom">
+    <p class="lightbox-author" id="lightboxAuthor"></p>
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+    <button class="lightbox-delete" id="lightboxDelete" style="display:none" onclick="deleteCurrent()">Delete photo</button>
+  </div>
 </div>
 
-<footer>
-  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
-</footer>
-
 <script>
-  requireAuth().then(async () => {
-    const guest = await isGuest();
-    if (guest) {
-      document.getElementById('guestBanner').style.display = 'block';
-      const us = document.querySelector('.upload-section');
-      if (us) us.style.display = 'none';
-    }
-  });
-
   const BUCKET = 'photos';
-  const PHOTOS_MAP = {
-    'Victoria Aronow': 'images/victoria-aronow.jpg',
-    'Joyce Saad': 'images/joyce-saad.jpg',
-    'Danielle Dabah': 'images/danielle-dabah.jpg',
-    'Ginger Aronow': 'images/ginger-aronow.jpg',
-    'Kimberly Dabah': 'images/kimberly-dabah.jpg',
-    'Stephanie Kattan': 'images/stephanie-kattan.jpg',
-    'Rachel Harari': 'images/rachel-harari.jpg',
-    'Joyce Salame': 'images/joyce-salame.jpg',
-    'Ann Salame': 'images/ann-salame.jpg',
-    'Susie Sutton': 'images/susie-sutton.jpg'
-  };
 
   let currentUser = null;
   let currentProfile = null;
   let selectedFiles = [];
-  let currentFilter = 0;
+  let allPhotos = [];       // full list loaded from DB
+  let lightboxIndex = 0;    // current position in lightbox
 
-  function getInitials(name) { return name.split(' ').map(n => n[0]).join(''); }
-
-  function timeAgo(dateStr) {
-    const diff = Date.now() - new Date(dateStr);
-    const mins = Math.floor(diff / 60000);
-    const hours = Math.floor(mins / 60);
-    const days = Math.floor(hours / 24);
-    if (mins < 1) return 'just now';
-    if (mins < 60) return `${mins}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  }
-
-  function avatarHtml(name) {
-    const photo = PHOTOS_MAP[name];
-    const initials = getInitials(name);
-    const style = 'width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:center center;flex-shrink:0;border:1px solid #E8E4DC;';
-    if (photo) {
-      return `<img src="${photo}" alt="${name}" style="${style}">`;
-    }
-    return `<div style="${style};background:#2C4A3E;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-family:serif;font-size:0.7rem;">${initials}</div>`;
-  }
-
+  // ─── INIT ───────────────────────────────────
   async function init() {
-    currentUser = await getCurrentUser();
+    currentUser = await requireAuth();
+    if (!currentUser) return;
+
+    const guest = await isGuest();
+    if (guest) {
+      document.getElementById('guestBanner').style.display = 'block';
+      document.getElementById('uploadSection').style.display = 'none';
+    }
+
     currentProfile = await getUserProfile();
     loadPhotos();
-
-    // File input handler
-    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-
-    // Drag and drop
-    const zone = document.getElementById('uploadZone');
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('dragover');
-      handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
-    });
   }
 
-  function handleFileSelect(e) {
-    handleFiles(Array.from(e.target.files));
+  // ─── UPLOAD ─────────────────────────────────
+  function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+  function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+  function handleDrop(e) {
+    e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+    handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
   }
 
   function handleFiles(files) {
+    if (!files.length) return;
     selectedFiles = [...selectedFiles, ...files];
     renderPreviews();
   }
+
+  function removeFile(index) { selectedFiles.splice(index, 1); renderPreviews(); }
 
   function renderPreviews() {
     const grid = document.getElementById('previewGrid');
     const options = document.getElementById('uploadOptions');
     const btn = document.getElementById('uploadBtn');
 
-    if (selectedFiles.length === 0) {
-      grid.innerHTML = '';
-      options.style.display = 'none';
-      btn.style.display = 'none';
-      return;
+    if (!selectedFiles.length) {
+      grid.innerHTML = ''; options.style.display = 'none'; return;
     }
 
-    options.style.display = 'grid';
-    btn.style.display = 'block';
-
+    options.style.display = 'flex';
     grid.innerHTML = selectedFiles.map((file, i) => {
       const url = URL.createObjectURL(file);
       return `
         <div class="preview-item">
-          <img src="${url}" alt="Preview">
+          <img src="${url}" alt="">
           <button class="preview-remove" onclick="removeFile(${i})">×</button>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
-  function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    renderPreviews();
-  }
-
   async function uploadPhotos() {
-    if (selectedFiles.length === 0) return;
-
+    if (!selectedFiles.length) return;
     const btn = document.getElementById('uploadBtn');
     const progress = document.getElementById('uploadProgress');
-    const day = document.getElementById('daySelect').value || null;
     const caption = document.getElementById('captionInput').value.trim();
     const name = currentProfile ? currentProfile.name : 'A Friend';
 
     btn.disabled = true;
-    progress.textContent = `Uploading 0 of ${selectedFiles.length}...`;
-
     let uploaded = 0;
 
     for (const original of selectedFiles) {
+      progress.textContent = `Uploading ${uploaded + 1} of ${selectedFiles.length}…`;
       const file = await compressImage(original);
       const ext = file.name.split('.').pop();
       const fileName = `${currentUser.id}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
 
-      // Upload to storage bucket
       const { error: storageError } = await db.storage
-        .from(BUCKET)
-        .upload(fileName, file, { contentType: file.type });
+        .from(BUCKET).upload(fileName, file, { contentType: file.type });
+      if (storageError) { progress.textContent = `Error uploading ${file.name}`; continue; }
 
-      if (storageError) {
-        progress.textContent = `Error uploading ${file.name}`;
-        continue;
-      }
-
-      // Save metadata to database
       await db.from('photos').insert({
         user_id: currentUser.id,
         user_name: name,
         file_path: fileName,
         caption: caption || null,
-        day: day ? parseInt(day) : null
+        day: null
       });
 
       uploaded++;
-      progress.textContent = `Uploaded ${uploaded} of ${selectedFiles.length}...`;
     }
 
-    progress.textContent = `✓ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded!`;
+    progress.textContent = `✓ ${uploaded} photo${uploaded !== 1 ? 's' : ''} added to the album!`;
     selectedFiles = [];
     document.getElementById('fileInput').value = '';
     document.getElementById('captionInput').value = '';
-    document.getElementById('daySelect').value = '';
     renderPreviews();
     btn.disabled = false;
+    setTimeout(() => { progress.textContent = ''; }, 3000);
     loadPhotos();
   }
 
-  function filterDay(day) {
-    currentFilter = day;
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(day === 0 ? 'filterAll' : `filter${day}`).classList.add('active');
-    loadPhotos();
-  }
-
+  // ─── LOAD PHOTOS ────────────────────────────
   async function loadPhotos() {
-    let query = db.from('photos').select('*').order('created_at', { ascending: false });
-    if (currentFilter > 0) query = query.eq('day', currentFilter);
-
-    const { data: photos } = await query;
+    const { data: photos } = await db.from('photos').select('*').order('created_at', { ascending: false });
     const grid = document.getElementById('photoGrid');
     const count = document.getElementById('photoCount');
 
-    count.textContent = photos ? `${photos.length} photo${photos.length !== 1 ? 's' : ''}` : '';
+    allPhotos = photos || [];
+    count.textContent = allPhotos.length ? `${allPhotos.length} photo${allPhotos.length !== 1 ? 's' : ''}` : '';
 
-    if (!photos || photos.length === 0) {
-      grid.innerHTML = `<div class="empty-state" style="column-span:all;">No photos yet — be the first to share a moment!</div>`;
+    if (!allPhotos.length) {
+      grid.innerHTML = `<div class="empty-state"><span>📸</span>No photos yet — be the first to share a moment!</div>`;
       return;
     }
 
     grid.innerHTML = '';
-
-    photos.forEach((photo, i) => {
-      const isOwn = currentUser && photo.user_id === currentUser.id;
+    allPhotos.forEach((photo, i) => {
       const { data: { publicUrl } } = db.storage.from(BUCKET).getPublicUrl(photo.file_path);
+      photo._url = publicUrl; // cache URL on object
 
       const card = document.createElement('div');
       card.className = 'photo-card';
-
+      card.onclick = () => openLightbox(i);
       card.innerHTML = `
-        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" onclick="openLightbox('${publicUrl}')" style="width:100%;display:block;cursor:pointer;">
-        <div class="photo-info">
-          <div class="photo-header">
-            ${avatarHtml(photo.user_name)}
-            <span class="photo-author">${photo.user_name}</span>
-            ${photo.day ? `<span class="photo-day-badge">Day ${photo.day}</span>` : ''}
-          </div>
-          ${photo.caption ? `<p class="photo-caption">${photo.caption}</p>` : ''}
-          <div class="photo-footer">
-            <span class="photo-time">${timeAgo(photo.created_at)}</span>
-            ${isOwn ? `<button class="photo-delete" onclick="deletePhoto(${photo.id}, '${photo.file_path}')">Delete</button>` : ''}
-          </div>
+        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" loading="lazy">
+        <div class="photo-overlay">
+          <p class="photo-author">${photo.user_name}</p>
+          ${photo.caption ? `<p class="photo-caption-text">${photo.caption}</p>` : ''}
         </div>
       `;
 
       grid.appendChild(card);
-      setTimeout(() => card.classList.add('revealed'), i * 80);
+      setTimeout(() => card.classList.add('revealed'), i * 60);
     });
   }
 
-  async function deletePhoto(id, filePath) {
-    if (!confirm('Delete this photo?')) return;
-    await db.storage.from(BUCKET).remove([filePath]);
-    await db.from('photos').delete().eq('id', id);
-    loadPhotos();
-  }
-
-  function openLightbox(url) {
-    document.getElementById('lightboxImg').src = url;
+  // ─── LIGHTBOX ───────────────────────────────
+  function openLightbox(index) {
+    lightboxIndex = index;
+    renderLightbox();
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -760,7 +524,76 @@
     document.body.style.overflow = '';
   }
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  function stepLightbox(dir) {
+    lightboxIndex = (lightboxIndex + dir + allPhotos.length) % allPhotos.length;
+    renderLightbox();
+  }
+
+  function renderLightbox() {
+    const photo = allPhotos[lightboxIndex];
+    const url = photo._url;
+    const isOwn = currentUser && photo.user_id === currentUser.id;
+
+    // Image
+    document.getElementById('lightboxImg').src = url;
+
+    // Counter
+    document.getElementById('lightboxCounter').textContent =
+      `${lightboxIndex + 1} / ${allPhotos.length}`;
+
+    // Download — use anchor trick so it saves to camera roll
+    const dl = document.getElementById('lightboxDownload');
+    dl.href = url;
+    dl.download = `scotland-${photo.user_name.split(' ')[0].toLowerCase()}-${lightboxIndex + 1}.jpg`;
+
+    // Caption & author
+    document.getElementById('lightboxAuthor').textContent = `📷 ${photo.user_name}`;
+    const cap = document.getElementById('lightboxCaption');
+    cap.textContent = photo.caption || '';
+    cap.style.display = photo.caption ? 'block' : 'none';
+
+    // Delete (own photos only)
+    const del = document.getElementById('lightboxDelete');
+    del.style.display = isOwn ? 'block' : 'none';
+
+    // Hide arrows if only 1 photo
+    document.getElementById('lightboxPrev').style.display = allPhotos.length > 1 ? 'flex' : 'none';
+    document.getElementById('lightboxNext').style.display = allPhotos.length > 1 ? 'flex' : 'none';
+  }
+
+  async function deleteCurrent() {
+    const photo = allPhotos[lightboxIndex];
+    if (!photo || photo.user_id !== currentUser.id) return;
+    if (!confirm('Delete this photo from the album?')) return;
+
+    await db.storage.from(BUCKET).remove([photo.file_path]);
+    await db.from('photos').delete().eq('id', photo.id);
+
+    closeLightbox();
+    loadPhotos();
+  }
+
+  // ─── KEYBOARD ───────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === 'ArrowRight') stepLightbox(1);
+  });
+
+  // ─── SWIPE (mobile) ─────────────────────────
+  let swipeStartX = 0;
+  const lb = document.getElementById('lightbox');
+  lb.addEventListener('touchstart', e => { swipeStartX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 50) stepLightbox(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Close lightbox on background tap (but not on image or buttons)
+  lb.addEventListener('click', e => {
+    if (e.target === lb) closeLightbox();
+  });
 
   init();
 </script>
