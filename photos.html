@@ -380,6 +380,7 @@
 
   let currentUser = null;
   let currentProfile = null;
+  let isAdminUser = false;
   let selectedFiles = [];
   let allPhotos = [];       // full list loaded from DB
   let lightboxIndex = 0;    // current position in lightbox
@@ -396,6 +397,7 @@
     }
 
     currentProfile = await getUserProfile();
+    isAdminUser = !!currentProfile?.is_admin;
     loadPhotos();
   }
 
@@ -517,11 +519,17 @@
     renderLightbox();
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
+    // Hide floating sign out so it doesn't cover lightbox toolbar
+    const signOut = document.getElementById('floating-signout');
+    if (signOut) signOut.style.display = 'none';
   }
 
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
+    // Restore floating sign out
+    const signOut = document.getElementById('floating-signout');
+    if (signOut) signOut.style.display = '';
   }
 
   function stepLightbox(dir) {
@@ -552,9 +560,10 @@
     cap.textContent = photo.caption || '';
     cap.style.display = photo.caption ? 'block' : 'none';
 
-    // Delete (own photos only)
+    // Delete (own photos or admin)
+    const canDelete = isAdminUser || (currentUser && photo.user_id === currentUser.id);
     const del = document.getElementById('lightboxDelete');
-    del.style.display = isOwn ? 'block' : 'none';
+    del.style.display = canDelete ? 'block' : 'none';
 
     // Hide arrows if only 1 photo
     document.getElementById('lightboxPrev').style.display = allPhotos.length > 1 ? 'flex' : 'none';
@@ -563,7 +572,9 @@
 
   async function deleteCurrent() {
     const photo = allPhotos[lightboxIndex];
-    if (!photo || photo.user_id !== currentUser.id) return;
+    if (!photo) return;
+    const canDelete = isAdminUser || (currentUser && photo.user_id === currentUser.id);
+    if (!canDelete) return;
     if (!confirm('Delete this photo from the album?')) return;
 
     await db.storage.from(BUCKET).remove([photo.file_path]);
